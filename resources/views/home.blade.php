@@ -6,8 +6,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">Lista de contas</div>
+                <div class="card card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        Lista de contas
+
+                        <a href="{{ route('contas.create') }}" class="btn btn-primary">Cadastrar</a>
+
+                    </div>
 
                     <div class="card-body">
                         @if (session('status'))
@@ -24,35 +29,26 @@
                                     <th scope="col">Valor</th>
                                     <th scope="col">Vencimento</th>
                                     <th scope="col">Situação</th>
-                                    <th scope="col">Ações</th>
+                                    <th scope="col" class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@twitter</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                </tr>
+                                @foreach ($contas as $conta)
+                                    <tr>
+                                        <th scope="row">{{ $conta->id }}</th>
+                                        <td>{{ $conta->name }}</td>
+                                        <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
+                                        <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
+                                        <td></td>
+                                        <td class="d-md-flex justify-content-center">
+                                            <a href="" class="btn btn-primary me-1">Visualizar</a>
+                                            <a href="" class="btn btn-warning me-1">Editar</a>
+                                            <a href="" class="btn btn-danger">Apagar</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
+
                         </table>
 
                     </div>

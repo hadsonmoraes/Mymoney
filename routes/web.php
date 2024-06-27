@@ -24,4 +24,9 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
     // Precisa de autenticação
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/cadastro/create', [HomeController::class, 'create'])->name('contas.create');
+    Route::post('/cadastro', [HomeController::class, 'store'])->name('contas.store');
+    Route::get('/cadastro/{id}', [HomeController::class, 'show'])->name('contas.show');
+    Route::post('/cadastro', [HomeController::class, 'edit'])->name('contas.edit');
+    Route::post('/cadastro', [HomeController::class, 'destroy'])->name('contas.destroy');
 });
