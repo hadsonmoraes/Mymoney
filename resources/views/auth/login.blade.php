@@ -11,8 +11,8 @@
                     </div>
                 @endif
 
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-gradient-primary text-white text-center py-3">
+                <div class="card shadow-lg border-0 rounded-top-4 rounded-bottom-4">
+                    <div class="card-header bg-gradient-primary text-white text-center py-3 rounded-top-4">
                         <h4 class="mb-0">{{ __('Login') }}</h4>
                     </div>
                     <div class="card-body p-5">
@@ -60,13 +60,13 @@
                             </div>
 
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block ">
                                     {{ __('Log in') }}
                                 </button>
                             </div>
                         </form>
                     </div>
-                    <div class="card-footer text-center py-3">
+                    <div class="card-footer text-center py-3 rounded-bottom-4">
                         <a href="{{ route('register') }}"
                             class="text-primary">{{ __('Don\'t have an account? Register') }}</a>
                     </div>
