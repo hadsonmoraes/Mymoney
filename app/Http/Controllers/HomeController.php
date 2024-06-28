@@ -52,17 +52,39 @@ class HomeController extends Controller
         return redirect('/');
     }
 
-    public function show()
+    public function show($id)
     {
+
+
+        $contas = Conta::findOrFail($id);
+
+        return view('contas.show', ['contas' => $contas]);
     }
 
-    public function edit()
+    public function edit($id)
     {
+
+        // $user = auth()->user();
+        $contas = Conta::findOrFail($id);
+
+        return view('contas.edit', ['contas' => $contas]);
+    }
+
+    public function update(Request $request)
+    {
+
+        $data = $request->all();
+        $id = $request->id;
+        Conta::findOrFail($id)->update($data);
+
+        return redirect('/');
     }
 
 
 
-    public function destroy()
+    public function destroy($id)
     {
+        Conta::findOrFail($id)->delete();
+        return redirect('/');
     }
 }

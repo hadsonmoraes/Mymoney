@@ -41,9 +41,17 @@
                                         <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
                                         <td></td>
                                         <td class="d-md-flex justify-content-center">
-                                            <a href="" class="btn btn-primary me-1">Visualizar</a>
-                                            <a href="" class="btn btn-warning me-1">Editar</a>
-                                            <a href="" class="btn btn-danger">Apagar</a>
+                                            <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
+                                                class="btn btn-primary me-1">Visualizar</a>
+                                            <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
+                                                class="btn btn-warning me-1">Editar</a>
+                                            <form action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Apagar</button>
+                                            </form>
+
                                         </td>
                                     </tr>
                                 @endforeach

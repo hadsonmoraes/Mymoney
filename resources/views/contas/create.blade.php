@@ -35,7 +35,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="maturity" class="form-label">Valor</label>
+                                <label for="maturity" class="form-label">Vencimento</label>
                                 <input type="date" class="form-control" id="maturity" name="maturity" required>
                             </div>
 
