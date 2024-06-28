@@ -49,7 +49,7 @@ class HomeController extends Controller
 
         $contas->save();
 
-        return redirect('/');
+        return redirect('home')->with('status', 'Conta criada com sucesso!');
     }
 
     public function show($id)
@@ -77,7 +77,7 @@ class HomeController extends Controller
         $id = $request->id;
         Conta::findOrFail($id)->update($data);
 
-        return redirect('/');
+        return redirect('home')->with('status', 'Conta atualizada com sucesso!');
     }
 
 
@@ -85,6 +85,6 @@ class HomeController extends Controller
     public function destroy($id)
     {
         Conta::findOrFail($id)->delete();
-        return redirect('/');
+        return redirect('home')->with('status', 'Conta apagada!');
     }
 }
