@@ -13,12 +13,25 @@
                     <div class="card-body">
                         <form action="{{ route('home') }}">
                             <div class="row">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-3 col-sm-12">
                                     <label for="name" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ $name }}" required>
+                                        value="{{ $name }}">
                                 </div>
-                                <div class="col-md-6 col-sm-12 mt-3 pt-3">
+
+                                <div class="col-md-3 col-sm-12">
+                                    <label for="data_inicio" class="form-label">Data Início</label>
+                                    <input type="date" class="form-control" id="data_inicio" name="data_inicio"
+                                        value="{{ $data_inicio }}">
+                                </div>
+
+                                <div class="col-md-3 col-sm-12">
+                                    <label for="data_fim" class="form-label">Data Fim</label>
+                                    <input type="date" class="form-control" id="data_fim" name="data_fim"
+                                        value="{{ $data_fim }}">
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mt-3 pt-3">
                                     <button type="submit" class="btn btn-info">Pesquisar</button>
                                     <a href="{{ route('home') }}" class="btn btn-warning">Limpar</a>
                                 </div>
@@ -80,7 +93,7 @@
 
 
                                 @if (count($contas) == 0)
-                                    <p>Nenhuma conta encontrada </p>
+                                    <p>Nenhuma conta encontrada! </p>
                                 @endif
 
 

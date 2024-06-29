@@ -31,12 +31,23 @@ class HomeController extends Controller
         $contas = Conta::when($request->has('name'), function ($whenQuery) use ($request) {
             $whenQuery->where('name', 'like', '%' . $request->name . '%');
         })
+            ->when($request->filled('data_inicio'), function ($whenQuery) use ($request) {
+                $whenQuery->where('maturity', '>=', \Carbon\Carbon::parse($request->data_inicio)->format('Y-m-d'));
+            })
+            ->when($request->filled('data_fim'), function ($whenQuery) use ($request) {
+                $whenQuery->where('maturity', '<=', \Carbon\Carbon::parse($request->data_fim)->format('Y-m-d'));
+            })
             ->Where('user_id', $user->id)
             ->orderByDesc('created_at')
             ->paginate(5)
             ->withQueryString();
 
-        return view('home', ['contas' => $contas, 'name' => $request->name]);
+        return view('home', [
+            'contas' => $contas,
+            'name' => $request->name,
+            'data_inicio' => $request->data_inicio,
+            'data_fim' => $request->data_fim
+        ]);
     }
 
     public function create()
