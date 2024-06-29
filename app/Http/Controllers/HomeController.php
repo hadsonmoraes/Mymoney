@@ -23,13 +23,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $user = auth()->user();
 
-        $contas = Conta::where('user_id', $user->id)->orderByDesc('created_at')->paginate(5);
-        return view('home', ['contas' => $contas]);
+        $contas = Conta::when($request->has('name'), function ($whenQuery) use ($request) {
+            $whenQuery->where('name', 'like', '%' . $request->name . '%');
+        })
+            ->Where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('home', ['contas' => $contas, 'name' => $request->name]);
     }
 
     public function create()
