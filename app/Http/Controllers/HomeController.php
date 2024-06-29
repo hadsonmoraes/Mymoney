@@ -28,7 +28,7 @@ class HomeController extends Controller
 
         $user = auth()->user();
 
-        $contas = $user->conta;
+        $contas = Conta::where('user_id', $user->id)->orderByDesc('created_at')->paginate(5);
         return view('home', ['contas' => $contas]);
     }
 

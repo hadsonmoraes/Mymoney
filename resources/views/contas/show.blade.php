@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create')
+@section('title', 'Visualizar')
 
 @section('content')
     <div class="container">
@@ -38,8 +38,20 @@
 
                             <div class="mb-3">
                                 <label for="maturity" class="form-label">Vencimento</label>
-                                <input type="date" class="form-control disabled" id="maturity" name="maturity" required
-                                    value="{{ $contas->maturity }}" disabled>
+                                <input type="text" class="form-control disabled" id="maturity" name="maturity" required
+                                    value="{{ date('d/m/Y', strtotime($contas->maturity)) }}" disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="cadastro" class="form-label">Cadastrado</label>
+                                <input type="text" class="form-control" id="cadastro" name="cadastro" required
+                                    value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editado" class="form-label">Editado</label>
+                                <input type="text" class="form-control disabled" id="editado" name="editado" required
+                                    value="{{ date('d/m/Y', strtotime($contas->updated_at)) }}" disabled>
                             </div>
 
 

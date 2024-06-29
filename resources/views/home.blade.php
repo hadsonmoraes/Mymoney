@@ -55,10 +55,17 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
+
+                                @if (count($contas) == 0)
+                                    <p>Nenhuma conta encontrada </p>
+                                @endif
+
+
                             </tbody>
 
                         </table>
-
+                        {{ $contas->onEachSide(0)->links() }}
                     </div>
                 </div>
             </div>
