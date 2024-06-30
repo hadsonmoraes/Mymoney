@@ -69,12 +69,25 @@
                             </thead>
                             <tbody>
                                 @foreach ($contas as $conta)
+                                    @php
+
+                                        if ($conta->situation == 'paid') {
+                                            $status = 'success';
+                                            $situation_name = 'Pago';
+                                        } elseif ($conta->situation == 'pending') {
+                                            $status = 'warning';
+                                            $situation_name = 'Pendente';
+                                        } else {
+                                            $status = 'danger';
+                                            $situation_name = 'Cancelado';
+                                        }
+                                    @endphp
                                     <tr>
                                         <th scope="row">{{ $conta->id }}</th>
                                         <td>{{ $conta->name }}</td>
                                         <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
                                         <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
-                                        <td></td>
+                                        <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
                                         <td class="d-md-flex justify-content-center">
                                             <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
                                                 class="btn btn-primary me-1">Visualizar</a>

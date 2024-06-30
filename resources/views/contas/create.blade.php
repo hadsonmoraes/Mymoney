@@ -24,19 +24,31 @@
                         <form action="{{ route('contas.store') }}" method="post">
                             @csrf
 
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
-                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="value" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="value" name="value" required>
-                            </div>
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="value" class="form-label">Valor</label>
+                                    <input type="text" class="form-control" id="value" name="value" required>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="maturity" class="form-label">Vencimento</label>
-                                <input type="date" class="form-control" id="maturity" name="maturity" required>
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="maturity" class="form-label">Vencimento</label>
+                                    <input type="date" class="form-control" id="maturity" name="maturity" required>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="situation" class="form-label">Situação</label>
+                                    <select class="form-select" id="situation" name="situation" required>
+                                        <option value="" selected disabled>selecione</option>
+                                        <option value="paid">Pago</option>
+                                        <option value="pending">Pendente</option>
+                                        <option value="canceled">Cancelado</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Cadastrar</button>

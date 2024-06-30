@@ -1,3 +1,15 @@
+<?php
+if ($contas->situation == 'paid') {
+    $situation_name = 'Pago';
+} elseif ($contas->situation == 'pending') {
+    $situation_name = 'Pendente';
+} else {
+    $situation_name = 'Cancelado';
+}
+
+?>
+
+
 @extends('layouts.app')
 
 @section('title', 'Visualizar')
@@ -23,39 +35,45 @@
 
                         <form action="" method="post">
                             @csrf
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="name" name="name" required
+                                        value="{{ $contas->name }}" disabled>
+                                </div>
 
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="name" name="name" required
-                                    value="{{ $contas->name }}" disabled>
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="value" class="form-label">Valor</label>
+                                    <input type="text" class="form-control" id="value" name="value" required
+                                        value="{{ 'R$' . number_format($contas->value, 2, ',', '.') }}" disabled>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="maturity" class="form-label">Vencimento</label>
+                                    <input type="text" class="form-control disabled" id="maturity" name="maturity"
+                                        required value="{{ date('d/m/Y', strtotime($contas->maturity)) }}" disabled>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="situation" class="form-label">Situação</label>
+                                    <select class="form-select" id="situation" name="situation" disabled required>
+                                        <option value="{{ $contas->situation }}">{{ $situation_name }}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="cadastro" class="form-label">Cadastrado</label>
+                                    <input type="text" class="form-control" id="cadastro" name="cadastro" required
+                                        value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="editado" class="form-label">Editado</label>
+                                    <input type="text" class="form-control disabled" id="editado" name="editado"
+                                        required value="{{ date('d/m/Y', strtotime($contas->updated_at)) }}" disabled>
+                                </div>
+
                             </div>
-
-                            <div class="mb-3">
-                                <label for="value" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="value" name="value" required
-                                    value="{{ 'R$' . number_format($contas->value, 2, ',', '.') }}" disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="maturity" class="form-label">Vencimento</label>
-                                <input type="text" class="form-control disabled" id="maturity" name="maturity" required
-                                    value="{{ date('d/m/Y', strtotime($contas->maturity)) }}" disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="cadastro" class="form-label">Cadastrado</label>
-                                <input type="text" class="form-control" id="cadastro" name="cadastro" required
-                                    value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="editado" class="form-label">Editado</label>
-                                <input type="text" class="form-control disabled" id="editado" name="editado" required
-                                    value="{{ date('d/m/Y', strtotime($contas->updated_at)) }}" disabled>
-                            </div>
-
-
-
                         </form>
 
                     </div>

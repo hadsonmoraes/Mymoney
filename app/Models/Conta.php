@@ -13,6 +13,7 @@ class Conta extends Model
         'name',
         'value',
         'maturity',
+        'situation',
     ];
 
     public function user()

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('value');
             $table->date('maturity');
+            $table->enum('situation', ['pending', 'paid', 'canceled'])->default('pending');
             $table->timestamps();
         });
     }
