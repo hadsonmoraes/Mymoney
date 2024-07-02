@@ -6,6 +6,7 @@ use App\Models\Conta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ContaRequest;
+use Exception;
 
 class HomeController extends Controller
 {
@@ -99,15 +100,16 @@ class HomeController extends Controller
 
     public function update(ContaRequest $request)
     {
-
+        try {
         $data = $request->all();
         $id = $request->id;
         Conta::findOrFail($id)->update($data);
 
         return redirect('home')->with('success', 'Conta atualizada com sucesso!');
+    } catch (Exception $e) {
+        return back()->withInput()->with('error', 'Conta não atualizada');
     }
-
-
+    }
 
     public function destroy($id)
     {
