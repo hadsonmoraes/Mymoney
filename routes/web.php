@@ -30,4 +30,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/cadastro/edit/{id}', [HomeController::class, 'edit'])->name('contas.edit');
     Route::put('/cadastro/update/{id}', [HomeController::class, 'update'])->name('contas.update');
     Route::delete('/cadastro/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 });

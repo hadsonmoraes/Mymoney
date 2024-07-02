@@ -101,19 +101,37 @@ class HomeController extends Controller
     public function update(ContaRequest $request)
     {
         try {
-        $data = $request->all();
-        $id = $request->id;
-        Conta::findOrFail($id)->update($data);
+            $data = $request->all();
+            $id = $request->id;
+            Conta::findOrFail($id)->update($data);
 
-        return redirect('home')->with('success', 'Conta atualizada com sucesso!');
-    } catch (Exception $e) {
-        return back()->withInput()->with('error', 'Conta não atualizada');
-    }
+            return redirect('home')->with('success', 'Conta atualizada com sucesso!');
+        } catch (Exception $e) {
+            return back()->withInput()->with('error', 'Conta não atualizada');
+        }
     }
 
     public function destroy($id)
     {
         Conta::findOrFail($id)->delete();
         return redirect('home')->with('success', 'Conta apagada!');
+    }
+
+    public function dashboard(Request $request)
+    {
+
+        $user = auth()->user();
+
+        $contas = Conta::where('user_id', $user->id)->get();
+
+        $contasPagas = $contas->where('situation', 'paid')->count();
+        $contasPendentes = $contas->where('situation', 'pending')->count();
+        $contasCanceladas = $contas->where('situation', 'canceled')->count();
+
+        return view('dashboard', [
+            'contasPagas' => $contasPagas,
+            'contasPendentes' => $contasPendentes,
+            'contasCanceladas' => $contasCanceladas,
+        ]);
     }
 }
