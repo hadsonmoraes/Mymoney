@@ -50,11 +50,8 @@
                     </div>
 
                     <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success text-center" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+
+                        <x-alert />
 
                         <table class="table">
                             <thead>
@@ -93,11 +90,13 @@
                                                 class="btn btn-primary me-1">Visualizar</a>
                                             <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
                                                 class="btn btn-warning me-1">Editar</a>
-                                            <form action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                            <form id="formExcluir{{ $conta->id }}"
+                                                action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
                                                 method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Apagar</button>
+                                                <button type="submit" class="btn btn-danger"
+                                                    onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</button>
                                             </form>
 
                                         </td>
@@ -106,7 +105,7 @@
 
 
                                 @if (count($contas) == 0)
-                                    <p>Nenhuma conta encontrada! </p>
+                                    <p class="text-center text-danger fw-bold">Nenhuma conta encontrada! </p>
                                 @endif
 
 

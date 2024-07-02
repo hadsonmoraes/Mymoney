@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ContaRequest;
 
 class HomeController extends Controller
 {
@@ -55,20 +56,27 @@ class HomeController extends Controller
         return view('contas.create');
     }
 
-    public function store(Request $request)
+    public function store(ContaRequest $request)
     {
-        $contas = new Conta;
-        $contas->name = $request->name;
-        $contas->value = $request->value;
-        $contas->maturity = $request->maturity;
-        $contas->situation = $request->situation;
+        $request->validated();
 
-        $user = Auth::user();
-        $contas->user_id = $user->id;
+        try {
 
-        $contas->save();
+            $contas = new Conta;
+            $contas->name = $request->name;
+            $contas->value = $request->value;
+            $contas->maturity = $request->maturity;
+            $contas->situation = $request->situation;
 
-        return redirect('home')->with('status', 'Conta criada com sucesso!');
+            $user = Auth::user();
+            $contas->user_id = $user->id;
+
+            $contas->save();
+
+            return redirect('home')->with('success', 'Conta criada com sucesso!');
+        } catch (Exception $e) {
+            return back()->withInput()->with('error', 'Conta não Cadastrada');
+        }
     }
 
     public function show($id)
@@ -89,14 +97,14 @@ class HomeController extends Controller
         return view('contas.edit', ['contas' => $contas]);
     }
 
-    public function update(Request $request)
+    public function update(ContaRequest $request)
     {
 
         $data = $request->all();
         $id = $request->id;
         Conta::findOrFail($id)->update($data);
 
-        return redirect('home')->with('status', 'Conta atualizada com sucesso!');
+        return redirect('home')->with('success', 'Conta atualizada com sucesso!');
     }
 
 
@@ -104,6 +112,6 @@ class HomeController extends Controller
     public function destroy($id)
     {
         Conta::findOrFail($id)->delete();
-        return redirect('home')->with('status', 'Conta apagada!');
+        return redirect('home')->with('success', 'Conta apagada!');
     }
 }
