@@ -119,19 +119,46 @@ class HomeController extends Controller
 
     public function dashboard(Request $request)
     {
-
         $user = auth()->user();
 
-        $contas = Conta::where('user_id', $user->id)->get();
+        // Filtrando as contas do usuário conforme as datas fornecidas
+        $contas = Conta::where('user_id', $user->id)
+            ->when($request->filled('data_inicio'), function ($query) use ($request) {
+                $query->where('maturity', '>=', \Carbon\Carbon::parse($request->data_inicio)->format('Y-m-d'));
+            })
+            ->when($request->filled('data_fim'), function ($query) use ($request) {
+                $query->where('maturity', '<=', \Carbon\Carbon::parse($request->data_fim)->format('Y-m-d'));
+            });
 
-        $contasPagas = $contas->where('situation', 'paid')->count();
-        $contasPendentes = $contas->where('situation', 'pending')->count();
-        $contasCanceladas = $contas->where('situation', 'canceled')->count();
+        // Coletando todas as contas do usuário conforme os filtros de data
+        $allContas = $contas->get();
+
+        // Calculando os valores de acordo com a situação
+        $contasPagasValor = $allContas->where('situation', 'paid')->sum('value');
+        $contasPagasQuantidade = $allContas->where('situation', 'paid')->count();
+
+        $contasPendentes = $allContas->where('situation', 'pending');
+        $contasPendentesValor = $contasPendentes->sum('value');
+        $contasPendentesQuantidade = $contasPendentes->count();
+
+        $contasCanceladasValor = $allContas->where('situation', 'canceled')->sum('value');
+        $contasCanceladasQuantidade = $allContas->where('situation', 'canceled')->count();
+
+        // Somando todos os valores de todas as contas
+        $total = $allContas->sum('value');
+        $totalquantidade = $allContas->count();
 
         return view('dashboard', [
-            'contasPagas' => $contasPagas,
-            'contasPendentes' => $contasPendentes,
-            'contasCanceladas' => $contasCanceladas,
+            'contasPagasValor' => $contasPagasValor,
+            'contasPagasQuantidade' => $contasPagasQuantidade,
+            'contasPendentesValor' => $contasPendentesValor,
+            'contasPendentesQuantidade' => $contasPendentesQuantidade,
+            'contasCanceladasValor' => $contasCanceladasValor,
+            'contasCanceladasQuantidade' => $contasCanceladasQuantidade,
+            'total' => $total,
+            'totalquantidade' => $totalquantidade,
+            'data_inicio' => $request->data_inicio,
+            'data_fim' => $request->data_fim
         ]);
     }
 }
