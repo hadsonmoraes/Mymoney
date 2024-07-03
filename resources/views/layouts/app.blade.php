@@ -24,7 +24,7 @@
 <body>
     <div id="app">
         @if (Auth::user())
-            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light  shadow-sm">
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Mymoney') }}
@@ -34,10 +34,23 @@
                         aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                                    href="{{ route('dashboard') }}">
+                                    {{ __('Dashboard') }}
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                                    href="{{ route('home') }}">
+                                    {{ __('Home') }}
+                                </a>
+                            </li>
 
                         </ul>
 
@@ -67,7 +80,7 @@
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                    document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -87,6 +100,8 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Your Custom Script -->
     <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 

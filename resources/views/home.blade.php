@@ -14,19 +14,19 @@
                         <form action="{{ route('home') }}">
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
-                                    <label for="name" class="form-label">Nome</label>
+                                    <label for="name" class="form-label fw-bold">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ $name }}">
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
-                                    <label for="data_inicio" class="form-label">Data Início</label>
+                                    <label for="data_inicio" class="form-label fw-bold">Data Início</label>
                                     <input type="date" class="form-control" id="data_inicio" name="data_inicio"
                                         value="{{ $data_inicio }}">
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
-                                    <label for="data_fim" class="form-label">Data Fim</label>
+                                    <label for="data_fim" class="form-label fw-bold">Data Fim</label>
                                     <input type="date" class="form-control" id="data_fim" name="data_fim"
                                         value="{{ $data_fim }}">
                                 </div>
@@ -52,66 +52,94 @@
                     <div class="card-body">
 
                         <x-alert />
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Id</th>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Valor</th>
-                                    <th scope="col">Vencimento</th>
-                                    <th scope="col">Situação</th>
-                                    <th scope="col" class="text-center">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($contas as $conta)
-                                    @php
-
-                                        if ($conta->situation == 'paid') {
-                                            $status = 'success';
-                                            $situation_name = 'Pago';
-                                        } elseif ($conta->situation == 'pending') {
-                                            $status = 'warning';
-                                            $situation_name = 'Pendente';
-                                        } else {
-                                            $status = 'danger';
-                                            $situation_name = 'Cancelado';
-                                        }
-                                    @endphp
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <th scope="row">{{ $conta->id }}</th>
-                                        <td>{{ $conta->name }}</td>
-                                        <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
-                                        <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
-                                        <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
-                                        <td class="d-md-flex justify-content-center">
-                                            <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
-                                                class="btn btn-primary me-1">Visualizar</a>
-                                            <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
-                                                class="btn btn-warning me-1">Editar</a>
-                                            <form id="formExcluir{{ $conta->id }}"
-                                                action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
-                                                method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger"
-                                                    onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</button>
-                                            </form>
-
-                                        </td>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Valor</th>
+                                        <th scope="col">Vencimento</th>
+                                        <th scope="col">Situação</th>
+                                        <th scope="col" class="text-center">Ações</th>
                                     </tr>
-                                @endforeach
+                                </thead>
+                                <tbody>
+                                    @foreach ($contas as $conta)
+                                        @php
+
+                                            if ($conta->situation == 'paid') {
+                                                $status = 'success';
+                                                $situation_name = 'Pago';
+                                            } elseif ($conta->situation == 'pending') {
+                                                $status = 'warning';
+                                                $situation_name = 'Pendente';
+                                            } else {
+                                                $status = 'danger';
+                                                $situation_name = 'Cancelado';
+                                            }
+                                        @endphp
+                                        <tr>
+                                            <th scope="row">{{ $conta->id }}</th>
+                                            <td>{{ $conta->name }}</td>
+                                            <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
+                                            <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
+                                            <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
+                                            <td class="d-none d-md-flex justify-content-center collapse">
+                                                <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
+                                                    class="btn btn-primary me-1">Visualizar</a>
+                                                <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
+                                                    class="btn btn-warning me-1">Editar</a>
+                                                <form id="formExcluir{{ $conta->id }}"
+                                                    action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"
+                                                        onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</button>
+                                                </form>
+
+                                            </td>
+                                            <td class="d-flex d-md-none justify-content-center">
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Ações
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item"
+                                                                href="{{ route('contas.show', ['id' => $conta->id]) }}">Visualizar</a>
+                                                        </li>
+                                                        <li><a class="dropdown-item"
+                                                                href="{{ route('contas.edit', ['id' => $conta->id]) }}">Editar</a>
+                                                        </li>
+                                                        <li>
+                                                            <form id="formExcluir{{ $conta->id }}"
+                                                                action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                                                method="post">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <a class="dropdown-item" type="submit"
+                                                                    onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</a>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
 
 
-                                @if (count($contas) == 0)
-                                    <p class="text-center text-danger fw-bold">Nenhuma conta encontrada! </p>
-                                @endif
+                                    @if (count($contas) == 0)
+                                        <p class="text-center text-danger fw-bold">Nenhuma conta encontrada! </p>
+                                    @endif
 
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
+                        </div>
                         {{ $contas->onEachSide(0)->links() }}
                     </div>
                 </div>
