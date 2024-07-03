@@ -52,6 +52,11 @@
                                     </select>
                                 </div>
 
+                                <div class="col-md-12 col-sm-12 mb-3">
+                                    <label for="note" class="form-label">Nota</label>
+                                    <textarea name="note" id="note" class="form-control" rows="5">{{ old('note') }}</textarea>
+                                </div>
+
                             </div>
 
                             <button type="submit" class="btn btn-primary">Cadastrar</button>

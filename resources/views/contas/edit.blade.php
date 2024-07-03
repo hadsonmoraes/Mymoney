@@ -49,6 +49,11 @@
                                         <option value="canceled" @selected($contas->situation == 'canceled')>Cancelado</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-12 col-sm-12 mb-3">
+                                    <label for="note" class="form-label">Nota</label>
+                                    <textarea name="note" id="note" class="form-control" rows="5">{{ $contas->note }}</textarea>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Editar</button>
