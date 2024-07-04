@@ -71,6 +71,19 @@ class HomeController extends Controller
             $contas->situation = $request->situation;
             $contas->note = $request->note;
 
+
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $requestImage = $request->image;
+
+                $extension = $requestImage->extension();
+
+                $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+
+                $requestImage->move(public_path('img/comprovantes' . $contas->user_id), $imageName);
+
+                $contas->image =  $imageName;
+            }
+
             $user = Auth::user();
             $contas->user_id = $user->id;
 
@@ -102,7 +115,19 @@ class HomeController extends Controller
     public function update(ContaRequest $request)
     {
         try {
+            $user_id = auth()->user()->id;
             $data = $request->all();
+            if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                $requestImage = $request->image;
+
+                $extension = $requestImage->extension();
+
+                $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+
+                $requestImage->move(public_path('img/comprovantes' . $user_id), $imageName);
+
+                $data['image'] =  $imageName;
+            }
             $id = $request->id;
             Conta::findOrFail($id)->update($data);
 

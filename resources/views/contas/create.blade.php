@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <x-alert />
 
-                        <form action="{{ route('contas.store') }}" method="post">
+                        <form action="{{ route('contas.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row">
@@ -50,6 +50,11 @@
                                         <option value="canceled" {{ old('situation') == 'canceled' ? 'selected' : '' }}>
                                             Cancelado</option>
                                     </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Comprovante:</label>
+                                    <input class="form-control" type="file" id="image" name="image">
                                 </div>
 
                                 <div class="col-md-12 col-sm-12 mb-3">

@@ -18,7 +18,8 @@
 
                         <x-alert />
 
-                        <form action="{{ route('contas.update', ['id' => $contas->id]) }}" method="post">
+                        <form action="{{ route('contas.update', ['id' => $contas->id]) }}" method="post"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -50,10 +51,16 @@
                                     </select>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">Comprovante:</label>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                </div>
+
                                 <div class="col-md-12 col-sm-12 mb-3">
                                     <label for="note" class="form-label">Nota</label>
                                     <textarea name="note" id="note" class="form-control" rows="5">{{ $contas->note }}</textarea>
                                 </div>
+
                             </div>
 
                             <button type="submit" class="btn btn-primary">Editar</button>

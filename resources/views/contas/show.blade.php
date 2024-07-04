@@ -57,6 +57,19 @@ if ($contas->situation == 'paid') {
                                 </div>
 
                                 <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="image" class="form-label">Comprovante:</label>
+                                    @if (!empty($contas->image))
+                                        <a class="form-control text-decoration-none"
+                                            href="{{ url('img/comprovantes' . Auth::user()->id . '/' . $contas->image) }}"
+                                            target="_blank">Visualizar</a>
+                                    @else
+                                        <a class="form-control text-decoration-none disabled"
+                                            style="background-color:#e9ecef">Sem
+                                            Comprovante</a>
+                                    @endif
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="cadastro" class="form-label">Cadastrado</label>
                                     <input type="text" class="form-control" id="cadastro" name="cadastro" required
                                         value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
