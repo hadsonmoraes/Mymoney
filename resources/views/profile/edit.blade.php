@@ -18,33 +18,32 @@
 
                         <x-alert />
 
-                        <form action="{{ route('contas.update', ['id' => $profile->id]) }}" method="post">
+                        <form action="{{ route('profile.update', ['id' => $profile->id]) }}" method="post">
                             @csrf
                             @method('PUT')
 
                             <div class="row">
-                                <div class="col-md-5 col-sm-12 mb-3">
+                                <div class="col-md-6 col-sm-12 mb-3">
                                     <label for="name" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name" required
                                         value="{{ $profile->name }}">
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-6 col-sm-12 mb-3">
                                     <label for="value" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email" required
                                         value="{{ $profile->email }}">
                                 </div>
 
-                                <div class="col-md-3 col-sm-12 mb-3">
+                                <div class="col-md-6 col-sm-12 mb-3">
                                     <label for="password" class="form-label">Senha</label>
-                                    <input type="password" class="form-control" id="password" name="password" required
-                                        value="{{ $profile->password }}">
+                                    <input type="password" class="form-control" id="password" name="password">
                                 </div>
 
-                                <div class="col-md-3 col-sm-12 mb-3">
+                                <div class="col-md-6 col-sm-12 mb-3">
                                     <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
                                     <input id="password-confirm" type="password" class="form-control"
-                                        name="password_confirmation" required autocomplete="new-password">
+                                        name="password_confirmation" autocomplete="new-password">
                                 </div>
 
                             </div>

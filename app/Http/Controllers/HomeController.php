@@ -93,7 +93,6 @@ class HomeController extends Controller
     public function edit($id)
     {
 
-        // $user = auth()->user();
         $contas = Conta::findOrFail($id);
 
         return view('contas.edit', ['contas' => $contas]);
