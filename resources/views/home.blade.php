@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Pesquisar</span>
+                        <span>Filtro</span>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('home') }}">

@@ -8,19 +8,19 @@
             <div class="col-md-12">
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Pesquisar</span>
+                        <span>Filtro</span>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('dashboard') }}">
                             <div class="row justify-content-center align-items-center">
                                 <div class="col-md-4 col-sm-12">
-                                    <label for="data_inicio" class="form-label">Data Início</label>
+                                    <label for="data_inicio" class="form-label fw-bold">Data Início</label>
                                     <input type="date" class="form-control" id="data_inicio" name="data_inicio"
                                         value="{{ $data_inicio }}">
                                 </div>
 
                                 <div class="col-md-4 col-sm-12">
-                                    <label for="data_fim" class="form-label">Data Fim</label>
+                                    <label for="data_fim" class="form-label fw-bold">Data Fim</label>
                                     <input type="date" class="form-control" id="data_fim" name="data_fim"
                                         value="{{ $data_fim }}">
                                 </div>
