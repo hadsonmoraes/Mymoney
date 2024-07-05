@@ -71,6 +71,8 @@ class HomeController extends Controller
             $contas->situation = $request->situation;
             $contas->note = $request->note;
 
+            $user = Auth::user();
+            $contas->user_id = $user->id;
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
@@ -83,9 +85,6 @@ class HomeController extends Controller
 
                 $contas->image =  $imageName;
             }
-
-            $user = Auth::user();
-            $contas->user_id = $user->id;
 
             $contas->save();
 

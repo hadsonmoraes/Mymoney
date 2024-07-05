@@ -21,7 +21,7 @@
                             @csrf
 
                             <div class="row">
-                                <div class="mb-3">
+                                <div class="col-md-8 col-sm-12 mb-3">
                                     <label for="name" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ old('name') }}">
@@ -52,7 +52,7 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="image" class="form-label">Comprovante:</label>
                                     <input class="form-control" type="file" id="image" name="image">
                                 </div>

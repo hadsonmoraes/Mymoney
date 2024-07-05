@@ -59,7 +59,7 @@ if ($contas->situation == 'paid') {
                                 <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="image" class="form-label">Comprovante:</label>
                                     @if (!empty($contas->image))
-                                        <a class="form-control text-decoration-none"
+                                        <a class="form-control text-decoration-none" style="background-color:#e9ecef"
                                             href="{{ url('img/comprovantes' . Auth::user()->id . '/' . $contas->image) }}"
                                             target="_blank">Visualizar</a>
                                     @else
