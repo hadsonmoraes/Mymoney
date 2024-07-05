@@ -30,8 +30,9 @@ class HomeController extends Controller
     {
 
         $user = auth()->user();
+        $perPage = $request->input('perPage', 5);
 
-        $contas = Conta::where('user_id', $user->id)
+        $contasQuery = Conta::where('user_id', $user->id)
             ->when($request->has('name'), function ($whenQuery) use ($request) {
                 $whenQuery->where('name', 'like', '%' . $request->name . '%');
             })
@@ -41,15 +42,21 @@ class HomeController extends Controller
             ->when($request->filled('data_fim'), function ($whenQuery) use ($request) {
                 $whenQuery->where('maturity', '<=', Carbon::parse($request->data_fim)->format('Y-m-d'));
             })
-            ->orderByDesc('created_at')
-            ->paginate(10)
-            ->withQueryString();
+            ->when($request->filled('situation'), function ($whenQuery) use ($request) {
+                $whenQuery->where('situation', $request->situation);
+            })
+            ->orderByDesc('created_at');
+
+        $contas = $contasQuery->paginate($perPage)->withQueryString();
+
 
         return view('home', [
             'contas' => $contas,
             'name' => $request->name,
             'data_inicio' => $request->data_inicio,
-            'data_fim' => $request->data_fim
+            'data_fim' => $request->data_fim,
+            'situation' => $request->situation,
+            'perPage' => $perPage,
         ]);
     }
 

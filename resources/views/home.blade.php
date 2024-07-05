@@ -19,17 +19,31 @@
                                         value="{{ $name }}">
                                 </div>
 
-                                <div class="col-md-3 col-sm-12">
+                                <div class="col-md-2 col-sm-12">
                                     <label for="data_inicio" class="form-label fw-bold">Data Início</label>
                                     <input type="date" class="form-control" id="data_inicio" name="data_inicio"
                                         value="{{ $data_inicio }}">
                                 </div>
 
-                                <div class="col-md-3 col-sm-12">
+                                <div class="col-md-2 col-sm-12">
                                     <label for="data_fim" class="form-label fw-bold">Data Fim</label>
                                     <input type="date" class="form-control" id="data_fim" name="data_fim"
                                         value="{{ $data_fim }}">
                                 </div>
+
+                                <div class="col-md-2 col-sm-12">
+                                    <label for="situation" class="form-label fw-bold">Situação</label>
+                                    <select class="form-select" id="situation" name="situation">
+                                        <option value="">Todos</option>
+                                        <option value="paid" @selected($situation == 'paid')>Pago</option>
+                                        <option value="pending" @selected($situation == 'pending')>Pendente</option>
+                                        <option value="canceled" @selected($situation == 'canceled')>Cancelado</option>
+                                    </select>
+                                </div>
+
+                                @if ($perPage)
+                                    <input type="hidden" name="perPage" id="perPage" value="{{ $perPage }}">
+                                @endif
 
                                 <div class="col-md-3 col-sm-12 mt-3 pt-3">
                                     <button type="submit" class="btn btn-info">Pesquisar</button>
@@ -43,8 +57,33 @@
 
                 <div class="card mt-3 shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        Lista de contas
-
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">Lista de contas</span>
+                            <form id="filterForm" action="{{ route('home') }}">
+                                <select class="form-select" id="perPage" name="perPage"
+                                    onchange="document.getElementById('filterForm').submit()">
+                                    <option value="5" @selected($perPage == '5')>5</option>
+                                    <option value="10" @selected($perPage == '10')>10</option>
+                                    <option value="25" @selected($perPage == '25')>25</option>
+                                    <option value="50" @selected($perPage == '50')>50</option>
+                                    <option value="100" @selected($perPage == '100')>100</option>
+                                    <option value="150" @selected($perPage == '150')>150</option>
+                                    <option value="200" @selected($perPage == '200')>200</option>
+                                </select>
+                                @if ($name)
+                                    <input type="hidden" name="name" value="{{ $name }}">
+                                @endif
+                                @if ($data_inicio)
+                                    <input type="hidden" name="data_inicio" value="{{ $data_inicio }}">
+                                @endif
+                                @if ($data_fim)
+                                    <input type="hidden" name="data_fim" value="{{ $data_fim }}">
+                                @endif
+                                @if ($situation)
+                                    <input type="hidden" name="situation" value="{{ $situation }}">
+                                @endif
+                            </form>
+                        </div>
                         <a href="{{ route('contas.create') }}" class="btn btn-primary">Cadastrar</a>
 
                     </div>
