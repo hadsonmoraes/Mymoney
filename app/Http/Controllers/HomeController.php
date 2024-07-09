@@ -30,18 +30,18 @@ class HomeController extends Controller
     {
 
         $user = auth()->user();
+
+        $dataInicio = $request->filled('data_inicio') ? $request->data_inicio : Carbon::now()->startOfMonth()->format('Y-m-d');
+        $dataFim = $request->filled('data_fim') ? $request->data_fim : Carbon::now()->endOfMonth()->format('Y-m-d');
+
         $perPage = $request->input('perPage', 5);
 
         $contasQuery = Conta::where('user_id', $user->id)
             ->when($request->has('name'), function ($whenQuery) use ($request) {
                 $whenQuery->where('name', 'like', '%' . $request->name . '%');
             })
-            ->when($request->filled('data_inicio'), function ($whenQuery) use ($request) {
-                $whenQuery->where('maturity', '>=', Carbon::parse($request->data_inicio)->format('Y-m-d'));
-            })
-            ->when($request->filled('data_fim'), function ($whenQuery) use ($request) {
-                $whenQuery->where('maturity', '<=', Carbon::parse($request->data_fim)->format('Y-m-d'));
-            })
+            ->where('maturity', '>=', Carbon::parse($dataInicio)->format('Y-m-d'))
+            ->where('maturity', '<=', Carbon::parse($dataFim)->format('Y-m-d'))
             ->when($request->filled('situation'), function ($whenQuery) use ($request) {
                 $whenQuery->where('situation', $request->situation);
             })
@@ -53,8 +53,8 @@ class HomeController extends Controller
         return view('home', [
             'contas' => $contas,
             'name' => $request->name,
-            'data_inicio' => $request->data_inicio,
-            'data_fim' => $request->data_fim,
+            'data_inicio' =>  $dataInicio,
+            'data_fim' => $dataFim,
             'situation' => $request->situation,
             'perPage' => $perPage,
         ]);
@@ -153,13 +153,12 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
+        $dataInicio = $request->filled('data_inicio') ? $request->data_inicio : Carbon::now()->startOfMonth()->format('Y-m-d');
+        $dataFim = $request->filled('data_fim') ? $request->data_fim : Carbon::now()->endOfMonth()->format('Y-m-d');
+
         $contas = Conta::where('user_id', $user->id)
-            ->when($request->filled('data_inicio'), function ($query) use ($request) {
-                $query->where('maturity', '>=', Carbon::parse($request->data_inicio)->format('Y-m-d'));
-            })
-            ->when($request->filled('data_fim'), function ($query) use ($request) {
-                $query->where('maturity', '<=', Carbon::parse($request->data_fim)->format('Y-m-d'));
-            });
+            ->where('maturity', '>=', Carbon::parse($dataInicio)->format('Y-m-d'))
+            ->where('maturity', '<=', Carbon::parse($dataFim)->format('Y-m-d'));
 
         $allContas = $contas->get();
 
@@ -185,8 +184,8 @@ class HomeController extends Controller
             'contasCanceladasQuantidade' => $contasCanceladasQuantidade,
             'total' => $total,
             'totalquantidade' => $totalquantidade,
-            'data_inicio' => $request->data_inicio,
-            'data_fim' => $request->data_fim
+            'data_inicio' => $dataInicio,
+            'data_fim' => $dataFim
         ]);
     }
 }
