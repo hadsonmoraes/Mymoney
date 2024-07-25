@@ -52,6 +52,13 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('category') ? 'active' : '' }}"
+                                    href="{{ route('category.index') }}">
+                                    {{ __('Category') }}
+                                </a>
+                            </li>
+
                         </ul>
 
                         <!-- Right Side Of Navbar -->

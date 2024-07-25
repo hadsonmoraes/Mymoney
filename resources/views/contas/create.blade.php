@@ -52,6 +52,12 @@
                                     </select>
                                 </div>
 
+                                <div class="col-md-8 col-sm-12 mb-3">
+                                    <label for="category" class="form-label">Categoria</label>
+                                    <input type="text" class="form-control" id="category" name="category"
+                                        value="{{ old('category') }}">
+                                </div>
+
                                 <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="image" class="form-label">Comprovante:</label>
                                     <input class="form-control" type="file" id="image" name="image">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/contas/update/{id}', [HomeController::class, 'update'])->name('contas.update');
     Route::delete('/contas/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
 
     Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');

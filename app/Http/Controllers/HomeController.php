@@ -76,6 +76,7 @@ class HomeController extends Controller
             $contas->value = $request->value;
             $contas->maturity = $request->maturity;
             $contas->situation = $request->situation;
+            $contas->category = $request->category;
             $contas->note = $request->note;
 
             $user = Auth::user();

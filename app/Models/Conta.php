@@ -16,6 +16,7 @@ class Conta extends Model
         'value',
         'maturity',
         'situation',
+        'category',
         'note',
         'image',
     ];
