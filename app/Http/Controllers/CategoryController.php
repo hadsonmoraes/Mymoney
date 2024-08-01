@@ -14,4 +14,19 @@ class CategoryController extends Controller
         $categorys = Category::all();
         return view('category.index', ['categorys' => $categorys]);
     }
+
+    public function create()
+    {
+        return view('category.create');
+    }
+
+    public function store(Request $request)
+    {
+        $category = new Category;
+        $category->name = $request->name;
+
+        $category->save();
+
+        return redirect('category')->with('success', 'Categoria criada com sucesso!');
+    }
 }

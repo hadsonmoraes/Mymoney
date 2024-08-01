@@ -11,7 +11,7 @@
                 <div class="card mt-3 shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <span class="me-2">Lista de contas</span>
+                            <span class="me-2">Lista de categorias</span>
                             {{-- <form id="filterForm" action="{{ route('home') }}">
                                 <select class="form-select" id="perPage" name="perPage"
                                     onchange="document.getElementById('filterForm').submit()">
@@ -37,7 +37,7 @@
                                 @endif
                             </form> --}}
                         </div>
-                        <a href="{{ route('contas.create') }}" class="btn btn-primary">Cadastrar</a>
+                        <a href="{{ route('category.create') }}" class="btn btn-primary">Cadastrar</a>
 
                     </div>
 
