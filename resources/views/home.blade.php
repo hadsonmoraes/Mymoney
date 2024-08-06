@@ -125,7 +125,7 @@
                                             <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
                                             <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
                                             <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
-                                            <td>{{ $conta->category }}</td>
+                                            <td>{{ $conta->category->name }}</td>
                                             <td class="d-none d-md-flex justify-content-center collapse">
                                                 <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
                                                     class="btn btn-primary me-1">Visualizar</a>

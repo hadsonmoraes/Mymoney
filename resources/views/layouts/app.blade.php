@@ -53,9 +53,9 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('category') ? 'active' : '' }}"
+                                <a class="nav-link {{ request()->routeIs('category.index') ? 'active' : '' }}"
                                     href="{{ route('category.index') }}">
-                                    {{ __('Category') }}
+                                    {{ __('Categoria') }}
                                 </a>
                             </li>
 

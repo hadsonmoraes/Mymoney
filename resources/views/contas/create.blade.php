@@ -52,10 +52,18 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-8 col-sm-12 mb-3">
+                                <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="category" class="form-label">Categoria</label>
-                                    <input type="text" class="form-control" id="category" name="category"
-                                        value="{{ old('category') }}">
+                                    <select name="category" id="category" class="form-select">
+                                        <option value="" selected disabled>Selecione</option>
+                                        @forelse ($categorys as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @empty
+                                            <option value="">Nenhuma situação da conta encontrada</option>
+                                        @endforelse
+                                    </select>
                                 </div>
 
                                 <div class="col-md-4 col-sm-12 mb-3">

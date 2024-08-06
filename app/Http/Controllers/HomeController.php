@@ -6,6 +6,7 @@ use App\Models\Conta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ContaRequest;
+use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
 
@@ -62,7 +63,16 @@ class HomeController extends Controller
 
     public function create()
     {
-        return view('contas.create');
+
+        $categorys = Category::orderBy('name', 'asc')->get();
+
+        // Carregar a VIEW
+        return view('contas.create', [
+            'categorys' => $categorys,
+        ]);
+
+
+        // return view('contas.create');
     }
 
     public function store(ContaRequest $request)
@@ -72,11 +82,13 @@ class HomeController extends Controller
         try {
 
             $contas = new Conta;
+            $category = new Category;
+
             $contas->name = $request->name;
             $contas->value = $request->value;
             $contas->maturity = $request->maturity;
             $contas->situation = $request->situation;
-            $contas->category = $request->category;
+            $category->id = $request->category;
             $contas->note = $request->note;
 
             $user = Auth::user();
