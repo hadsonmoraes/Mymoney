@@ -119,16 +119,16 @@ class HomeController extends Controller
 
 
         $contas = Conta::findOrFail($id);
-
-        return view('contas.show', ['contas' => $contas]);
+        $categorys = Category::orderBy('name', 'asc')->get();
+        return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
     }
 
     public function edit($id)
     {
 
         $contas = Conta::findOrFail($id);
-
-        return view('contas.edit', ['contas' => $contas]);
+        $categorys = Category::orderBy('name', 'asc')->get();
+        return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
     }
 
     public function update(ContaRequest $request)

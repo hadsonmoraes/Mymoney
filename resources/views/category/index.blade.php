@@ -67,12 +67,12 @@
                                             <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
                                             <td>{{ $category->category }}</td> --}}
                                             <td class="d-none d-md-flex justify-content-center collapse">
-                                                <a href="{{ route('contas.show', ['id' => $category->id]) }}"
-                                                    class="btn btn-primary me-1">Visualizar</a>
-                                                <a href="{{ route('contas.edit', ['id' => $category->id]) }}"
+                                                {{-- <a href="{{ route('contas.show', ['id' => $category->id]) }}"
+                                                    class="btn btn-primary me-1">Visualizar</a> --}}
+                                                <a href="{{ route('category.edit', ['id' => $category->id]) }}"
                                                     class="btn btn-warning me-1">Editar</a>
                                                 <form id="formExcluir{{ $category->id }}"
-                                                    action="{{ route('contas.destroy', ['id' => $category->id]) }}"
+                                                    action="{{ route('category.destroy', ['id' => $category->id]) }}"
                                                     method="post">
                                                     @csrf
                                                     @method('DELETE')

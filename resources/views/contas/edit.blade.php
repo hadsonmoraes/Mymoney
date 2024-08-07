@@ -51,6 +51,21 @@
                                     </select>
                                 </div>
 
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="category" class="form-label">Categoria</label>
+                                    <select name="category" id="category" class="form-select">
+                                        <option value="" selected disabled>Selecione</option>
+                                        @forelse ($categorys as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category', $contas->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @empty
+                                            <option value="">Nenhuma situação da conta encontrada</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+
                                 <div class="col-md-4 col-sm-12 mb-3">
                                     <label for="image" class="form-label">Comprovante:</label>
                                     <input class="form-control" type="file" id="image" name="image">

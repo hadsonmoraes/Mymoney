@@ -31,7 +31,7 @@ if ($contas->situation == 'paid') {
                         <form action="" method="post">
                             @csrf
                             <div class="row">
-                                <div class="mb-3">
+                                <div class="col-md-8 col-sm-12 mb-3">
                                     <label for="name" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name" required
                                         value="{{ $contas->name }}" disabled>
@@ -53,6 +53,20 @@ if ($contas->situation == 'paid') {
                                     <label for="situation" class="form-label">Situação</label>
                                     <select class="form-select" id="situation" name="situation" disabled required>
                                         <option value="{{ $contas->situation }}">{{ $situation_name }}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <label for="category" class="form-label">Categoria</label>
+                                    <select name="category" id="category" class="form-select" disabled required>
+                                        <option value="" selected disabled>Selecione</option>
+                                        @forelse ($categorys as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category', $contas->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @empty
+                                            <option value="">Nenhuma situação da conta encontrada</option>
+                                        @endforelse
                                     </select>
                                 </div>
 
