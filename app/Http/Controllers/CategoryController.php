@@ -12,8 +12,11 @@ class CategoryController extends Controller
     //
     public function index()
     {
-        $categorys = Category::all();
-        return view('category.index', ['categorys' => $categorys]);
+
+        $user = auth()->user();
+        $categories = Category::where('user_id', $user->id)->paginate(5)->withQueryString();
+
+        return view('category.index', ['categories' => $categories]);
     }
 
     public function create()
@@ -23,8 +26,10 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $user = auth()->user();
         $category = new Category;
         $category->name = $request->name;
+        $category->user_id = $user->id;
 
         $category->save();
 

@@ -58,7 +58,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categorys as $category)
+                                    @foreach ($categories as $category)
                                         <tr>
                                             <th scope="row">{{ $category->id }}</th>
                                             <td>{{ $category->name }}</td>
@@ -112,7 +112,7 @@
                                     @endforeach
 
 
-                                    @if (count($categorys) == 0)
+                                    @if (count($categories) == 0)
                                         <p class="text-center text-danger fw-bold">Nenhuma categoria encontrada! </p>
                                     @endif
 
@@ -121,7 +121,7 @@
 
                             </table>
                         </div>
-                        {{-- {{ $categorys->onEachSide(0)->links() }} --}}
+                        {{ $categories->onEachSide(0)->links() }}
                     </div>
                 </div>
             </div>

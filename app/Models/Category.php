@@ -11,11 +11,16 @@ class Category extends Model
     protected $table = 'category';
 
     protected $fillable = [
-        'name'
+        'name', 'user_id'
     ];
 
     public function conta()
     {
         return $this->hasMany(Conta::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
