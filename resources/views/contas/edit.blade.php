@@ -53,12 +53,12 @@
 
 
                                 <div class="col-md-4 col-sm-12 mb-3">
-                                    <label for="category" class="form-label">Categoria</label>
-                                    <select name="category" id="category" class="form-select">
+                                    <label for="category_id" class="form-label">Categoria</label>
+                                    <select name="category_id" id="category_id" class="form-select">
                                         <option value="" selected disabled>Selecione</option>
                                         @forelse ($categorys as $category)
                                             <option value="{{ $category->id }}"
-                                                {{ old('category', $contas->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ old('category_id', $contas->category_id) == $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}</option>
                                         @empty
                                             <option value="">Nenhuma situação da conta encontrada</option>

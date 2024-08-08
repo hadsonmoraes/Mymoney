@@ -100,7 +100,7 @@
                                         <th scope="col">Valor</th>
                                         <th scope="col">Vencimento</th>
                                         <th scope="col">Situação</th>
-                                        <th scope="col">Categorias</th>
+                                        <th scope="col">Categoria</th>
                                         <th scope="col" class="text-center">Ações</th>
                                     </tr>
                                 </thead>

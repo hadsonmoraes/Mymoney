@@ -82,13 +82,12 @@ class HomeController extends Controller
         try {
 
             $contas = new Conta;
-            $category = new Category;
 
             $contas->name = $request->name;
             $contas->value = $request->value;
             $contas->maturity = $request->maturity;
             $contas->situation = $request->situation;
-            $category->id = $request->category;
+            $contas->category_id = $request->category_id;
             $contas->note = $request->note;
 
             $user = Auth::user();
