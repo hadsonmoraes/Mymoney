@@ -31,32 +31,39 @@ if ($contas->situation == 'paid') {
                         <form action="" method="post">
                             @csrf
                             <div class="row">
-                                <div class="col-md-8 col-sm-12 mb-3">
+                                <div class="col-md-6 col-sm-12 mb-3">
                                     <label for="name" class="form-label">Nome</label>
                                     <input type="text" class="form-control" id="name" name="name" required
                                         value="{{ $contas->name }}" disabled>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="value" class="form-label">Valor</label>
                                     <input type="text" class="form-control" id="value" name="value" required
                                         value="{{ 'R$' . number_format($contas->value, 2, ',', '.') }}" disabled>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="maturity" class="form-label">Vencimento</label>
                                     <input type="text" class="form-control disabled" id="maturity" name="maturity"
                                         required value="{{ date('d/m/Y', strtotime($contas->maturity)) }}" disabled>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="type" class="form-label">Tipo</label>
+                                    <select class="form-select" id="type" name="type" disabled required>
+                                        <option value="{{ $contas->type }}">{{ ucfirst($contas->type) }}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="situation" class="form-label">Situação</label>
                                     <select class="form-select" id="situation" name="situation" disabled required>
                                         <option value="{{ $contas->situation }}">{{ $situation_name }}</option>
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="category" class="form-label">Categoria</label>
                                     <select name="category" id="category" class="form-select" disabled required>
                                         <option value="" selected disabled>Selecione</option>
@@ -70,7 +77,7 @@ if ($contas->situation == 'paid') {
                                     </select>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="image" class="form-label">Comprovante:</label>
                                     @if (!empty($contas->image))
                                         <a class="form-control text-decoration-none" style="background-color:#e9ecef"
@@ -83,13 +90,13 @@ if ($contas->situation == 'paid') {
                                     @endif
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="cadastro" class="form-label">Cadastrado</label>
                                     <input type="text" class="form-control" id="cadastro" name="cadastro" required
                                         value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
                                 </div>
 
-                                <div class="col-md-4 col-sm-12 mb-3">
+                                <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="editado" class="form-label">Editado</label>
                                     <input type="text" class="form-control disabled" id="editado" name="editado"
                                         required value="{{ date('d/m/Y', strtotime($contas->updated_at)) }}" disabled>

@@ -41,6 +41,15 @@
                                     </select>
                                 </div>
 
+                                <div class="col-md-2 col-sm-12">
+                                    <label for="type" class="form-label fw-bold">Tipo</label>
+                                    <select class="form-select" id="type" name="type">
+                                        <option value="">Todos</option>
+                                        <option value="entrada" @selected($type == 'entrada')>Entrada</option>
+                                        <option value="saida" @selected($type == 'saida')>Saída</option>
+                                    </select>
+                                </div>
+
                                 @if ($perPage)
                                     <input type="hidden" name="perPage" id="perPage" value="{{ $perPage }}">
                                 @endif
@@ -101,6 +110,7 @@
                                         <th scope="col">Vencimento</th>
                                         <th scope="col">Situação</th>
                                         <th scope="col">Categoria</th>
+                                        <th scope="col">Tipo</th>
                                         <th scope="col" class="text-center">Ações</th>
                                     </tr>
                                 </thead>
@@ -118,6 +128,7 @@
                                                 $status = 'danger';
                                                 $situation_name = 'Cancelado';
                                             }
+
                                         @endphp
                                         <tr>
                                             <th scope="row">{{ $conta->id }}</th>
@@ -126,6 +137,14 @@
                                             <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
                                             <td>{!! '<span class="badge text-bg-' . $status . ' "   >' . $situation_name . ' </span>' !!} </td>
                                             <td>{{ $conta->category->name }}</td>
+                                            <td
+                                                style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
+                                                @if (ucfirst($conta->type) == 'Entrada')
+                                                    <i class="fas fa-arrow-up"></i> Entrada
+                                                @else
+                                                    <i class="fas fa-arrow-down"></i> Saída
+                                                @endif
+                                            </td>
                                             <td class="d-none d-md-flex justify-content-center collapse">
                                                 <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
                                                     class="btn btn-primary me-1">Visualizar</a>

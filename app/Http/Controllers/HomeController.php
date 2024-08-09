@@ -46,6 +46,9 @@ class HomeController extends Controller
             ->when($request->filled('situation'), function ($whenQuery) use ($request) {
                 $whenQuery->where('situation', $request->situation);
             })
+            ->when($request->filled('type'), function ($whenQuery) use ($request) {
+                $whenQuery->where('type', $request->type);
+            })
             ->orderByDesc('created_at');
 
         $contas = $contasQuery->paginate($perPage)->withQueryString();
@@ -57,6 +60,7 @@ class HomeController extends Controller
             'data_inicio' =>  $dataInicio,
             'data_fim' => $dataFim,
             'situation' => $request->situation,
+            'type' => $request->type,
             'perPage' => $perPage,
         ]);
     }
@@ -66,13 +70,9 @@ class HomeController extends Controller
 
         $categorys = Category::orderBy('name', 'asc')->get();
 
-        // Carregar a VIEW
         return view('contas.create', [
             'categorys' => $categorys,
         ]);
-
-
-        // return view('contas.create');
     }
 
     public function store(ContaRequest $request)
@@ -88,6 +88,7 @@ class HomeController extends Controller
             $contas->maturity = $request->maturity;
             $contas->situation = $request->situation;
             $contas->category_id = $request->category_id;
+            $contas->type = $request->type;
             $contas->note = $request->note;
 
             $user = Auth::user();
