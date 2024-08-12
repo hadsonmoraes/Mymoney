@@ -185,6 +185,17 @@ class HomeController extends Controller
         $contasCanceladasValor = $allContas->where('situation', 'canceled')->sum('value');
         $contasCanceladasQuantidade = $allContas->where('situation', 'canceled')->count();
 
+        $contasEntrada = $allContas->where('type', 'entrada');
+        $contasEntradaValor = $contasEntrada->sum('value');
+        $contasEntradaQuantidade = $contasEntrada->count();
+
+        $contasSaida = $allContas->where('type', 'saida');
+        $contasSaidaValor = $contasSaida->sum('value');
+        $contasSaidaQuantidade = $contasSaida->count();
+
+        $MyTotal = ($contasEntradaValor - $contasSaidaValor);
+
+
         $total = $allContas->sum('value');
         $totalquantidade = $allContas->count();
 
@@ -195,6 +206,11 @@ class HomeController extends Controller
             'contasPendentesQuantidade' => $contasPendentesQuantidade,
             'contasCanceladasValor' => $contasCanceladasValor,
             'contasCanceladasQuantidade' => $contasCanceladasQuantidade,
+            'contasEntradaValor' => $contasEntradaValor,
+            'contasEntradaQuantidade' => $contasEntradaQuantidade,
+            'contasSaidaValor' => $contasSaidaValor,
+            'contasSaidaQuantidade' => $contasSaidaQuantidade,
+            'MyTotal' => $MyTotal,
             'total' => $total,
             'totalquantidade' => $totalquantidade,
             'data_inicio' => $dataInicio,

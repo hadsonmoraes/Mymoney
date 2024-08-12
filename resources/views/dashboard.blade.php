@@ -80,6 +80,39 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-3 col-sm-12 mt-3">
+                        <div class="card text-bg-info mb-3 w-100 h-100">
+                            <div class="card-header fw-bold">Entrada</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ 'Valor: R$ ' . number_format($contasEntradaValor, 2, ',', '.') }}
+                                </h5>
+                                <h5 class="card-title">{{ 'Quantidade: ' . $contasEntradaQuantidade }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 mt-3">
+                        <div class="card text-bg-dark mb-3 w-100 h-100">
+                            <div class="card-header fw-bold">Saída</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ 'Valor: R$ ' . number_format($contasSaidaValor, 2, ',', '.') }}
+                                </h5>
+                                <h5 class="card-title">{{ 'Quantidade: ' . $contasSaidaQuantidade }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 mt-3">
+                        <div class="card text-bg-secondary mb-3 w-100 h-100">
+                            <div class="card-header fw-bold">Total Entrada/Saída </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ 'Valor: R$ ' . number_format($MyTotal, 2, ',', '.') }}
+                                </h5>
+                                <h5 class="card-title">{{ 'Quantidade: ' . '-' }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
