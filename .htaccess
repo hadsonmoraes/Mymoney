@@ -1,0 +1,13 @@
+Options +SymLinksIfOwnerMatch
+RewriteEngine On
+
+# Allow Installatron requests
+RewriteCond %{REQUEST_FILENAME} deleteme\.\w+\.php
+RewriteRule (.*) - [L]
+
+# Ensure requests for files and directories are served directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# If needed, uncomment the following line to enforce loading assets from the public directory
+ RewriteRule ^(.*)$ public/$1 [L]
