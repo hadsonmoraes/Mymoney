@@ -67,8 +67,8 @@ class HomeController extends Controller
 
     public function create()
     {
-
-        $categorys = Category::orderBy('name', 'asc')->get();
+        $user = auth()->user();
+        $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
 
         return view('contas.create', [
             'categorys' => $categorys,
@@ -117,17 +117,17 @@ class HomeController extends Controller
     public function show($id)
     {
 
-
+        $user = auth()->user();
         $contas = Conta::findOrFail($id);
-        $categorys = Category::orderBy('name', 'asc')->get();
+        $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
     }
 
     public function edit($id)
     {
-
+        $user = auth()->user();
         $contas = Conta::findOrFail($id);
-        $categorys = Category::orderBy('name', 'asc')->get();
+        $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
     }
 
