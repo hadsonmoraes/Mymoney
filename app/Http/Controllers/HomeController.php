@@ -84,12 +84,16 @@ class HomeController extends Controller
             $contas = new Conta;
 
             $contas->name = $request->name;
-            $contas->value = $request->value;
+            $contas->value = str_replace(',', '.', str_replace('.', '', $request->value));
             $contas->maturity = $request->maturity;
             $contas->situation = $request->situation;
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
             $contas->note = $request->note;
+
+            if ($contas->value <= 0 || $contas->value === "") {
+                return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
+            }
 
             $user = Auth::user();
             $contas->user_id = $user->id;

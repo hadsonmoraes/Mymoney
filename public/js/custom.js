@@ -18,3 +18,22 @@ function confirmarExclusao(event, contaId) {
   })
 
 }
+
+
+let inputValor = document.getElementById('value');
+
+if (inputValor.value == "") {
+  inputValor.value = '0,00';
+}
+
+inputValor.addEventListener('input', function () {
+
+  let valueValor = this.value.replace(/[^\d]/g, '');
+
+  var formattedValor = (valueValor.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.')) + '' + valueValor.slice(-2);
+
+  formattedValor = formattedValor.slice(0, -2) + ',' + formattedValor.slice(-2);
+
+  this.value = formattedValor;
+
+});

@@ -23,7 +23,7 @@ class ContaRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'value' => 'required|numeric',
+            'value' => 'required',
             'maturity' => 'required',
             'situation' => 'required',
         ];
@@ -34,7 +34,6 @@ class ContaRequest extends FormRequest
         return [
             'name.required' => 'Campo nome é obrigatório!',
             'value.required' => 'Campo valor é obrigatório!',
-            'value.numeric' => 'Campo valor só aceita números!',
             'maturity.required' => 'Campo vencimento é obrigatório!',
             'situation.required' => 'Campo situação  é obrigatório!',
         ];

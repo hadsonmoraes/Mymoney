@@ -33,7 +33,7 @@
                                 <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="value" class="form-label">Valor</label>
                                     <input type="text" class="form-control" id="value" name="value" required
-                                        value="{{ $contas->value }}">
+                                        value="{{ number_format($contas->value, '2', ',', '.') }}">
                                 </div>
 
                                 <div class="col-md-3 col-sm-12 mb-3">
