@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card card shadow-sm">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         Editar conta
 
@@ -63,7 +63,7 @@
 
                                 <div class="col-md-3 col-sm-12 mb-3">
                                     <label for="category_id" class="form-label">Categoria</label>
-                                    <select name="category_id" id="category_id" class="form-select">
+                                    <select name="category_id" id="category_id" class="form-select select2">
                                         <option value="" selected disabled>Selecione</option>
                                         @forelse ($categorys as $category)
                                             <option value="{{ $category->id }}"

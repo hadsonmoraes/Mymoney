@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css','resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
-    <div id="app">
+    <div>
         @if (Auth::user())
-            <nav class="navbar navbar-expand-lg navbar-light bg-light  shadow-sm">
+            <nav class="navbar navbar-expand-lg bg-light shadow-sm">
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Mymoney') }}
@@ -114,8 +114,6 @@
         </main>
     </div>
 
-    <!-- Your Custom Script -->
-    <script src="{{ asset('js/custom.js') }}"></script>
 </body>
 
 </html>

@@ -1,3 +1,6 @@
+
+
+
 function confirmarExclusao(event, contaId) {
 
   event.preventDefault();
@@ -36,4 +39,10 @@ inputValor.addEventListener('input', function () {
 
   this.value = formattedValor;
 
+});
+
+$(function () {
+  $('.select2').select2({
+    theme: 'bootstrap-5'
+  });
 });

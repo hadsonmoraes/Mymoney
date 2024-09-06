@@ -18,7 +18,7 @@ if ($contas->situation == 'paid') {
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card card shadow-sm">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         Visualizar conta
 
@@ -26,7 +26,7 @@ if ($contas->situation == 'paid') {
 
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body ">
 
                         <form action="" method="post">
                             @csrf
