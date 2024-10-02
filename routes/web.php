@@ -44,4 +44,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/gerar-csv', [HomeController::class, 'gerarCsv'])->name('contas.gerar-csv');
 });

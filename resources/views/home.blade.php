@@ -93,8 +93,23 @@
                                 @endif
                             </form>
                         </div>
-                        <a href="{{ route('contas.create') }}" class="btn btn-primary">Cadastrar</a>
 
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <a type="button" href="{{ route('contas.create') }}"
+                                class="btn btn-primary active">Cadastrar</a>
+
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('gerar-csv?' . request()->getQueryString()) }}"
+                                            class="dropdown-item btn btn-success">Gerar Excel</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="card-body">

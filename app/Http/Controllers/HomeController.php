@@ -9,6 +9,7 @@ use App\Http\Requests\ContaRequest;
 use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -220,5 +221,86 @@ class HomeController extends Controller
             'data_inicio' => $dataInicio,
             'data_fim' => $dataFim
         ]);
+    }
+
+
+    public function gerarCsv(Request $request)
+    {
+        $user = auth()->user();
+
+        $dataInicio = $request->filled('data_inicio') ? $request->data_inicio : Carbon::now()->startOfMonth()->format('Y-m-d');
+        $dataFim = $request->filled('data_fim') ? $request->data_fim : Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        $perPage = $request->input('perPage', 5);
+
+        $contasQuery = Conta::where('user_id', $user->id)
+            ->when($request->has('name'), function ($whenQuery) use ($request) {
+                $whenQuery->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->where('maturity', '>=', Carbon::parse($dataInicio)->format('Y-m-d'))
+            ->where('maturity', '<=', Carbon::parse($dataFim)->format('Y-m-d'))
+            ->when($request->filled('situation'), function ($whenQuery) use ($request) {
+                $whenQuery->where('situation', $request->situation);
+            })
+            ->when($request->filled('type'), function ($whenQuery) use ($request) {
+                $whenQuery->where('type', $request->type);
+            })
+            ->orderByDesc('created_at');
+
+        $contas = $contasQuery->paginate($perPage)->withQueryString();
+
+        $totalValor = $contas->sum('value');
+
+        // Criar o arquivo temporário
+        $csvNomeArquivo = tempnam(sys_get_temp_dir(), 'csv_' . Str::ulid());
+
+        // Abrir o arquivo na forma de escrita
+        $arquivoAberto = fopen($csvNomeArquivo, 'w');
+
+        // Criar o cabeçalho do Excel - Usar a função mb_convert_encoding para converter carateres especiais
+        $cabecalho = ['id', 'Nome', 'Vencimento', mb_convert_encoding('Situação', 'ISO-8859-1', 'UTF-8'), 'Categoria', 'Tipo', 'Valor'];
+
+        // Escrever o cabeçalho no arquivo
+        fputcsv($arquivoAberto, $cabecalho, ';');
+
+        // Ler os registros recuperados do banco de dados
+        foreach ($contas as $conta) {
+
+            $situation = $conta->situation;
+            if ($situation == "paid") {
+                $situation = "Pago";
+            } elseif ($situation == "pending") {
+                $situation = "Pendente";
+            } else {
+                $situation = "Cancelado";
+            }
+
+            // Criar o array com os dados da linha do Excel
+            $contaArray = [
+                'id' => $conta->id,
+                'nome' => mb_convert_encoding($conta->name, 'ISO-8859-1', 'UTF-8'),
+                'vencimento' => date('d/m/Y', strtotime($conta->maturity)),
+                'situacao' => mb_convert_encoding($situation, 'ISO-8859-1', 'UTF-8'),
+                'categoria' => mb_convert_encoding($conta->category->name, 'ISO-8859-1', 'UTF-8'),
+                'tipo' => mb_convert_encoding($conta->type, 'ISO-8859-1', 'UTF-8'),
+                'valor' => number_format($conta->value, 2, ',', '.'),
+            ];
+
+            // Escrever o conteúdo no arquivo
+            fputcsv($arquivoAberto, $contaArray, ';');
+        }
+
+
+        // Criar o rodapé do Excel
+        $rodape = ['', '', '', '', number_format($totalValor, 2, ',', '.')];
+
+        // Escrever o conteúdo no arquivo
+        fputcsv($arquivoAberto, $rodape, ';');
+
+        // Fechar o arquivo após a escrita
+        fclose($arquivoAberto);
+
+        // Realizar o download do arquivo
+        return response()->download($csvNomeArquivo, 'relatorio_contas_' . Str::ulid() . '.csv');
     }
 }
