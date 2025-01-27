@@ -3,60 +3,68 @@
 @section('title', 'Profile')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card card shadow-sm">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        Editar Perfil
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    Editar Perfil
 
-                        <a href="{{ route('home') }}" class="btn btn-secondary">Voltar</a>
+                    <a href="{{ route('home') }}" class="btn btn-secondary">Voltar</a>
 
-                    </div>
+                </div>
 
-                    <div class="card-body">
+                <div class="card-body">
 
-                        <x-alert />
+                    <x-alert />
 
-                        <form action="{{ route('profile.update', ['id' => $profile->id]) }}" method="post">
-                            @csrf
-                            @method('PUT')
+                    <form action="{{ route('profile.update', ['id' => $profile->id]) }}" method="post">
+                        @csrf
+                        @method('PUT')
 
-                            <div class="row">
-                                <div class="col-md-6 col-sm-12 mb-3">
-                                    <label for="name" class="form-label">Nome</label>
-                                    <input type="text" class="form-control" id="name" name="name" required
-                                        value="{{ $profile->name }}">
-                                </div>
-
-                                <div class="col-md-6 col-sm-12 mb-3">
-                                    <label for="value" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" required
-                                        value="{{ $profile->email }}">
-                                </div>
-
-                                <div class="col-md-6 col-sm-12 mb-3">
-                                    <label for="password" class="form-label">Senha</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-                                </div>
-
-                                <div class="col-md-6 col-sm-12 mb-3">
-                                    <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
-                                    <input id="password-confirm" type="password" class="form-control"
-                                        name="password_confirmation" autocomplete="new-password">
-                                </div>
-
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-3">
+                                <label for="name" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                    value="{{ $profile->name }}">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Editar</button>
+                            <div class="col-md-6 col-sm-12 mb-3">
+                                <label for="value" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                    value="{{ $profile->email }}">
+                            </div>
 
-                        </form>
+                            <div class="col-md-6 col-sm-12 mb-3">
+                                <label for="password" class="form-label">Senha</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password">
+                                    <span class="input-group-text" onclick="togglePassword('password', this)">
+                                        <i class="fa-regular fa-eye"></i></span>
+                                </div>
+                            </div>
 
-                    </div>
+                            <div class="col-md-6 col-sm-12 mb-3">
+                                <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
+                                <div class="input-group">
+                                    <input id="password-confirm" type="password" class="form-control"
+                                        name="password_confirmation" autocomplete="new-password">
+                                    <span class="input-group-text" onclick="togglePassword('password-confirm', this)">
+                                        <i class="fa-regular fa-eye"></i></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Editar</button>
+
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 
