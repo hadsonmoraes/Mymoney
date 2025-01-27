@@ -30,10 +30,13 @@ class UserRequest extends FormRequest
 
             'name' => ['required', 'string', 'max:255'],
             'email' => [
-                'required', 'string', 'email', 'max:255',
+                'required',
+                'string',
+                'email',
+                'max:255',
                 Rule::unique('users', 'email')->ignore($user)
             ],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['min:8', 'confirmed'],
 
         ];
     }
