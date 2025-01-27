@@ -1,7 +1,7 @@
 
 
 
-function confirmarExclusao(event, contaId) {
+window.confirmarExclusao = function (event, contaId) {
 
     event.preventDefault();
 

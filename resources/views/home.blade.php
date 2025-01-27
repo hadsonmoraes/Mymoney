@@ -170,7 +170,7 @@
                                                     method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger"
+                                                    <button type="button" class="btn btn-danger"
                                                         onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</button>
                                                 </form>
 

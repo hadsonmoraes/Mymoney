@@ -66,7 +66,7 @@
                                                                 method="post">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <a class="dropdown-item" type="submit"
+                                                                <a class="dropdown-item" type="button"
                                                                     onclick="confirmarExclusao(event, {{ $category->id }})">Apagar</a>
                                                             </form>
                                                         </li>
