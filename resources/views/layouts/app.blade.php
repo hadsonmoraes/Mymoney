@@ -23,97 +23,149 @@
 </head>
 
 <body>
-    <div>
-        @if (Auth::user())
-            <nav class="navbar navbar-expand-lg bg-light shadow-sm">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Mymoney') }}
+    @if (Auth::user())
+    <div class="d-flex">
+        <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column">
+            <div class="sidebar-header text-center p-3">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    {{ config('app.name', 'Mymoney') }}
+                </a>
+                <button class="btn btn-outline-light w-100 mt-2" id="toggleSidebar">☰</button>
+            </div>
+            <ul class="nav flex-column p-3 flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                        <span class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="sidebar-label">{{ __('Dashboard') }}</span>
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                        <span class="sidebar-icon"><i class="fa-solid fa-house"></i></span>
+                        <span class="sidebar-label">{{ __('Home') }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('category.index') ? 'active' : '' }}" href="{{ route('category.index') }}">
+                        <span class="sidebar-icon"><i class="fa-solid fa-list"></i></span>
+                        <span class="sidebar-label">{{ __('Categoria') }}</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav flex-column p-3 mt-auto">
+                @guest
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-text" href="{{ route('login') }}">
+                                <span class="sidebar-icon"><i class="fa-solid fa-key"></i></span>
+                                <span class="sidebar-label">{{ __('Login') }}</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-text" href="{{ route('register') }}">
+                                <span class="sidebar-icon"><i class="fa-solid fa-pen-to-square"></i></span>
+                                <span class="sidebar-label">{{ __('Register') }}</span>
+                            </a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <a class="nav-link sidebar-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="sidebar-icon"><i class="fa-solid fa-user"></i></span>
+                            <span class="sidebar-label">{{ strtoupper(Auth::user()->name) }}</span>
+                        </a>
+                        <div class="dropdown-menu shadow">
+                            <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
+                                {{ __('Profile') }}
+                            </a>
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
+            </ul>
+        </nav>
 
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                                    href="{{ route('dashboard') }}">
-                                    {{ __('Dashboard') }}
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
-                                    href="{{ route('home') }}">
-                                    {{ __('Home') }}
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('category.index') ? 'active' : '' }}"
-                                    href="{{ route('category.index') }}">
-                                    {{ __('Categoria') }}
-                                </a>
-                            </li>
-
-                        </ul>
-
-                        <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ms-auto">
-                            <!-- Authentication Links -->
-                            @guest
-                                @if (Route::has('login'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                    </li>
-                                @endif
-
-                                @if (Route::has('register'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                    </li>
-                                @endif
-                            @else
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ strtoupper(Auth::user()->name) }}
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-
-                                        <a class="dropdown-item"
-                                            href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
-                                            {{ __('Profile') }}
-                                        </a>
-
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            @endguest
-                        </ul>
-                    </div>
-                </div>
-            </nav>
         @endif
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <div id="content" >
+            <main>
+                @yield('content')
+            </main>
+        </div>
     </div>
 
+    @if (Auth::user())
+    <style>
+        #sidebar {
+            width: 250px;
+            transition: width 0.3s;
+            overflow: hidden;
+            background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+        }
+        #sidebar.collapsed {
+            width: 80px;
+        }
+
+        @media (max-width: 768px) { /* Ajusta quando a tela for menor que 768px */
+    #sidebar {
+        width: 80px ;
+    }
+
+    #content {
+        margin-left: 80px !important;
+        width: calc(100% - 80px) !important;
+    }
+
+    /* Esconde os textos dentro da sidebar quando responsiva */
+    #sidebar .sidebar-label {
+        display: none;
+    }
+}
+
+
+        #content {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+        transition: margin-left 0.3s, width 0.3s;
+        }
+        #sidebar.collapsed + #content {
+            margin-left: 80px;
+            width: calc(100% - 80px);
+        }
+
+        .sidebar-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+        .sidebar-icon {
+            font-size: 20px;
+        }
+        #sidebar.collapsed .sidebar-label {
+            display: none;
+        }
+
+        .dropdown-menu {
+        position: fixed !important; /* Permite que o dropdown fique fora da sidebar */
+        }
+
+
+    </style>
+
+    <script>
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('content').classList.toggle('collapsed');
+        });
+    </script>
+     @endif
 </body>
 
 </html>
