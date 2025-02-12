@@ -34,19 +34,22 @@
             </div>
             <ul class="nav flex-column p-3 flex-grow-1">
                 <li class="nav-item">
-                    <a class="nav-link sidebar-text {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                        href="{{ route('dashboard') }}">
                         <span class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></span>
                         <span class="sidebar-label">{{ __('Dashboard') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link sidebar-text {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('home') ? 'active' : '' }}"
+                        href="{{ route('home') }}">
                         <span class="sidebar-icon"><i class="fa-solid fa-house"></i></span>
                         <span class="sidebar-label">{{ __('Home') }}</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link sidebar-text {{ request()->routeIs('category.index') ? 'active' : '' }}" href="{{ route('category.index') }}">
+                    <a class="nav-link sidebar-text {{ request()->routeIs('category.index') ? 'active' : '' }}"
+                        href="{{ route('category.index') }}">
                         <span class="sidebar-icon"><i class="fa-solid fa-list"></i></span>
                         <span class="sidebar-label">{{ __('Categoria') }}</span>
                     </a>
@@ -54,46 +57,48 @@
             </ul>
             <ul class="nav flex-column p-3 mt-auto">
                 @guest
-                    @if (Route::has('login'))
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-text" href="{{ route('login') }}">
-                                <span class="sidebar-icon"><i class="fa-solid fa-key"></i></span>
-                                <span class="sidebar-label">{{ __('Login') }}</span>
-                            </a>
-                        </li>
-                    @endif
-                    @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-text" href="{{ route('register') }}">
-                                <span class="sidebar-icon"><i class="fa-solid fa-pen-to-square"></i></span>
-                                <span class="sidebar-label">{{ __('Register') }}</span>
-                            </a>
-                        </li>
-                    @endif
+                @if (Route::has('login'))
+                <li class="nav-item">
+                    <a class="nav-link sidebar-text" href="{{ route('login') }}">
+                        <span class="sidebar-icon"><i class="fa-solid fa-key"></i></span>
+                        <span class="sidebar-label">{{ __('Login') }}</span>
+                    </a>
+                </li>
+                @endif
+                @if (Route::has('register'))
+                <li class="nav-item">
+                    <a class="nav-link sidebar-text" href="{{ route('register') }}">
+                        <span class="sidebar-icon"><i class="fa-solid fa-pen-to-square"></i></span>
+                        <span class="sidebar-label">{{ __('Register') }}</span>
+                    </a>
+                </li>
+                @endif
                 @else
-                    <li class="nav-item dropdown">
-                        <a class="nav-link sidebar-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="sidebar-icon"><i class="fa-solid fa-user"></i></span>
-                            <span class="sidebar-label">{{ strtoupper(Auth::user()->name) }}</span>
+                <li class="nav-item dropdown">
+                    <a class="nav-link sidebar-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <span class="sidebar-icon"><i class="fa-solid fa-user"></i></span>
+                        <span class="sidebar-label">{{ strtoupper(Auth::user()->name) }}</span>
+                    </a>
+                    <div class="dropdown-menu shadow">
+                        <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
+                            {{ __('Profile') }}
                         </a>
-                        <div class="dropdown-menu shadow">
-                            <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
-                                {{ __('Profile') }}
-                            </a>
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                </li>
                 @endguest
             </ul>
         </nav>
 
         @endif
-        <div id="content" >
+        <div id="content">
             <main>
                 @yield('content')
             </main>
@@ -108,33 +113,48 @@
             overflow: hidden;
             background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
         }
+
         #sidebar.collapsed {
             width: 80px;
         }
 
-        @media (max-width: 768px) { /* Ajusta quando a tela for menor que 768px */
-    #sidebar {
-        width: 80px ;
-    }
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+            border-radius: 5px;
+        }
 
-    #content {
-        margin-left: 80px !important;
-        width: calc(100% - 80px) !important;
-    }
+        .nav-link.active:hover {
+            color: #d3d3d3 !important;
+        }
 
-    /* Esconde os textos dentro da sidebar quando responsiva */
-    #sidebar .sidebar-label {
-        display: none;
-    }
-}
+
+        @media (max-width: 768px) {
+
+            /* Ajusta quando a tela for menor que 768px */
+            #sidebar {
+                width: 80px;
+            }
+
+            #content {
+                margin-left: 80px !important;
+                width: calc(100% - 80px) !important;
+            }
+
+            /* Esconde os textos dentro da sidebar quando responsiva */
+            #sidebar .sidebar-label {
+                display: none;
+            }
+        }
 
 
         #content {
-        margin-left: 250px;
-        width: calc(100% - 250px);
-        transition: margin-left 0.3s, width 0.3s;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s, width 0.3s;
         }
-        #sidebar.collapsed + #content {
+
+        #sidebar.collapsed+#content {
             margin-left: 80px;
             width: calc(100% - 80px);
         }
@@ -145,18 +165,26 @@
             gap: 10px;
             color: #fff;
         }
+
+        .sidebar-text:hover {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d3d3d3;
+        }
+
         .sidebar-icon {
             font-size: 20px;
         }
+
         #sidebar.collapsed .sidebar-label {
             display: none;
         }
 
         .dropdown-menu {
-        position: fixed !important; /* Permite que o dropdown fique fora da sidebar */
+            position: fixed !important;
+            /* Permite que o dropdown fique fora da sidebar */
         }
-
-
     </style>
 
     <script>
@@ -165,7 +193,7 @@
             document.getElementById('content').classList.toggle('collapsed');
         });
     </script>
-     @endif
+    @endif
 </body>
 
 </html>
