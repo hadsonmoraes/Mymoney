@@ -28,7 +28,8 @@
         <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column">
             <div class="sidebar-header text-center p-3">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Mymoney') }}
+                    {{-- <img src="{{asset(" ..\logo.png")}}" alt=""> {{ config('app.name', 'Mymoney') }} --}}
+                    <img src="{{asset("logo.png")}}" alt="Mymoney" class="w-100" style="height: 100px" >
                 </a>
                 <button class="btn btn-outline-light w-100 mt-2" id="toggleSidebar">☰</button>
             </div>
