@@ -205,7 +205,13 @@
 
 
                                 @if (count($contas) == 0)
-                                <p class="text-center text-danger fw-bold">Nenhuma conta encontrada! </p>
+                                <tr>
+
+                                <td colspan="8" class="text-center text-danger fw-bold">
+                                    Nenhuma conta encontrada!
+                                </td>
+
+                                </tr>
                                 @endif
 
 

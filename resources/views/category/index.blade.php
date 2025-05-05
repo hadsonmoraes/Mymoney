@@ -76,11 +76,15 @@
                                 </tr>
                                 @endforeach
 
-
                                 @if (count($categories) == 0)
-                                <p class="text-center text-danger fw-bold">Nenhuma categoria encontrada! </p>
-                                @endif
+                                <tr>
 
+                                <td colspan="3" class="text-center text-danger fw-bold">
+                                    Nenhuma categoria encontrada!
+                                </td>
+
+                                </tr>
+                                @endif
 
                             </tbody>
 
