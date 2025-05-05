@@ -9,6 +9,7 @@ use App\Http\Requests\ContaRequest;
 use App\Models\Category;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class HomeController extends Controller
@@ -115,6 +116,7 @@ class HomeController extends Controller
 
             return redirect('home')->with('success', 'Conta criada com sucesso!');
         } catch (Exception $e) {
+            Log::error('Conta não Cadastrada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não Cadastrada');
         }
     }
@@ -141,6 +143,7 @@ class HomeController extends Controller
         try {
             $user_id = auth()->user()->id;
             $data = $request->all();
+            $data['value'] = str_replace(',', '.', str_replace('.', '', $request->value));
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
 
@@ -157,6 +160,7 @@ class HomeController extends Controller
 
             return redirect('home')->with('success', 'Conta atualizada com sucesso!');
         } catch (Exception $e) {
+            Log::error('Conta não atualizada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não atualizada');
         }
     }

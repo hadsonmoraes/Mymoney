@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -36,7 +37,8 @@ class ProfileController extends Controller
                 return redirect()->route('profile.edit', ['id' => $user->id])->with('success', 'Perfil atualizado com sucesso!');
             }
         } catch (Exception $e) {
-            return back()->withInput()->with('error', 'Erro ao atualizar ou criar o perfil: ' . $e->getMessage());
+            Log::error('Erro ao atualizar ou criar o perfil.', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Erro ao atualizar ou criar o perfil');
         }
     }
 }

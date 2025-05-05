@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Exception;
-
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -26,6 +26,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        try {
         $user = auth()->user();
         $category = new Category;
         $category->name = $request->name;
@@ -34,6 +35,11 @@ class CategoryController extends Controller
         $category->save();
 
         return redirect('category')->with('success', 'Categoria criada com sucesso!');
+        } catch (Exception $e) {
+            Log::error('Erro ao criar categoria.', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Erro ao criar categoria');
+        }
+
     }
 
     public function edit($id)
@@ -53,6 +59,7 @@ class CategoryController extends Controller
 
             return redirect('category')->with('success', 'Categoria atualizada com sucesso!');
         } catch (Exception $e) {
+            Log::error('Categoria não atualizada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Categoria não atualizada');
         }
     }
