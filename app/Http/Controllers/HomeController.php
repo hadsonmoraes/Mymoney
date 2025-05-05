@@ -171,6 +171,28 @@ class HomeController extends Controller
         return redirect('home')->with('success', 'Conta apagada!');
     }
 
+    public function changeSituation(Conta $id){
+
+        try {
+            $conta = $id;
+
+            if ($conta->situation === 'paid') {
+                $novaSituacao = 'pending';
+            } elseif ($conta->situation === 'pending') {
+                $novaSituacao = 'canceled';
+            } else {
+                $novaSituacao = 'paid';
+            }
+
+            $conta->update(['situation' => $novaSituacao]);
+            return back()->withInput()->with('success', 'Situacao da conta editada com sucesso!');
+        } catch (Exception $e) {
+            Log::error('Situacao da conta não editada', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Situacao da conta não editada');
+        }
+
+    }
+
     public function dashboard(Request $request)
     {
         $user = auth()->user();

@@ -149,8 +149,12 @@
                                     <td>{{ $conta->name }}</td>
                                     <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
                                     <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
-                                    <td>{!! '<span class="badge text-bg-' . $status . ' ">' . $situation_name . '
-                                        </span>' !!} </td>
+                                    <td>
+                                        <a href="{{ route('situacao.alterar', ['id' => $conta->id]) }}">
+                                        {!! '<span class="badge text-bg-' . $status . ' ">' . $situation_name . '
+                                        </span>' !!}
+                                        </a>
+                                    </td>
                                     <td>{{ $conta->category->name }}</td>
                                     <td style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
                                         @if (ucfirst($conta->type) == 'Entrada')

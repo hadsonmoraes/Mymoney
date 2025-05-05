@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/contas/edit/{id}', [HomeController::class, 'edit'])->name('contas.edit');
     Route::put('/contas/update/{id}', [HomeController::class, 'update'])->name('contas.update');
     Route::delete('/contas/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
+    Route::get('/contas/situacao/alterar/{id}', [HomeController::class, 'changeSituation'])->name('situacao.alterar');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category.index');
