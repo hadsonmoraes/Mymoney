@@ -188,12 +188,28 @@
         }
     </style>
 
-    <script>
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('content').classList.toggle('collapsed');
-        });
-    </script>
+<script>
+    const toggleButton = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+    if (localStorage.getItem("sidebar") === "true") {
+        sidebar.classList.add('collapsed');
+        content.classList.add('collapsed');
+    }
+
+    toggleButton.addEventListener('click', function () {
+        sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+
+        if (localStorage.getItem("sidebar") !== "true") {
+            localStorage.setItem("sidebar", "true");
+        } else {
+            localStorage.removeItem("sidebar");
+        }
+    });
+</script>
+
     @endif
 </body>
 
