@@ -6,14 +6,14 @@
 <div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm collapse" id="filtro">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>Filtro</span>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('home') }}">
                         <div class="row">
-                            <div class="col-md-3 col-sm-12">
+                            <div class="col-md-2 col-sm-12">
                                 <label for="name" class="form-label fw-bold">Nome</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $name }}">
                             </div>
@@ -53,9 +53,9 @@
                             <input type="hidden" name="perPage" id="perPage" value="{{ $perPage }}">
                             @endif
 
-                            <div class="col-md-3 col-sm-12 mt-3 pt-3">
+                            <div class="col-md-2 col-sm-12 mt-3 pt-3">
                                 <button type="submit" class="btn btn-info">Pesquisar</button>
-                                <a href="{{ route('home') }}" class="btn btn-warning">Limpar</a>
+                                <a href="{{ route('home') }}" class="btn btn-warning mt-xl-0 mt-lg-2 mt-md-2 ">Limpar</a>
                             </div>
                         </div>
                     </form>
@@ -92,22 +92,26 @@
                             @endif
                         </form>
                     </div>
+                    <div class="d-flex">
+                        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#filtro">
+                            <i class="fas fa-filter fa-lg text-secondary" title="Filtro"></i>
+                        </button>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <a type="button" href="{{ route('contas.create') }}"
+                                class="btn btn-primary active">Cadastrar</a>
 
-                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                        <a type="button" href="{{ route('contas.create') }}"
-                            class="btn btn-primary active">Cadastrar</a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('gerar-csv?' . request()->getQueryString()) }}"
+                                            class="dropdown-item btn btn-success">Gerar Excel</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ url('gerar-csv?' . request()->getQueryString()) }}"
-                                        class="dropdown-item btn btn-success">Gerar Excel</a>
-                                </li>
-                            </ul>
                         </div>
-
                     </div>
                 </div>
 

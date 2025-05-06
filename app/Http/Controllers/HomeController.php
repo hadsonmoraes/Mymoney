@@ -37,7 +37,7 @@ class HomeController extends Controller
         $dataInicio = $request->filled('data_inicio') ? $request->data_inicio : Carbon::now()->startOfMonth()->format('Y-m-d');
         $dataFim = $request->filled('data_fim') ? $request->data_fim : Carbon::now()->endOfMonth()->format('Y-m-d');
 
-        $perPage = $request->input('perPage', 5);
+        $perPage = $request->input('perPage', 10);
 
         $contasQuery = Conta::where('user_id', $user->id)
             ->when($request->has('name'), function ($whenQuery) use ($request) {
