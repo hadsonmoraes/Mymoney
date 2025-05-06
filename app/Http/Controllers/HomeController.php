@@ -261,7 +261,7 @@ class HomeController extends Controller
 
 
         // Criar o rodapé do Excel
-        $rodape = ['', '', '', '', number_format($totalValor, 2, ',', '.')];
+        $rodape = ['', '', '', '', '', '', number_format($totalValor, 2, ',', '.')];
 
         // Escrever o conteúdo no arquivo
         fputcsv($arquivoAberto, $rodape, ';');
