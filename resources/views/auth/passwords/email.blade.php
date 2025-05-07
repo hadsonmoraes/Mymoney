@@ -3,7 +3,7 @@
 @section('title', 'alterar senha')
 
 @section('content')
-    <div class="container">
+    <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-7">
                 <div class="card shadow-lg border-0 rounded-top-4 rounded-bottom-4">
