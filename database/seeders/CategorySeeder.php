@@ -24,7 +24,7 @@ class CategorySeeder extends Seeder
 
         $categories = [
             'Outros', 'Educação', 'Lazer', 'Saúde', 'Viagem', 'Supermercado', 'Eletrônicos',
-            'Casa', 'Serviços', 'Transporte', 'Vestuário', 'Restaurante'
+            'Casa', 'Serviços', 'Transporte', 'Vestuário', 'Restaurante', 'Investimento', 'Salário'
         ];
 
         foreach ($categories as $category) {
