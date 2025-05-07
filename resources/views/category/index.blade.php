@@ -31,8 +31,8 @@
                             <tbody>
                                 @foreach ($categories as $category)
                                 <tr>
-                                    <th scope="row">{{ $category->id }}</th>
-                                    <td>{{ $category->name }}</td>
+                                    <th class="align-middle" scope="row">{{ $category->id }}</th>
+                                    <td class="align-middle">{{ $category->name }}</td>
                                     <td class="d-none d-md-flex justify-content-center collapse">
                                         <a href="{{ route('category.edit', ['id' => $category->id]) }}"
                                             class="btn btn-warning me-1">Editar</a>
@@ -54,14 +54,11 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item"
-                                                        href="{{ route('contas.show', ['id' => $category->id]) }}">Visualizar</a>
-                                                </li>
-                                                <li><a class="dropdown-item"
-                                                        href="{{ route('contas.edit', ['id' => $category->id]) }}">Editar</a>
+                                                        href="{{ route('category.edit', ['id' => $category->id]) }}">Editar</a>
                                                 </li>
                                                 <li>
                                                     <form id="formExcluir{{ $category->id }}"
-                                                        action="{{ route('contas.destroy', ['id' => $category->id]) }}"
+                                                        action="{{ route('category.destroy', ['id' => $category->id]) }}"
                                                         method="post">
                                                         @csrf
                                                         @method('DELETE')

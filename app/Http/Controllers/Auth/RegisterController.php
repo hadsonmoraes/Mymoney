@@ -70,7 +70,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $defaultCategories = ['Outros', 'Internet', 'Energia', 'Água', 'Lazer', 'Saúde', 'Viagem', 'Supermercado', 'Eletrônicos', 'Casa', 'Serviços', 'Transporte', 'Vestuário', 'Restaurante'];
+        $defaultCategories = ['Outros', 'Internet', 'Energia', 'Água', 'Lazer', 'Saúde', 'Viagem', 'Supermercado', 'Eletrônicos', 'Casa', 'Serviços', 'Transporte', 'Vestuário', 'Restaurante', 'Investimento', 'Salário'];
         foreach ($defaultCategories as $categoryName) {
             Category::create([
                 'name' => $categoryName,

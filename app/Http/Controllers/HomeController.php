@@ -144,6 +144,9 @@ class HomeController extends Controller
             $user_id = auth()->user()->id;
             $data = $request->all();
             $data['value'] = str_replace(',', '.', str_replace('.', '', $request->value));
+            if ($data['value'] <= 0 || $data['value'] === "") {
+                return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
+            }
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
 
@@ -185,10 +188,10 @@ class HomeController extends Controller
             }
 
             $conta->update(['situation' => $novaSituacao]);
-            return back()->withInput()->with('success', 'Situacao da conta editada com sucesso!');
+            return back()->withInput()->with('success', 'Situaçao da conta editada com sucesso!');
         } catch (Exception $e) {
-            Log::error('Situacao da conta não editada', ['mensagem' => $e->getMessage()]);
-            return back()->withInput()->with('error', 'Situacao da conta não editada');
+            Log::error('Situaçao da conta não editada', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Situaçao da conta não editada');
         }
 
     }

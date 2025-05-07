@@ -22,24 +22,24 @@
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12 mb-3">
-                                <label for="name" class="form-label">Nome</label>
+                                <label for="name" class="form-label">Nome<span class="text-danger ">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="value" class="form-label">Valor</label>
+                                <label for="value" class="form-label">Valor<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="value" name="value"
                                     value="{{ old('value') }}">
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="maturity" class="form-label">Vencimento</label>
+                                <label for="maturity" class="form-label">Vencimento<span class="text-danger">*</span></label>
                                 <input type="date" class="form-control" id="maturity" name="maturity"
                                     value="{{ old('maturity') }}">
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="type" class="form-label">Tipo</label>
+                                <label for="type" class="form-label">Tipo<span class="text-danger">*</span></label>
                                 <select class="form-select" id="type" name="type">
                                     <option value="" selected disabled>selecione</option>
                                     <option value="entrada" {{ old('type')=='entrada' ? 'selected' : '' }}>Entrada
@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="situation" class="form-label">Situação</label>
+                                <label for="situation" class="form-label">Situação<span class="text-danger">*</span></label>
                                 <select class="form-select" id="situation" name="situation">
                                     <option value="" selected disabled>selecione</option>
                                     <option value="paid" {{ old('situation')=='paid' ? 'selected' : '' }}>Pago
@@ -63,7 +63,7 @@
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="category_id" class="form-label">Categoria</label>
+                                <label for="category_id" class="form-label">Categoria<span class="text-danger">*</span></label>
                                 <select name="category_id" id="category_id" class="form-select select2">
                                     <option value="" selected disabled>Selecione</option>
                                     @forelse ($categorys as $category)
