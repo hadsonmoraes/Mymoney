@@ -54,14 +54,11 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item"
-                                                        href="{{ route('contas.show', ['id' => $category->id]) }}">Visualizar</a>
-                                                </li>
-                                                <li><a class="dropdown-item"
-                                                        href="{{ route('contas.edit', ['id' => $category->id]) }}">Editar</a>
+                                                        href="{{ route('category.edit', ['id' => $category->id]) }}">Editar</a>
                                                 </li>
                                                 <li>
                                                     <form id="formExcluir{{ $category->id }}"
-                                                        action="{{ route('contas.destroy', ['id' => $category->id]) }}"
+                                                        action="{{ route('category.destroy', ['id' => $category->id]) }}"
                                                         method="post">
                                                         @csrf
                                                         @method('DELETE')
