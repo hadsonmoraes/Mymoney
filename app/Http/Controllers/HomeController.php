@@ -54,7 +54,7 @@ class HomeController extends Controller
             ->orderByDesc('created_at');
 
         $contas = $contasQuery->paginate($perPage)->withQueryString();
-
+        session(['filtros_contas' => request()->query()]);
 
         return view('home', [
             'contas' => $contas,
@@ -114,7 +114,7 @@ class HomeController extends Controller
 
             $contas->save();
 
-            return redirect('home')->with('success', 'Conta criada com sucesso!');
+            return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta criada com sucesso!');
         } catch (Exception $e) {
             Log::error('Conta não Cadastrada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não Cadastrada');
@@ -161,7 +161,8 @@ class HomeController extends Controller
             $id = $request->id;
             Conta::findOrFail($id)->update($data);
 
-            return redirect('home')->with('success', 'Conta atualizada com sucesso!');
+            return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta atualizada com sucesso!');
+
         } catch (Exception $e) {
             Log::error('Conta não atualizada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não atualizada');
@@ -171,7 +172,7 @@ class HomeController extends Controller
     public function destroy($id)
     {
         Conta::findOrFail($id)->delete();
-        return redirect('home')->with('success', 'Conta apagada!');
+        return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta apagada!');
     }
 
     public function changeSituation(Conta $id){

@@ -10,7 +10,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     Editar conta
 
-                    <a href="{{ route('home') }}" class="btn btn-secondary">Voltar</a>
+                    <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-secondary">Voltar</a>
 
                 </div>
 
