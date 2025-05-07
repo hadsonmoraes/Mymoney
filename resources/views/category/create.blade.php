@@ -22,7 +22,7 @@
 
                         <div class="row">
                             <div class="col-md-8 col-sm-12 mb-3">
-                                <label for="name" class="form-label">Nome</label>
+                                <label for="name" class="form-label">Nome<span class="text-danger ">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                             </div>
 

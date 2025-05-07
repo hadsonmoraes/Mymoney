@@ -25,7 +25,9 @@ class ContaRequest extends FormRequest
             'name' => 'required',
             'value' => 'required',
             'maturity' => 'required',
+            'type' => 'required',
             'situation' => 'required',
+            'category_id' => 'required',
         ];
     }
 
@@ -34,8 +36,10 @@ class ContaRequest extends FormRequest
         return [
             'name.required' => 'Campo nome é obrigatório!',
             'value.required' => 'Campo valor é obrigatório!',
+            'type.required' => 'Campo tipo é obrigatório!',
             'maturity.required' => 'Campo vencimento é obrigatório!',
-            'situation.required' => 'Campo situação  é obrigatório!',
+            'situation.required' => 'Campo situação é obrigatório!',
+            'category_id.required' => 'Campo categoria é obrigatório!',
         ];
     }
 }
