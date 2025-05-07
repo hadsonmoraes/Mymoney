@@ -6,7 +6,7 @@
 <div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card shadow-sm collapse" id="filtro">
+            <div class="card shadow-sm collapse mb-3" id="filtro">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>Filtro</span>
                 </div>
@@ -63,7 +63,7 @@
             </div>
 
 
-            <div class="card mt-3 shadow-sm">
+            <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <span class="me-2">Lista de contas</span>
