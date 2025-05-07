@@ -31,8 +31,8 @@
                             <tbody>
                                 @foreach ($categories as $category)
                                 <tr>
-                                    <th scope="row">{{ $category->id }}</th>
-                                    <td>{{ $category->name }}</td>
+                                    <th class="align-middle" scope="row">{{ $category->id }}</th>
+                                    <td class="align-middle">{{ $category->name }}</td>
                                     <td class="d-none d-md-flex justify-content-center collapse">
                                         <a href="{{ route('category.edit', ['id' => $category->id]) }}"
                                             class="btn btn-warning me-1">Editar</a>

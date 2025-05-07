@@ -53,8 +53,8 @@
                             <input type="hidden" name="perPage" id="perPage" value="{{ $perPage }}">
                             @endif
 
-                            <div class="col-md-2 col-sm-12 mt-3 pt-3">
-                                <button type="submit" class="btn btn-info">Pesquisar</button>
+                            <div class="d-flex col-md-2 col-sm-12 mt-3 pt-3">
+                                <button type="submit" class="btn btn-info me-1">Buscar</button>
                                 <a href="{{ route('home') }}" class="btn btn-warning mt-xl-0 mt-lg-2 mt-md-2 ">Limpar</a>
                             </div>
                         </div>
@@ -149,18 +149,18 @@
 
                                 @endphp
                                 <tr>
-                                    <th scope="row">{{ $conta->id }}</th>
-                                    <td>{{ $conta->name }}</td>
-                                    <td>{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
-                                    <td>{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
-                                    <td>
+                                    <th class="align-middle">{{ $conta->id }}</th>
+                                    <td class="align-middle">{{ $conta->name }}</td>
+                                    <td class="align-middle">{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
+                                    <td class="align-middle">{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
+                                    <td class="align-middle">
                                         <a href="{{ route('situacao.alterar', ['id' => $conta->id]) }}">
                                         {!! '<span class="badge text-bg-' . $status . ' ">' . $situation_name . '
                                         </span>' !!}
                                         </a>
                                     </td>
-                                    <td>{{ $conta->category->name }}</td>
-                                    <td style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
+                                    <td  class="align-middle">{{ $conta->category->name }}</td>
+                                    <td  class="align-middle" style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
                                         @if (ucfirst($conta->type) == 'Entrada')
                                         <i class="fas fa-arrow-up"></i> Entrada
                                         @else
