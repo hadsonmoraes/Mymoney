@@ -81,6 +81,13 @@
                                 <input class="form-control" type="file" id="image" name="image">
                             </div>
 
+                             <div class="col-md-3 col-sm-12 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="fixed" value="{{ true }}">
+                                    <label class="form-check-label" for="switchCheckDefault">Despesa/Receita fixa</label>
+                                </div>
+                             </div>
+
                             <div class="col-md-12 col-sm-12 mb-3">
                                 <label for="note" class="form-label">Nota</label>
                                 <textarea name="note" id="note" class="form-control"
