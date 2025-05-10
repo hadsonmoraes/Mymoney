@@ -3,6 +3,20 @@
 @section('title', 'Cadastrar')
 
 @section('content')
+
+<style>
+.select2-container--bootstrap-5 .select2-selection {
+    font-size: 0.9rem;
+}
+.select2-container--bootstrap-5 .select2-results__option {
+    font-size: 0.9rem;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
+      font-size: 0.9rem;
+}
+</style>
+
 <div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -83,7 +97,7 @@
 
                              <div class="col-md-3 col-sm-12 mb-3">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="fixed" value="{{ true }}">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="fixed" value="{{ true }}" {{ old('fixed') ? 'checked' : ''}}>
                                     <label class="form-check-label" for="switchCheckDefault">Despesa/Receita fixa</label>
                                 </div>
                              </div>

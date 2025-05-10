@@ -148,6 +148,7 @@ class HomeController extends Controller
             if ($data['value'] <= 0 || $data['value'] === "") {
                 return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
             }
+             $data['fixed'] = $request->fixed ?? false;
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
 
