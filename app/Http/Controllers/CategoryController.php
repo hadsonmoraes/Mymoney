@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Exception;
@@ -24,8 +25,11 @@ class CategoryController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
+
+        $request->validated();
+
         try {
         $user = auth()->user();
         $category = new Category;
