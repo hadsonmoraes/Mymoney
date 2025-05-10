@@ -143,7 +143,7 @@ class HomeController extends Controller
     {
         try {
             $user_id = auth()->user()->id;
-            $data = $request->all();
+            $data = $request->validated();
             $data['value'] = str_replace(',', '.', str_replace('.', '', $request->value));
             if ($data['value'] <= 0 || $data['value'] === "") {
                 return back()->withInput()->with('error', 'O valor precisa ser maior que zero');

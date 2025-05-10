@@ -52,12 +52,11 @@ class CategoryController extends Controller
         return view('category.edit', ['categorys' => $categorys]);
     }
 
-    public function update(Request $request)
+    public function update(CategoryRequest $request)
     {
 
         try {
-            $data = $request->all();
-
+            $data = $request->validated();
             $id = $request->id;
             Category::findOrFail($id)->update($data);
 
