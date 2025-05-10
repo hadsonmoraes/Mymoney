@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Conta;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -26,6 +31,54 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+
+
+    protected function authenticated(Request $request, $user)
+    {
+        try{
+                $dataAtual = Carbon::now();
+
+                    $fixas = Conta::where('fixed', true)
+                    ->whereDate('maturity', '<', $dataAtual->startOfMonth())
+                    ->get();
+
+                    foreach ($fixas as $fixa) {
+
+                    $jaExiste = Conta::where('fixed', true)
+                        ->where('name', $fixa->name)
+                        ->where('value', $fixa->value)
+                        ->where('situation', $fixa->situation)
+                        ->where('user_id', $user->id)
+                        ->where('category_id', $fixa->category_id)
+                        ->where('type', $fixa->type)
+                        ->where('note', $fixa->note)
+                        ->whereYear('maturity', $dataAtual->year)
+                        ->whereMonth('maturity', $dataAtual->month)
+                        ->exists();
+
+                    if (!$jaExiste) {
+
+                        $dia = Carbon::parse($fixa->maturity)->day;
+                        Conta::create([
+                            'name' => $fixa->name,
+                            'value' => $fixa->value,
+                            'maturity' => now()->copy()->setDay($dia),
+                            'situation' => $fixa->situation,
+                            'user_id' => $user->id,
+                            'note' => $fixa->note,
+                            'category_id' => $fixa->category_id,
+                            'type' => $fixa->type,
+                            'fixed' => true,
+                        ]);
+
+                    }
+                }
+            }catch (Exception $e) {
+                Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
+                return back()->withInput()->with('error', 'Conta não atualizada');
+            }
+    }
+
 
     /**
      * Create a new controller instance.

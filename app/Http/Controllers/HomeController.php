@@ -91,6 +91,7 @@ class HomeController extends Controller
             $contas->situation = $request->situation;
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
+            $contas->fixed = $request->fixed ?? false;
             $contas->note = $request->note;
 
             if ($contas->value <= 0 || $contas->value === "") {
@@ -147,6 +148,7 @@ class HomeController extends Controller
             if ($data['value'] <= 0 || $data['value'] === "") {
                 return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
             }
+             $data['fixed'] = $request->fixed ?? false;
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
 

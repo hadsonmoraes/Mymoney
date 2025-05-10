@@ -20,6 +20,12 @@ class Conta extends Model
         'type',
         'note',
         'image',
+        'user_id',
+        'fixed',
+    ];
+
+    protected $casts = [
+    'fixed' => 'boolean',
     ];
 
     public function user()
