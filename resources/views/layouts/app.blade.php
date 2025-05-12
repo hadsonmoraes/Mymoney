@@ -22,7 +22,7 @@
     @vite(['resources/css/app.css','resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="theme-light">
     @if (Auth::user())
     <div class="d-flex">
         <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column">
@@ -75,6 +75,12 @@
                 </li>
                 @endif
                 @else
+                <li class="nav-item">
+                    <button class="nav-link sidebar-text" onclick="toggleTheme()">
+                        <span class="sidebar-icon"><i class="fa-solid " id="themeIcon"></i></span>
+                        <span class="sidebar-label cursor-pointer" id="themeText"></span>
+                    </button>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link sidebar-text dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -186,29 +192,26 @@
             position: fixed !important;
             /* Permite que o dropdown fique fora da sidebar */
         }
-    </style>
 
-<script>
-    const toggleButton = document.getElementById('toggleSidebar');
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
 
-    if (localStorage.getItem("sidebar") === "true") {
-        sidebar.classList.add('collapsed');
-        content.classList.add('collapsed');
-    }
-
-    toggleButton.addEventListener('click', function () {
-        sidebar.classList.toggle('collapsed');
-        content.classList.toggle('collapsed');
-
-        if (localStorage.getItem("sidebar") !== "true") {
-            localStorage.setItem("sidebar", "true");
-        } else {
-            localStorage.removeItem("sidebar");
+        /* Estilos padrão (claro) */
+        .theme-light {
+        background-color: #fff;
+        color: #222;
         }
-    });
-</script>
+
+        /* Estilos do modo escuro */
+        .theme-dark {
+        background-color: #222;
+        color: #fff;
+        }
+
+        .theme-dark #sidebar {
+        background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%) !important;
+        background-size: cover;
+        }
+
+    </style>
 
     @endif
 </body>
