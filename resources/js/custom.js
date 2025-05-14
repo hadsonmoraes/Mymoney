@@ -1,5 +1,34 @@
 
 
+    const toggleButton = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+    toggleButton.addEventListener('click', function (e) {
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+
+        const sidebarOpen = !isCollapsed;
+
+        fetch('/user/sidebar-toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({
+                sidebar_open: sidebarOpen
+            })
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erro ao salvar o estado do sidebar');
+            }
+        }).catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+    });
+
+
 
 window.confirmarExclusao = function (event, contaId) {
 
@@ -9,7 +38,7 @@ window.confirmarExclusao = function (event, contaId) {
         title: 'Tem certeza?',
         text: 'Você não poderá reverter isso!',
         icon: 'warning',
-        theme: 'dark',
+        theme: localStorage.getItem('theme'),
         showCancelButton: true,
         cancelButtonColor: '#0d6efd',
         cancelButtonText: 'Cancelar',
@@ -62,26 +91,6 @@ $(function () {
         theme: 'bootstrap-5'
     });
 });
-
-    const toggleButton = document.getElementById('toggleSidebar');
-    const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
-
-    if (localStorage.getItem("sidebar") === "true") {
-        sidebar.classList.add('collapsed');
-        content.classList.add('collapsed');
-    }
-
-    toggleButton.addEventListener('click', function () {
-        sidebar.classList.toggle('collapsed');
-        content.classList.toggle('collapsed');
-
-        if (localStorage.getItem("sidebar") !== "true") {
-            localStorage.setItem("sidebar", "true");
-        } else {
-            localStorage.removeItem("sidebar");
-        }
-    });
 
         window.toggleTheme = function () {
         const currentTheme = localStorage.getItem('theme') || 'light';

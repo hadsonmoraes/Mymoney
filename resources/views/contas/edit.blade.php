@@ -4,19 +4,6 @@
 
 @section('content')
 
-<style>
-.select2-container--bootstrap-5 .select2-selection {
-    font-size: 0.9rem;
-}
-.select2-container--bootstrap-5 .select2-results__option {
-    font-size: 0.9rem;
-}
-
-.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
-      font-size: 0.9rem;
-}
-</style>
-
 <div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-md-12">

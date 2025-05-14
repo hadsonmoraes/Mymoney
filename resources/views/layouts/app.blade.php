@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css','resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body class="theme-light">
     @if (Auth::user())
     <div class="d-flex">
-        <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column">
+        <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column {{ auth()->check() && auth()->user()->sidebar === 0 ? 'collapsed' : '' }}">
             <div class="sidebar-header text-center p-3">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- <img src="{{asset(" ..\logo.png")}}" alt=""> {{ config('app.name', 'Mymoney') }} --}}
@@ -52,7 +52,7 @@
                     <a class="nav-link sidebar-text {{ request()->routeIs('category.index') ? 'active' : '' }}"
                         href="{{ route('category.index') }}">
                         <span class="sidebar-icon"><i class="fa-solid fa-list"></i></span>
-                        <span class="sidebar-label">{{ __('Categoria') }}</span>
+                        <span class="sidebar-label">{{ 'Categoria' }}</span>
                     </a>
                 </li>
             </ul>
@@ -112,108 +112,7 @@
         </div>
     </div>
 
-    @if (Auth::user())
-    <style>
-        #sidebar {
-            width: 250px;
-            transition: width 0.3s;
-            overflow: hidden;
-            background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-        }
-
-        #sidebar.collapsed {
-            width: 80px;
-        }
-
-        .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff !important;
-            border-radius: 5px;
-        }
-
-        .nav-link.active:hover {
-            color: #d3d3d3 !important;
-        }
-
-
-        @media (max-width: 768px) {
-
-            /* Ajusta quando a tela for menor que 768px */
-            #sidebar {
-                width: 80px;
-            }
-
-            #content {
-                margin-left: 80px !important;
-                width: calc(100% - 80px) !important;
-            }
-
-            /* Esconde os textos dentro da sidebar quando responsiva */
-            #sidebar .sidebar-label {
-                display: none;
-            }
-        }
-
-
-        #content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            transition: margin-left 0.3s, width 0.3s;
-        }
-
-        #sidebar.collapsed+#content {
-            margin-left: 80px;
-            width: calc(100% - 80px);
-        }
-
-        .sidebar-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-        }
-
-        .sidebar-text:hover {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #d3d3d3;
-        }
-
-        .sidebar-icon {
-            font-size: 20px;
-        }
-
-        #sidebar.collapsed .sidebar-label {
-            display: none;
-        }
-
-        .dropdown-menu {
-            position: fixed !important;
-            /* Permite que o dropdown fique fora da sidebar */
-        }
-
-
-        /* Estilos padrão (claro) */
-        .theme-light {
-        background-color: #fff;
-        color: #222;
-        }
-
-        /* Estilos do modo escuro */
-        .theme-dark {
-        background-color: #222;
-        color: #fff;
-        }
-
-        .theme-dark #sidebar {
-        background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%) !important;
-        background-size: cover;
-        }
-
-    </style>
-
-    @endif
 </body>
 
 </html>
+

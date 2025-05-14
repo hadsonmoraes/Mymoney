@@ -80,12 +80,12 @@ if ($contas->situation == 'paid') {
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="image" class="form-label">Comprovante:</label>
                                 @if (!empty($contas->image))
-                                <a class="form-control text-decoration-none" style="background-color:#e9ecef"
+                                <a class="form-control text-decoration-none" style="background-color:var(--bs-secondary-bg);"
                                     href="{{ url('img/comprovantes' . Auth::user()->id . '/' . $contas->image) }}"
-                                    target="_blank">Visualizar</a>
+                                    target="_blank">Visualizar <i class="fas fa-download"></i></a>
                                 @else
                                 <a class="form-control text-decoration-none disabled"
-                                    style="background-color:#e9ecef">Sem
+                                    style="background-color:var(--bs-secondary-bg);">Sem
                                     Comprovante</a>
                                 @endif
                             </div>
