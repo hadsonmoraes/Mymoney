@@ -4,7 +4,7 @@
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
 
-    toggleButton.addEventListener('click', function (e) {
+    toggleButton.addEventListener('click', function () {
         const isCollapsed = sidebar.classList.toggle('collapsed');
         content.classList.toggle('collapsed');
 
@@ -27,7 +27,6 @@
             console.error('Erro na requisição:', error);
         });
     });
-
 
 
 window.confirmarExclusao = function (event, contaId) {
@@ -92,19 +91,36 @@ $(function () {
     });
 });
 
-        window.toggleTheme = function () {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.getElementById('toggleTheme').addEventListener('click', () => {
+    const current = document.body.classList.contains('theme-dark') ? 'theme-dark' : 'theme-light';
+    const next = current === 'theme-dark' ? 'theme-light' : 'theme-dark';
 
-        document.body.className = 'theme-' + newTheme;
-        localStorage.setItem('theme', newTheme);
+    document.body.classList.remove(current);
+    document.body.classList.add(next);
 
-        updateThemeIcon(newTheme);
-    }
+        fetch('/user/dark-mode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ theme: next })
+
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erro ao salvar o tema');
+            }
+        }).catch(error => {
+            console.error('Erro ao salvar tema:', error);
+        });
+
+        updateThemeIcon(next);
+});
 
     function applySavedTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.className = 'theme-' + savedTheme;
+        const savedTheme = document.body.dataset.theme || 'theme-light';
+            document.body.classList.remove('theme-light', 'theme-dark');
+            document.body.classList.add(savedTheme);
         updateThemeIcon(savedTheme);
     }
 
@@ -113,16 +129,16 @@ $(function () {
         const text = document.getElementById('themeText');
         if (!icon) return;
 
-        if (theme === 'dark') {
+        if (theme === 'theme-dark') {
             icon.classList.remove('fa-sun');
             icon.classList.add('fa-moon');
             text.innerText = ' Modo Escuro';
-             document.documentElement.setAttribute('data-bs-theme', theme)
+             document.body.setAttribute('data-bs-theme', 'dark')
         } else {
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
             text.innerText = ' Modo Claro';
-             document.documentElement.setAttribute('data-bs-theme', theme)
+             document.body.setAttribute('data-bs-theme', 'light')
         }
     }
 

@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
 
 <head>
     <meta charset="utf-8">
@@ -22,7 +23,12 @@
     @vite(['resources/css/app.css', 'resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body class="theme-light">
+@php
+    $theme = Auth::user()->darkmode ?? 'theme-light';
+        $bsTheme = $theme === 'theme-dark' ? 'dark' : 'light';
+@endphp
+
+<body class="{{ $theme }}" data-theme="{{ $theme }}" data-bs-theme="{{ $bsTheme }}">
     @if (Auth::user())
     <div class="d-flex">
         <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column {{ auth()->check() && auth()->user()->sidebar === 0 ? 'collapsed' : '' }}">
@@ -76,7 +82,7 @@
                 @endif
                 @else
                 <li class="nav-item">
-                    <button class="nav-link sidebar-text" onclick="toggleTheme()">
+                    <button class="nav-link sidebar-text" id="toggleTheme">
                         <span class="sidebar-icon"><i class="fa-solid " id="themeIcon"></i></span>
                         <span class="sidebar-label cursor-pointer" id="themeText"></span>
                     </button>

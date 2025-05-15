@@ -54,4 +54,17 @@ class ProfileController extends Controller
 
     return response()->json(['success' => true]);
     }
+
+    public function darkMode(Request $request){
+
+   $request->validate([
+        'theme' => 'required|in:theme-light,theme-dark',
+    ]);
+
+    $user = auth()->user();
+    $user->darkmode = $request->theme;
+    $user->save();
+
+    return response()->json(['success' => true]);
+    }
 }

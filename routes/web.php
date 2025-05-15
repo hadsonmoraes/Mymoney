@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/contas/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
     Route::get('/contas/situacao/alterar/{id}', [HomeController::class, 'changeSituation'])->name('situacao.alterar');
     Route::post('/user/sidebar-toggle', [profileController::class, 'toggleSidebar'])->name('usuario.sidebar.toggle');
+    Route::post('/user/dark-mode', [profileController::class, 'darkMode'])->name('usuario.darkmode');
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
