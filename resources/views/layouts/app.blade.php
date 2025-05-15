@@ -111,11 +111,14 @@
         </nav>
 
         @endif
-        <div id="content">
+
+
+        <div @auth id="content" @endauth>
             <main>
                 @yield('content')
             </main>
         </div>
+
     </div>
 
 </body>
