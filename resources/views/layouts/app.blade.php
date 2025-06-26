@@ -119,8 +119,11 @@
             </main>
         </div>
 
-    </div>
 
+    </div>
+        <footer class="fixed-bottom d-flex justify-content-center">
+        <p> &copy; {{ date('Y') }} - Hadson Moraes</p>
+        </footer>
 </body>
 
 </html>
