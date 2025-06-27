@@ -4,19 +4,6 @@
 
 @section('content')
 
-<style>
-.select2-container--bootstrap-5 .select2-selection {
-    font-size: 0.9rem;
-}
-.select2-container--bootstrap-5 .select2-results__option {
-    font-size: 0.9rem;
-}
-
-.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
-      font-size: 0.9rem;
-}
-</style>
-
 <div class="container-fluid p-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -104,8 +91,9 @@
 
                             <div class="col-md-12 col-sm-12 mb-3">
                                 <label for="note" class="form-label">Nota</label>
-                                <textarea name="note" id="note" class="form-control"
-                                    rows="5">{{ old('note') }}</textarea>
+                                <textarea name="note" id="summernote" class="form-control">
+                                    {{ old('note') }}
+                                </textarea>
                             </div>
 
                         </div>

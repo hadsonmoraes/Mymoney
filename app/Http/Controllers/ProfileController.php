@@ -41,4 +41,30 @@ class ProfileController extends Controller
             return back()->withInput()->with('error', 'Erro ao atualizar ou criar o perfil');
         }
     }
+
+    public function toggleSidebar(Request $request){
+
+   $request->validate([
+        'sidebar_open' => 'required|boolean',
+    ]);
+
+    $user = auth()->user();
+    $user->sidebar = $request->sidebar_open;
+    $user->save();
+
+    return response()->json(['success' => true]);
+    }
+
+    public function darkMode(Request $request){
+
+   $request->validate([
+        'theme' => 'required|in:theme-light,theme-dark',
+    ]);
+
+    $user = auth()->user();
+    $user->darkmode = $request->theme;
+    $user->save();
+
+    return response()->json(['success' => true]);
+    }
 }

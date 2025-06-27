@@ -1,0 +1,140 @@
+      /* menu lateral */
+
+      #sidebar {
+            width: 250px;
+            transition: width 0.3s;
+            overflow: hidden;
+            background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+        }
+
+        #sidebar.collapsed {
+            width: 80px;
+
+        }
+
+       .nav-link{
+          display: flex !important;
+          align-items: center !important;
+         color: #fff !important;
+        }
+
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+            border-radius: 5px;
+        }
+
+        .nav-link.active:hover {
+            color: #d3d3d3 !important;
+        }
+
+
+        @media (max-width: 768px) {
+
+            /* Ajusta quando a tela for menor que 768px */
+            #sidebar {
+                width: 80px;
+            }
+
+            #content {
+                margin-left: 80px !important;
+                width: calc(100% - 80px) !important;
+            }
+
+            /* Esconde os textos dentro da sidebar quando responsiva */
+            #sidebar .sidebar-label {
+                display: none;
+            }
+        }
+
+
+        #content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s, width 0.3s;
+        }
+
+        #sidebar.collapsed+#content {
+            margin-left: 80px;
+            width: calc(100% - 80px);
+        }
+
+        .sidebar-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .sidebar-text:hover {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d3d3d3;
+        }
+
+        .sidebar-icon {
+            font-size: 20px;
+        }
+
+        #sidebar.collapsed .sidebar-label {
+            display: none;
+        }
+
+        .dropdown-menu {
+            position: fixed !important;
+            /* Permite que o dropdown fique fora da sidebar */
+        }
+
+
+        /* Estilos padrão (claro) */
+        .theme-light {
+        background-color: #fff;
+        color: #222;
+        }
+
+        /* Estilos do modo escuro */
+        .theme-dark {
+        background-color: #222;
+        color: #fff;
+        }
+
+        .theme-dark #sidebar {
+        background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%) !important;
+        background-size: cover;
+        }
+
+
+
+    /* select2 modo dark */
+    .select2-container--bootstrap-5 .select2-selection {
+        font-size: 0.9rem;
+    }
+    .select2-container--bootstrap-5 .select2-results__option {
+        font-size: 0.9rem;
+    }
+
+    .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option {
+        font-size: 0.9rem;
+    }
+
+    body.theme-dark .select2-container--bootstrap-5 .select2-selection,
+    body.theme-dark .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
+    body.theme-dark .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
+    body.theme-dark .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered .select2-selection__placeholder,
+    body.theme-dark .select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field,
+    body.theme-dark .select2-container--bootstrap-5 .select2-dropdown,
+    body.theme-dark .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option[role=group] .select2-results__group {
+    background-color: #212529;
+    color: #f8f9fa;
+    border-color: #495057;
+    }
+
+    body.theme-dark .select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--highlighted{
+        background-color: #343a40;
+        color: #f8f9fa;
+    }
+
+    body.theme-dark .select2-container--bootstrap-5 .select2-selection--single {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23dee2e6' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    }

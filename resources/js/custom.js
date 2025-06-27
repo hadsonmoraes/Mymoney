@@ -1,5 +1,33 @@
 
 
+    const toggleButton = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+    toggleButton.addEventListener('click', function () {
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+
+        const sidebarOpen = !isCollapsed;
+
+        fetch('/user/sidebar-toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({
+                sidebar_open: sidebarOpen
+            })
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erro ao salvar o estado do sidebar');
+            }
+        }).catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+    });
+
 
 window.confirmarExclusao = function (event, contaId) {
 
@@ -9,6 +37,7 @@ window.confirmarExclusao = function (event, contaId) {
         title: 'Tem certeza?',
         text: 'Você não poderá reverter isso!',
         icon: 'warning',
+        theme: localStorage.getItem('theme'),
         showCancelButton: true,
         cancelButtonColor: '#0d6efd',
         cancelButtonText: 'Cancelar',
@@ -61,3 +90,56 @@ $(function () {
         theme: 'bootstrap-5'
     });
 });
+
+    document.getElementById('toggleTheme').addEventListener('click', () => {
+    const current = document.body.classList.contains('theme-dark') ? 'theme-dark' : 'theme-light';
+    const next = current === 'theme-dark' ? 'theme-light' : 'theme-dark';
+
+    document.body.classList.remove(current);
+    document.body.classList.add(next);
+
+        fetch('/user/dark-mode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ theme: next })
+
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Erro ao salvar o tema');
+            }
+        }).catch(error => {
+            console.error('Erro ao salvar tema:', error);
+        });
+
+        updateThemeIcon(next);
+});
+
+    function applySavedTheme() {
+        const savedTheme = document.body.dataset.theme || 'theme-light';
+            document.body.classList.remove('theme-light', 'theme-dark');
+            document.body.classList.add(savedTheme);
+        updateThemeIcon(savedTheme);
+    }
+
+    function updateThemeIcon(theme) {
+        const icon = document.getElementById('themeIcon');
+        const text = document.getElementById('themeText');
+        if (!icon) return;
+
+        if (theme === 'theme-dark') {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+            text.innerText = ' Modo Escuro';
+             document.body.setAttribute('data-bs-theme', 'dark')
+        } else {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+            text.innerText = ' Modo Claro';
+             document.body.setAttribute('data-bs-theme', 'light')
+        }
+    }
+
+    applySavedTheme();
