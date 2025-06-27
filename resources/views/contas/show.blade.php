@@ -104,8 +104,7 @@ if ($contas->situation == 'paid') {
 
                             <div class="col-md-12 col-sm-12 mb-3">
                                 <label for="note" class="form-label">Nota</label>
-                                <textarea name="note" id="note" class="form-control" rows="5"
-                                    disabled>{{ $contas->note }}</textarea>
+                                {!! $contas->note !!}
                             </div>
 
 
@@ -117,7 +116,6 @@ if ($contas->situation == 'paid') {
         </div>
     </div>
 </div>
-
 
 
 @endsection
