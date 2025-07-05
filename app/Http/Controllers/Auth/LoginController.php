@@ -40,7 +40,7 @@ class LoginController extends Controller
 
                     $fixas = Conta::where('fixed', true)
                     ->whereDate('maturity', '<', $dataAtual->startOfMonth())
-                    ->get();
+                    ->withoutTrashed()->get();
 
                     foreach ($fixas as $fixa) {
 
