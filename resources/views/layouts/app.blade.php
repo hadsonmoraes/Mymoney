@@ -30,7 +30,7 @@
 
 <body class="{{ $theme }}" data-theme="{{ $theme }}" data-bs-theme="{{ $bsTheme }}">
     @if (Auth::user())
-    <div class="d-flex">
+    <div class="d-flex flex-column vh-100">
         <nav id="sidebar" class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column {{ auth()->check() && auth()->user()->sidebar === 0 ? 'collapsed' : '' }}">
             <div class="sidebar-header text-center p-3">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -119,11 +119,12 @@
             </main>
         </div>
 
-
-    </div>
-        <footer class="fixed-bottom d-flex justify-content-center">
+        <footer class="d-flex justify-content-center mt-auto">
         <p> &copy; {{ date('Y') }} - Hadson Moraes</p>
         </footer>
+    </div>
+
+
 </body>
 
 </html>
