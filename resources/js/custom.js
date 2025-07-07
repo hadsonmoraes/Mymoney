@@ -4,6 +4,7 @@
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
 
+    if(toggleButton){
     toggleButton.addEventListener('click', function () {
         const isCollapsed = sidebar.classList.toggle('collapsed');
         content.classList.toggle('collapsed');
@@ -27,7 +28,7 @@
             console.error('Erro na requisição:', error);
         });
     });
-
+    }
 
 window.confirmarExclusao = function (event, contaId) {
 
