@@ -22,10 +22,11 @@ class Conta extends Model
         'image',
         'user_id',
         'fixed',
+        'repeat'
     ];
 
     protected $casts = [
-    'fixed' => 'boolean',
+        'fixed' => 'boolean',
     ];
 
     public function user()

@@ -4,109 +4,121 @@
 
 @section('content')
 
-<div class="container-fluid p-4">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    Criar conta
+    <div class="container-fluid p-4">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        Criar conta
 
-                    <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-secondary">Voltar</a>
+                        <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-secondary">Voltar</a>
 
-                </div>
+                    </div>
 
-                <div class="card-body">
-                    <x-alert />
+                    <div class="card-body">
+                        <x-alert />
 
-                    <form action="{{ route('contas.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
+                        <form action="{{ route('contas.store') }}" method="post" enctype="multipart/form-data">
+                            @csrf
 
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <label for="name" class="form-label">Nome<span class="text-danger ">*</span></label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="value" class="form-label">Valor<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="value" name="value"
-                                    value="{{ old('value') }}">
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="maturity" class="form-label">Vencimento<span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="maturity" name="maturity"
-                                    value="{{ old('maturity') }}">
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="type" class="form-label">Tipo<span class="text-danger">*</span></label>
-                                <select class="form-select" id="type" name="type">
-                                    <option value="" selected disabled>selecione</option>
-                                    <option value="entrada" {{ old('type')=='entrada' ? 'selected' : '' }}>Entrada
-                                    </option>
-                                    <option value="saida" {{ old('type')=='saida' ? 'selected' : '' }}>
-                                        Saída</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="situation" class="form-label">Situação<span class="text-danger">*</span></label>
-                                <select class="form-select" id="situation" name="situation">
-                                    <option value="" selected disabled>selecione</option>
-                                    <option value="paid" {{ old('situation')=='paid' ? 'selected' : '' }}>Pago
-                                    </option>
-                                    <option value="pending" {{ old('situation')=='pending' ? 'selected' : '' }}>
-                                        Pendente</option>
-                                    <option value="canceled" {{ old('situation')=='canceled' ? 'selected' : '' }}>
-                                        Cancelado</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="category_id" class="form-label">Categoria<span class="text-danger">*</span></label>
-                                <select name="category_id" id="category_id" class="form-select select2">
-                                    <option value="" selected disabled>Selecione</option>
-                                    @forelse ($categorys as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id')==$category->id ?
-                                        'selected' : '' }}>
-                                        {{ $category->name }}</option>
-                                    @empty
-                                    <option value="">Nenhuma situação da conta encontrada</option>
-                                    @endforelse
-                                </select>
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 mb-3">
-                                <label for="image" class="form-label">Comprovante:</label>
-                                <input class="form-control" type="file" id="image" name="image">
-                            </div>
-
-                             <div class="col-md-3 col-sm-12 mb-3">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="fixed" value="{{ true }}" {{ old('fixed') ? 'checked' : ''}}>
-                                    <label class="form-check-label" for="switchCheckDefault">Despesa/Receita fixa</label>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12 mb-3">
+                                    <label for="name" class="form-label">Nome<span class="text-danger ">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ old('name') }}">
                                 </div>
-                             </div>
 
-                            <div class="col-md-12 col-sm-12 mb-3">
-                                <label for="note" class="form-label">Nota</label>
-                                <textarea name="note" id="summernote" class="form-control">
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="value" class="form-label">Valor<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="value" name="value"
+                                        value="{{ old('value') }}">
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="maturity" class="form-label">Vencimento<span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="maturity" name="maturity"
+                                        value="{{ old('maturity') }}">
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="type" class="form-label">Tipo<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="type" name="type">
+                                        <option value="" selected disabled>selecione</option>
+                                        <option value="entrada" {{ old('type') == 'entrada' ? 'selected' : '' }}>Entrada
+                                        </option>
+                                        <option value="saida" {{ old('type') == 'saida' ? 'selected' : '' }}>
+                                            Saída</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="situation" class="form-label">Situação<span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" id="situation" name="situation">
+                                        <option value="" selected disabled>selecione</option>
+                                        <option value="paid" {{ old('situation') == 'paid' ? 'selected' : '' }}>Pago
+                                        </option>
+                                        <option value="pending" {{ old('situation') == 'pending' ? 'selected' : '' }}>
+                                            Pendente</option>
+                                        <option value="canceled" {{ old('situation') == 'canceled' ? 'selected' : '' }}>
+                                            Cancelado</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="category_id" class="form-label">Categoria<span
+                                            class="text-danger">*</span></label>
+                                    <select name="category_id" id="category_id" class="form-select select2">
+                                        <option value="" selected disabled>Selecione</option>
+                                        @forelse ($categorys as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @empty
+                                            <option value="">Nenhuma situação da conta encontrada</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <label for="image" class="form-label">Comprovante:</label>
+                                    <input class="form-control" type="file" id="image" name="image">
+                                </div>
+
+                                <div class="col-md-3 col-sm-12 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" name="fixed"
+                                            value="{{ true }}" {{ old('fixed') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="switchCheckDefault">Despesa/Receita
+                                            fixa</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-sm-12 mb-3">
+                                    <label for="repeat" class="form-label">Repetir Despesa/Receita</label>
+                                    <input type="number" min="0" class="form-control" id="repeat" name="repeat"
+                                        value="{{ old('repeat') }}">
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mb-3">
+                                    <label for="note" class="form-label">Nota</label>
+                                    <textarea name="note" id="summernote" class="form-control">
                                     {{ old('note') }}
                                 </textarea>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
 
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        </form>
 
-                    </form>
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
 

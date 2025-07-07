@@ -71,6 +71,49 @@ class LoginController extends Controller
                     ]);
                 }
             }
+
+            $repeats = Conta::where('repeat', '>', 0)
+                ->whereDate('maturity', '<', $dataAtual->startOfMonth())
+                ->withoutTrashed()->get();
+
+            foreach ($repeats as $repeat) {
+
+                $jaExiste2 = Conta::where('name', $repeat->name)
+                    ->where('value', $repeat->value)
+                    ->where('situation', $repeat->situation)
+                    ->where('user_id', $user->id)
+                    ->where('category_id', $repeat->category_id)
+                    ->where('type', $repeat->type)
+                    ->where('note', $repeat->note)
+                    ->whereYear('maturity', $dataAtual->year)
+                    ->whereMonth('maturity', $dataAtual->month)
+                    ->exists();
+
+                $repeatGet = Conta::where('name', $repeat->name)
+                    ->where('value', $repeat->value)
+                    ->where('situation', $repeat->situation)
+                    ->where('user_id', $user->id)
+                    ->where('category_id', $repeat->category_id)
+                    ->where('type', $repeat->type)
+                    ->where('note', $repeat->note)
+                    ->get();
+
+                if (!$jaExiste2 && count($repeatGet) <= $repeat->repeat) {
+
+                    $dia = Carbon::parse($repeat->maturity)->day;
+                    Conta::create([
+                        'name' => $repeat->name,
+                        'value' => $repeat->value,
+                        'maturity' => now()->copy()->setDay($dia),
+                        'situation' => $repeat->situation,
+                        'user_id' => $user->id,
+                        'note' => $repeat->note,
+                        'category_id' => $repeat->category_id,
+                        'type' => $repeat->type,
+                        'fixed' => false,
+                    ]);
+                }
+            }
         } catch (Exception $e) {
             Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não atualizada');
