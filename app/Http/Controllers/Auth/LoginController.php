@@ -35,48 +35,46 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        try{
-                $dataAtual = Carbon::now();
+        try {
+            $dataAtual = Carbon::now();
 
-                    $fixas = Conta::where('fixed', true)
-                    ->whereDate('maturity', '<', $dataAtual->startOfMonth())
-                    ->withoutTrashed()->get();
+            $fixas = Conta::where('fixed', true)
+                ->whereDate('maturity', '<', $dataAtual->startOfMonth())
+                ->withoutTrashed()->get();
 
-                    foreach ($fixas as $fixa) {
+            foreach ($fixas as $fixa) {
 
-                    $jaExiste = Conta::where('fixed', true)
-                        ->where('name', $fixa->name)
-                        ->where('value', $fixa->value)
-                        ->where('situation', $fixa->situation)
-                        ->where('user_id', $user->id)
-                        ->where('category_id', $fixa->category_id)
-                        ->where('type', $fixa->type)
-                        ->where('note', $fixa->note)
-                        ->whereYear('maturity', $dataAtual->year)
-                        ->whereMonth('maturity', $dataAtual->month)
-                        ->exists();
+                $jaExiste = Conta::where('name', $fixa->name)
+                    ->where('value', $fixa->value)
+                    ->where('situation', $fixa->situation)
+                    ->where('user_id', $user->id)
+                    ->where('category_id', $fixa->category_id)
+                    ->where('type', $fixa->type)
+                    ->where('note', $fixa->note)
+                    ->whereYear('maturity', $dataAtual->year)
+                    ->whereMonth('maturity', $dataAtual->month)
+                    ->exists();
 
-                    if (!$jaExiste) {
+                if (!$jaExiste) {
 
-                        $dia = Carbon::parse($fixa->maturity)->day;
-                        Conta::create([
-                            'name' => $fixa->name,
-                            'value' => $fixa->value,
-                            'maturity' => now()->copy()->setDay($dia),
-                            'situation' => $fixa->situation,
-                            'user_id' => $user->id,
-                            'note' => $fixa->note,
-                            'category_id' => $fixa->category_id,
-                            'type' => $fixa->type,
-                            'fixed' => true,
-                        ]);
-
-                    }
+                    $dia = Carbon::parse($fixa->maturity)->day;
+                    Conta::create([
+                        'name' => $fixa->name,
+                        'value' => $fixa->value,
+                        'maturity' => now()->copy()->setDay($dia),
+                        'situation' => $fixa->situation,
+                        'user_id' => $user->id,
+                        'note' => $fixa->note,
+                        'category_id' => $fixa->category_id,
+                        'type' => $fixa->type,
+                        'fixed' => false,
+                    ]);
                 }
-            }catch (Exception $e) {
-                Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
-                return back()->withInput()->with('error', 'Conta não atualizada');
             }
+        } catch (Exception $e) {
+            Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Conta não atualizada');
+        }
     }
 
 
