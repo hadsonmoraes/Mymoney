@@ -44,31 +44,10 @@ class LoginController extends Controller
 
             foreach ($fixas as $fixa) {
 
-                $jaExiste = Conta::where('name', $fixa->name)
-                    ->where('value', $fixa->value)
-                    ->where('situation', $fixa->situation)
-                    ->where('user_id', $user->id)
-                    ->where('category_id', $fixa->category_id)
-                    ->where('type', $fixa->type)
-                    ->where('note', $fixa->note)
-                    ->whereYear('maturity', $dataAtual->year)
-                    ->whereMonth('maturity', $dataAtual->month)
-                    ->exists();
+                $Exist = $this->jaExiste($fixa, $user, $dataAtual);
 
-                if (!$jaExiste) {
-
-                    $dia = Carbon::parse($fixa->maturity)->day;
-                    Conta::create([
-                        'name' => $fixa->name,
-                        'value' => $fixa->value,
-                        'maturity' => now()->copy()->setDay($dia),
-                        'situation' => $fixa->situation,
-                        'user_id' => $user->id,
-                        'note' => $fixa->note,
-                        'category_id' => $fixa->category_id,
-                        'type' => $fixa->type,
-                        'fixed' => false,
-                    ]);
+                if (!$Exist) {
+                    $this->create($fixa, $user);
                 }
             }
 
@@ -78,16 +57,7 @@ class LoginController extends Controller
 
             foreach ($repeats as $repeat) {
 
-                $jaExiste2 = Conta::where('name', $repeat->name)
-                    ->where('value', $repeat->value)
-                    ->where('situation', $repeat->situation)
-                    ->where('user_id', $user->id)
-                    ->where('category_id', $repeat->category_id)
-                    ->where('type', $repeat->type)
-                    ->where('note', $repeat->note)
-                    ->whereYear('maturity', $dataAtual->year)
-                    ->whereMonth('maturity', $dataAtual->month)
-                    ->exists();
+                $Exist = $this->jaExiste($repeat, $user, $dataAtual);
 
                 $repeatGet = Conta::where('name', $repeat->name)
                     ->where('value', $repeat->value)
@@ -96,22 +66,10 @@ class LoginController extends Controller
                     ->where('category_id', $repeat->category_id)
                     ->where('type', $repeat->type)
                     ->where('note', $repeat->note)
-                    ->get();
+                    ->count();
 
-                if (!$jaExiste2 && count($repeatGet) <= $repeat->repeat) {
-
-                    $dia = Carbon::parse($repeat->maturity)->day;
-                    Conta::create([
-                        'name' => $repeat->name,
-                        'value' => $repeat->value,
-                        'maturity' => now()->copy()->setDay($dia),
-                        'situation' => $repeat->situation,
-                        'user_id' => $user->id,
-                        'note' => $repeat->note,
-                        'category_id' => $repeat->category_id,
-                        'type' => $repeat->type,
-                        'fixed' => false,
-                    ]);
+                if (!$Exist && $repeatGet <= $repeat->repeat) {
+                    $this->create($repeat, $user);
                 }
             }
         } catch (Exception $e) {
@@ -120,6 +78,35 @@ class LoginController extends Controller
         }
     }
 
+    protected function jaExiste($conta, $user, $dataAtual)
+    {
+        Conta::where('name', $conta->name)
+            ->where('value', $conta->value)
+            ->where('situation', $conta->situation)
+            ->where('user_id', $user->id)
+            ->where('category_id', $conta->category_id)
+            ->where('type', $conta->type)
+            ->where('note', $conta->note)
+            ->whereYear('maturity', $dataAtual->year)
+            ->whereMonth('maturity', $dataAtual->month)
+            ->exists();
+    }
+
+    protected function create($conta, $user)
+    {
+        $dia = Carbon::parse($conta->maturity)->day;
+        Conta::create([
+            'name' => $conta->name,
+            'value' => $conta->value,
+            'maturity' => now()->copy()->setDay($dia),
+            'situation' => $conta->situation,
+            'user_id' => $user->id,
+            'note' => $conta->note,
+            'category_id' => $conta->category_id,
+            'type' => $conta->type,
+            'fixed' => false,
+        ]);
+    }
 
     /**
      * Create a new controller instance.
