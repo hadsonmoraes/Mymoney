@@ -80,7 +80,7 @@ class LoginController extends Controller
 
     protected function jaExiste($conta, $user, $dataAtual)
     {
-        Conta::where('name', $conta->name)
+        return Conta::where('name', $conta->name)
             ->where('value', $conta->value)
             ->where('situation', $conta->situation)
             ->where('user_id', $user->id)
