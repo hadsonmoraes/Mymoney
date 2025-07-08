@@ -92,6 +92,7 @@ class HomeController extends Controller
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
             $contas->fixed = $request->fixed ?? false;
+            $contas->repeat = $request->repeat;
             $contas->note = $request->note;
 
             if ($contas->value <= 0 || $contas->value === "") {
@@ -144,12 +145,13 @@ class HomeController extends Controller
         try {
             $user_id = auth()->user()->id;
             $data = $request->validated();
+            $data['repeat'] = $request->repeat;
             $data['note'] = $request->note;
             $data['value'] = str_replace(',', '.', str_replace('.', '', $request->value));
             if ($data['value'] <= 0 || $data['value'] === "") {
                 return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
             }
-             $data['fixed'] = $request->fixed ?? false;
+            $data['fixed'] = $request->fixed ?? false;
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
 
@@ -165,7 +167,6 @@ class HomeController extends Controller
             Conta::findOrFail($id)->update($data);
 
             return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta atualizada com sucesso!');
-
         } catch (Exception $e) {
             Log::error('Conta não atualizada.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Conta não atualizada');
@@ -178,7 +179,8 @@ class HomeController extends Controller
         return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta apagada!');
     }
 
-    public function changeSituation(Conta $id){
+    public function changeSituation(Conta $id)
+    {
 
         try {
             $conta = $id;
@@ -197,7 +199,6 @@ class HomeController extends Controller
             Log::error('Situaçao da conta não editada', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Situaçao da conta não editada');
         }
-
     }
 
     public function gerarCsv(Request $request)

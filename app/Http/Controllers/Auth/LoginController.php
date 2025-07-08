@@ -35,50 +35,78 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        try{
-                $dataAtual = Carbon::now();
+        try {
+            $dataAtual = Carbon::now();
 
-                    $fixas = Conta::where('fixed', true)
-                    ->whereDate('maturity', '<', $dataAtual->startOfMonth())
-                    ->withoutTrashed()->get();
+            $fixas = Conta::where('fixed', true)
+                ->whereDate('maturity', '<', $dataAtual->startOfMonth())
+                ->withoutTrashed()->get();
 
-                    foreach ($fixas as $fixa) {
+            foreach ($fixas as $fixa) {
 
-                    $jaExiste = Conta::where('fixed', true)
-                        ->where('name', $fixa->name)
-                        ->where('value', $fixa->value)
-                        ->where('situation', $fixa->situation)
-                        ->where('user_id', $user->id)
-                        ->where('category_id', $fixa->category_id)
-                        ->where('type', $fixa->type)
-                        ->where('note', $fixa->note)
-                        ->whereYear('maturity', $dataAtual->year)
-                        ->whereMonth('maturity', $dataAtual->month)
-                        ->exists();
+                $Exist = $this->jaExiste($fixa, $user, $dataAtual);
 
-                    if (!$jaExiste) {
-
-                        $dia = Carbon::parse($fixa->maturity)->day;
-                        Conta::create([
-                            'name' => $fixa->name,
-                            'value' => $fixa->value,
-                            'maturity' => now()->copy()->setDay($dia),
-                            'situation' => $fixa->situation,
-                            'user_id' => $user->id,
-                            'note' => $fixa->note,
-                            'category_id' => $fixa->category_id,
-                            'type' => $fixa->type,
-                            'fixed' => true,
-                        ]);
-
-                    }
+                if (!$Exist) {
+                    $this->create($fixa, $user);
                 }
-            }catch (Exception $e) {
-                Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
-                return back()->withInput()->with('error', 'Conta não atualizada');
             }
+
+            $repeats = Conta::where('repeat', '>', 0)
+                ->whereDate('maturity', '<', $dataAtual->startOfMonth())
+                ->withoutTrashed()->get();
+
+            foreach ($repeats as $repeat) {
+
+                $Exist = $this->jaExiste($repeat, $user, $dataAtual);
+
+                $repeatGet = Conta::where('name', $repeat->name)
+                    ->where('value', $repeat->value)
+                    ->where('situation', $repeat->situation)
+                    ->where('user_id', $user->id)
+                    ->where('category_id', $repeat->category_id)
+                    ->where('type', $repeat->type)
+                    ->where('note', $repeat->note)
+                    ->count();
+
+                if (!$Exist && $repeatGet <= $repeat->repeat) {
+                    $this->create($repeat, $user);
+                }
+            }
+        } catch (Exception $e) {
+            Log::error('Erro Não gerado', ['mensagem' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Conta não atualizada');
+        }
     }
 
+    protected function jaExiste($conta, $user, $dataAtual)
+    {
+        return Conta::where('name', $conta->name)
+            ->where('value', $conta->value)
+            ->where('situation', $conta->situation)
+            ->where('user_id', $user->id)
+            ->where('category_id', $conta->category_id)
+            ->where('type', $conta->type)
+            ->where('note', $conta->note)
+            ->whereYear('maturity', $dataAtual->year)
+            ->whereMonth('maturity', $dataAtual->month)
+            ->exists();
+    }
+
+    protected function create($conta, $user)
+    {
+        $dia = Carbon::parse($conta->maturity)->day;
+        Conta::create([
+            'name' => $conta->name,
+            'value' => $conta->value,
+            'maturity' => now()->copy()->setDay($dia),
+            'situation' => $conta->situation,
+            'user_id' => $user->id,
+            'note' => $conta->note,
+            'category_id' => $conta->category_id,
+            'type' => $conta->type,
+            'fixed' => false,
+        ]);
+    }
 
     /**
      * Create a new controller instance.
