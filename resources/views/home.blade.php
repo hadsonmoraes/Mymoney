@@ -122,7 +122,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Id</th>
+                                    {{-- <th scope="col">Id</th> --}}
                                     <th scope="col">Nome</th>
                                     <th scope="col">Valor</th>
                                     <th scope="col">Vencimento</th>
@@ -149,7 +149,7 @@
 
                                 @endphp
                                 <tr>
-                                    <th class="align-middle">{{ $conta->id }}</th>
+                                    {{-- <th class="align-middle">{{ $conta->id }}</th> --}}
                                     <td class="align-middle">{{ $conta->name }}</td>
                                     <td class="align-middle">{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</td>
                                     <td class="align-middle">{{ date('d/m/Y', strtotime($conta->maturity)) }}</td>
