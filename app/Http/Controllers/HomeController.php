@@ -92,7 +92,7 @@ class HomeController extends Controller
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
             $contas->fixed = $request->fixed ?? false;
-            $contas->repeat = $request->repeat;
+            $contas->repeat = $request->repeat ?? 0;
             $contas->note = $request->note;
 
             if ($contas->value <= 0 || $contas->value === "") {
