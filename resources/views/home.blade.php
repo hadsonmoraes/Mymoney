@@ -136,20 +136,6 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($contas as $conta)
-                                        @php
-
-                                            if ($conta->situation == 'paid') {
-                                                $status = 'success';
-                                                $situation_name = 'Pago';
-                                            } elseif ($conta->situation == 'pending') {
-                                                $status = 'warning';
-                                                $situation_name = 'Pendente';
-                                            } else {
-                                                $status = 'danger';
-                                                $situation_name = 'Cancelado';
-                                            }
-
-                                        @endphp
                                         <tr>
                                             {{-- <th class="align-middle">{{ $conta->id }}</th> --}}
                                             <td class="align-middle">{{ $conta->name }}</td>
@@ -166,7 +152,7 @@
                                             </td>
                                             <td class="align-middle">
                                                 <a href="{{ route('situacao.alterar', ['id' => $conta->id]) }}">
-                                                    {!! '<span class="badge text-bg-' . $status . ' ">' . $situation_name . '</span>' !!}
+                                                    {!! '<span class="badge text-bg-' . $conta->status . ' ">' . $conta->situation_name . '</span>' !!}
                                                 </a>
                                             </td>
                                             <td class="align-middle">{{ $conta->category->name }}</td>
