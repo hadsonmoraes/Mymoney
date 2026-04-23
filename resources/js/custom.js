@@ -4,10 +4,11 @@
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
 
-    if(toggleButton){
+    if(toggleButton && sidebar && content){
     toggleButton.addEventListener('click', function () {
         const isCollapsed = sidebar.classList.toggle('collapsed');
         content.classList.toggle('collapsed');
+        toggleButton.setAttribute('aria-expanded', String(!isCollapsed));
 
         const sidebarOpen = !isCollapsed;
 
@@ -91,8 +92,9 @@ $(function () {
         theme: 'bootstrap-5'
     });
 });
-
-    document.getElementById('toggleTheme').addEventListener('click', () => {
+const toggleThemeButton = document.getElementById('toggleTheme');
+if (toggleThemeButton) {
+    toggleThemeButton.addEventListener('click', () => {
     const current = document.body.classList.contains('theme-dark') ? 'theme-dark' : 'theme-light';
     const next = current === 'theme-dark' ? 'theme-light' : 'theme-dark';
 
@@ -114,9 +116,9 @@ $(function () {
         }).catch(error => {
             console.error('Erro ao salvar tema:', error);
         });
-
         updateThemeIcon(next);
-});
+    });
+}
 
     function applySavedTheme() {
         const savedTheme = document.body.dataset.theme || 'theme-light';
