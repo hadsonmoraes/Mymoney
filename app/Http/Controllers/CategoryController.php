@@ -31,24 +31,24 @@ class CategoryController extends Controller
         $request->validated();
 
         try {
-        $user = auth()->user();
-        $category = new Category;
-        $category->name = $request->name;
-        $category->user_id = $user->id;
+            $user = auth()->user();
+            $category = new Category;
+            $category->name = $request->name;
+            $category->user_id = $user->id;
 
-        $category->save();
+            $category->save();
 
-        return redirect('category')->with('success', 'Categoria criada com sucesso!');
+            return redirect('category')->with('success', 'Categoria criada com sucesso!');
         } catch (Exception $e) {
             Log::error('Erro ao criar categoria.', ['mensagem' => $e->getMessage()]);
             return back()->withInput()->with('error', 'Erro ao criar categoria');
         }
-
     }
 
     public function edit($id)
     {
-        $categorys = Category::findOrFail($id);
+        $user = auth()->user();
+        $categorys = Category::where('user_id', $user->id)->findOrFail($id);
         return view('category.edit', ['categorys' => $categorys]);
     }
 

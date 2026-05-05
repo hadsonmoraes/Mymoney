@@ -127,7 +127,7 @@ class HomeController extends Controller
     {
 
         $user = auth()->user();
-        $contas = Conta::findOrFail($id);
+        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
     }
@@ -135,7 +135,7 @@ class HomeController extends Controller
     public function edit($id)
     {
         $user = auth()->user();
-        $contas = Conta::findOrFail($id);
+        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
     }
