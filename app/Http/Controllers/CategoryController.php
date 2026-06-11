@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
@@ -17,12 +18,15 @@ class CategoryController extends Controller
         $user = auth()->user();
         $categories = Category::where('user_id', $user->id)->paginate(5)->withQueryString();
 
-        return view('category.index', ['categories' => $categories]);
+        return Inertia::render('Categories/Index', ['categories' => $categories]);
     }
 
     public function create()
     {
-        return view('category.create');
+        return Inertia::render('Categories/Form', [
+            'category' => null,
+            'mode' => 'create',
+        ]);
     }
 
     public function store(CategoryRequest $request)
@@ -49,7 +53,10 @@ class CategoryController extends Controller
     {
         $user = auth()->user();
         $categorys = Category::where('user_id', $user->id)->findOrFail($id);
-        return view('category.edit', ['categorys' => $categorys]);
+        return Inertia::render('Categories/Form', [
+            'category' => $categorys,
+            'mode' => 'edit',
+        ]);
     }
 
     public function update(CategoryRequest $request)

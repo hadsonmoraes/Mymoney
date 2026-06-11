@@ -5,7 +5,6 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,11 +17,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return redirect('/login');
-});
-
-Auth::routes();
+Route::redirect('/', '/login');
 
 Route::middleware('auth')->group(function () {
     // Precisa de autenticação
@@ -34,8 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/contas/update/{id}', [HomeController::class, 'update'])->name('contas.update');
     Route::delete('/contas/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
     Route::get('/contas/situacao/alterar/{id}', [HomeController::class, 'changeSituation'])->name('situacao.alterar');
-    Route::post('/user/sidebar-toggle', [profileController::class, 'toggleSidebar'])->name('usuario.sidebar.toggle');
-    Route::post('/user/dark-mode', [profileController::class, 'darkMode'])->name('usuario.darkmode');
+    Route::post('/user/sidebar-toggle', [ProfileController::class, 'toggleSidebar'])->name('usuario.sidebar.toggle');
+    Route::post('/user/dark-mode', [ProfileController::class, 'darkMode'])->name('usuario.darkmode');
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
@@ -51,3 +46,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/gerar-csv', [HomeController::class, 'gerarCsv'])->name('contas.gerar-csv');
 });
+
+require __DIR__.'/auth.php';

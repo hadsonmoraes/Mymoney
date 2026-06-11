@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Conta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -45,7 +46,7 @@ class DashboardController extends Controller
         $total = $allContas->sum('value');
         $totalquantidade = $allContas->count();
 
-        return view('dashboard', [
+        return Inertia::render('Dashboard', [
             'contasPagasValor' => $contasPagasValor,
             'contasPagasQuantidade' => $contasPagasQuantidade,
             'contasPendentesValor' => $contasPendentesValor,

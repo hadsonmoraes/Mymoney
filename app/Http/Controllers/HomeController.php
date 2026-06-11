@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class HomeController extends Controller
 {
@@ -56,7 +57,7 @@ class HomeController extends Controller
         $contas = $contasQuery->paginate($perPage)->withQueryString();
         session(['filtros_contas' => request()->query()]);
 
-        return view('home', [
+        return Inertia::render('Accounts/Index', [
             'contas' => $contas,
             'name' => $request->name,
             'data_inicio' =>  $dataInicio,
@@ -72,8 +73,10 @@ class HomeController extends Controller
         $user = auth()->user();
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
 
-        return view('contas.create', [
+        return Inertia::render('Accounts/Form', [
             'categorys' => $categorys,
+            'conta' => null,
+            'mode' => 'create',
         ]);
     }
 
@@ -129,7 +132,7 @@ class HomeController extends Controller
         $user = auth()->user();
         $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
-        return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
+        return Inertia::render('Accounts/Show', ['conta' => $contas, 'categorys' => $categorys]);
     }
 
     public function edit($id)
@@ -137,7 +140,11 @@ class HomeController extends Controller
         $user = auth()->user();
         $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
-        return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
+        return Inertia::render('Accounts/Form', [
+            'conta' => $contas,
+            'categorys' => $categorys,
+            'mode' => 'edit',
+        ]);
     }
 
     public function update(ContaRequest $request)

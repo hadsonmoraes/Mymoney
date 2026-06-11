@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
@@ -16,7 +17,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         $profile = User::where('id', $user->id)->findOrFail($id);
 
-        return view('profile.edit', ['profile' => $profile]);
+        return Inertia::render('Profile/Edit', ['profile' => $profile]);
     }
 
     public function update(UserRequest $request)
