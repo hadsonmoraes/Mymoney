@@ -1,13 +1,14 @@
     @if (Auth::user())
         <div class="d-flex flex-column vh-100">
             <nav id="sidebar"
-                class="bg-primary bg-gradient text-white shadow-sm vh-100 position-fixed d-flex flex-column {{ auth()->check() && auth()->user()->sidebar === 0 ? 'collapsed' : '' }}">
+                class="vh-100 position-fixed d-flex flex-column {{ auth()->check() && auth()->user()->sidebar === 0 ? 'collapsed' : '' }}">
                 <div class="sidebar-header text-center p-3">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{-- <img src="{{asset(" ..\logo.png")}}" alt=""> {{ config('app.name', 'Mymoney') }} --}}
-                        <img src="{{ asset('logo.png') }}" alt="Mymoney" class="w-100" style="height: 100px">
+                        <img src="{{ asset('logo.png') }}" alt="Mymoney" class="sidebar-brand w-100"
+                            style="max-width: 120px; height: auto;">
                     </a>
-                    <button class="btn btn-outline-light w-100 mt-2" id="toggleSidebar"
+                    <span class="sidebar-badge mt-3">Financeiro inteligente</span>
+                    <button class="btn btn-outline-light w-100 mt-3" id="toggleSidebar"
                         aria-label="Alternar menu lateral" aria-controls="sidebar"
                         aria-expanded="{{ auth()->check() && auth()->user()->sidebar === 0 ? 'false' : 'true' }}">☰</button>
                 </div>
@@ -59,13 +60,13 @@
                                 <span class="sidebar-label cursor-pointer" id="themeText"></span>
                             </button>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown dropup dropend sidebar-account-menu">
                             <a class="nav-link sidebar-text dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="sidebar-icon"><i class="fa-solid fa-user"></i></span>
                                 <span class="sidebar-label">{{ strtoupper(Auth::user()->name) }}</span>
                             </a>
-                            <div class="dropdown-menu shadow">
+                            <div class="dropdown-menu shadow sidebar-user-dropdown">
                                 <a class="dropdown-item" href="{{ route('profile.edit', ['id' => Auth::user()->id]) }}">
                                     {{ __('Profile') }}
                                 </a>
@@ -80,5 +81,8 @@
                         </li>
                     @endguest
                 </ul>
+                <div class="sidebar-footer p-3">
+                    <small class="text-white-50 d-block sidebar-label">Controle financeiro com uma interface mais limpa e rápida.</small>
+                </div>
             </nav>
     @endif

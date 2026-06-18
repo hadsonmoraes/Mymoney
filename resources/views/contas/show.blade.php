@@ -5,16 +5,25 @@
 @section('content')
 
     <div class="container-fluid p-4">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center g-3">
             <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        Visualizar conta
-                        <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-secondary">Voltar</a>
-                    </div>
+                <div class="page-hero mb-3">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div>
+                            <div class="metric-label mb-2">Detalhes</div>
+                            <h1 class="page-title mb-1">Visualizar conta</h1>
+                            <p class="page-subtitle">Confira todas as informações registradas neste lançamento.</p>
+                        </div>
 
-                    <div class="card-body">
-                        <div class="row">
+                        <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm section-card form-surface w-100">
+                    <div class="card-body form-card-body">
+                        <div class="row g-3">
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <label for="name" class="form-label">Nome</label>
                                 <input type="text" class="form-control" id="name" value="{{ $contas->name }}"
@@ -80,9 +89,11 @@
                                     disabled>
                             </div>
 
-                            <div class="col-md-12 col-sm-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label for="note" class="form-label">Nota:</label>
-                                {!! $contas->note !!}
+                                <div class="form-control bg-body-tertiary" style="min-height: 120px;">
+                                    {!! $contas->note !!}
+                                </div>
                             </div>
                         </div>
                     </div>

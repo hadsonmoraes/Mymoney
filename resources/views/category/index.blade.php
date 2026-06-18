@@ -1,26 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Home')
+@section('title', 'Categorias')
 
 @section('content')
 <div class="container-fluid p-4">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center g-3">
         <div class="col-md-12">
 
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <span class="me-2">Lista de categorias</span>
+            <div class="page-hero mb-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div>
+                        <div class="metric-label mb-2">Organização</div>
+                        <h1 class="page-title mb-1">Categorias</h1>
+                        <p class="page-subtitle">Agrupe seus lançamentos de forma visual e simples de administrar.</p>
                     </div>
-                    <a href="{{ route('category.create') }}" class="btn btn-primary">Cadastrar</a>
-
+                    <a href="{{ route('category.create') }}" class="btn btn-primary">
+                        <i class="fa-solid fa-circle-plus me-1"></i> Nova categoria
+                    </a>
                 </div>
+            </div>
 
+            <div class="card shadow-sm section-card">
                 <div class="card-body">
 
                     <x-alert />
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table align-middle">
                             <thead>
                                 <tr>
                                     <th scope="col">Id</th>
@@ -35,13 +40,13 @@
                                     <td class="align-middle">{{ $category->name }}</td>
                                     <td class="d-none d-md-flex justify-content-center collapse">
                                         <a href="{{ route('category.edit', ['id' => $category->id]) }}"
-                                            class="btn btn-warning me-1">Editar</a>
+                                            class="btn btn-outline-secondary btn-sm me-1">Editar</a>
                                         <form id="formExcluir{{ $category->id }}"
                                             action="{{ route('category.destroy', ['id' => $category->id]) }}"
                                             method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
                                                 onclick="confirmarExclusao(event, {{ $category->id }})">Apagar</button>
                                         </form>
 
@@ -76,8 +81,12 @@
                                 @if (count($categories) == 0)
                                 <tr>
 
-                                <td colspan="3" class="text-center text-danger fw-bold">
-                                    Nenhuma categoria encontrada!
+                                <td colspan="3">
+                                    <div class="empty-state">
+                                        <div class="icon"><i class="fa-solid fa-list"></i></div>
+                                        <div class="fw-semibold text-body">Nenhuma categoria encontrada</div>
+                                        <div>Crie sua primeira categoria para começar a organizar os lançamentos.</div>
+                                    </div>
                                 </td>
 
                                 </tr>

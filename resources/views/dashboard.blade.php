@@ -9,16 +9,17 @@
     @endphp
 
     <div class="container-fluid p-4">
-        <div class="row g-3 mb-2">
+        <div class="row g-3 mb-3">
             <div class="col-md-12">
-                <div class="p-4 dash-hero">
+                <div class="page-hero dash-hero">
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
                         <div>
-                            <h4 class="mb-1 fw-bold">Dashboard Financeiro</h4>
-                            <p class="mb-0 text-muted">Resumo por período com status e totais das contas.</p>
+                            <div class="metric-label mb-2">Painel financeiro</div>
+                            <h4 class="page-title mb-1">Dashboard Financeiro</h4>
+                            <p class="page-subtitle">Resumo por período com status, totais e movimentações das contas.</p>
                         </div>
                         <div class="text-end">
-                            <small class="text-muted d-block">Período selecionado</small>
+                            <small class="metric-label d-block">Período selecionado</small>
                             <span class="fw-semibold">
                                 {{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}
                                 até
@@ -32,7 +33,7 @@
 
         <div class="row g-3 mb-2">
             <div class="col-md-12">
-                <div class="card dash-filter-card">
+                <div class="card dash-filter-card section-card">
                     <div class="card-body p-4">
                         <form action="{{ route('dashboard') }}">
                             <div class="row g-3 align-items-end">
@@ -64,10 +65,10 @@
                 <div class="card dash-stat-card h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="small text-uppercase text-muted fw-semibold">Saldo Entrada/Saída</span>
+                            <span class="metric-label">Saldo Entrada/Saída</span>
                             <span class="icon bg-soft-secondary"><i class="fa-solid fa-scale-balanced"></i></span>
                         </div>
-                        <h3 class="fw-bold mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h3>
+                        <h3 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h3>
                         <small class="text-muted">Entradas - Saídas no período</small>
                     </div>
                 </div>
@@ -77,10 +78,10 @@
                 <div class="card dash-stat-card h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="small text-uppercase text-muted fw-semibold">Total de Contas</span>
+                            <span class="metric-label">Total de Contas</span>
                             <span class="icon bg-soft-primary"><i class="fa-solid fa-layer-group"></i></span>
                         </div>
-                        <h4 class="fw-bold mb-1">{{ $money($total) }}</h4>
+                        <h4 class="metric-value mb-1">{{ $money($total) }}</h4>
                         <small class="text-muted">Quantidade: {{ $totalquantidade }}</small>
                     </div>
                 </div>
@@ -90,7 +91,7 @@
                 <div class="card dash-stat-card h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="small text-uppercase text-muted fw-semibold">Movimentação</span>
+                            <span class="metric-label">Movimentação</span>
                             <span class="icon bg-soft-info"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>
                         </div>
                         <p class="mb-1"><span class="fw-semibold">Entrada:</span> {{ $money($contasEntradaValor) }}

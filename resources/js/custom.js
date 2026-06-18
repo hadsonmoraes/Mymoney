@@ -7,7 +7,7 @@
     if(toggleButton && sidebar && content){
     toggleButton.addEventListener('click', function () {
         const isCollapsed = sidebar.classList.toggle('collapsed');
-        content.classList.toggle('collapsed');
+        document.body.classList.toggle('sidebar-collapsed', isCollapsed);
         toggleButton.setAttribute('aria-expanded', String(!isCollapsed));
 
         const sidebarOpen = !isCollapsed;
