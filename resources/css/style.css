@@ -72,6 +72,7 @@ body.sidebar-collapsed #content {
 
 #sidebar {
     width: 250px;
+    height: 100vh;
     transition: width 0.3s ease, transform 0.3s ease;
     overflow: visible;
     background:
@@ -159,7 +160,7 @@ body.sidebar-collapsed #sidebar {
     min-width: 12rem;
     border: 1px solid rgba(148, 163, 184, 0.18);
     box-shadow: var(--app-shadow);
-    z-index: 1045;
+    z-index: 9999;
 }
 
 #sidebar .sidebar-user-dropdown {
@@ -221,7 +222,7 @@ body.sidebar-collapsed #sidebar {
     width: 100%;
 }
 
-#sidebar.collapsed .nav-item > .nav-link {
+#sidebar.collapsed .nav-item>.nav-link {
     width: 100%;
 }
 
@@ -230,7 +231,7 @@ body.sidebar-collapsed #sidebar {
     width: 100%;
 }
 
-#sidebar.collapsed .nav-item.dropdown > .nav-link {
+#sidebar.collapsed .nav-item.dropdown>.nav-link {
     justify-content: center !important;
 }
 
@@ -734,6 +735,7 @@ footer {
 }
 
 @media (max-width: 768px) {
+
     .page-hero,
     .dash-hero,
     .auth-aside,

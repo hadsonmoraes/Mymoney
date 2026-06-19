@@ -15,11 +15,13 @@
 
                     <div class="card auth-card border-0 shadow-lg overflow-hidden">
                         <div class="row g-0">
-                            <div class="col-lg-5 auth-aside d-flex flex-column justify-content-between">
+                            <div class="col-lg-5 auth-aside d-flex flex-column justify-content-between p-4">
                                 <div>
-                                    <span class="auth-badge mb-4"><i class="fa-solid fa-chart-line"></i> Controle financeiro moderno</span>
+                                    <span class="auth-badge mb-4"><i class="fa-solid fa-chart-line"></i> Controle financeiro
+                                        moderno</span>
                                     <h1 class="mb-3">Uma visão mais limpa das suas finanças.</h1>
-                                    <p class="mb-4">Acesse seu painel com uma experiência mais rápida, elegante e fácil de usar.</p>
+                                    <p class="mb-4">Acesse seu painel com uma experiência mais rápida, elegante e fácil de
+                                        usar.</p>
 
                                     <div class="summary-list">
                                         <div class="summary-item">
@@ -55,8 +57,9 @@
 
                                         <div class="mb-3">
                                             <label for="email" class="form-label">{{ __('Email') }}</label>
-                                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                                                name="email" value="{{ old('email') }}" required autofocus autocomplete="username">
+                                            <input id="email" type="email"
+                                                class="form-control @error('email') is-invalid @enderror" name="email"
+                                                value="{{ old('email') }}" required autofocus autocomplete="username">
                                             @error('email')
                                                 <div class="invalid-feedback d-block">
                                                     {{ $message }}
@@ -68,8 +71,8 @@
                                             <label for="password" class="form-label">{{ __('Password') }}</label>
                                             <div class="input-group">
                                                 <input id="password" type="password"
-                                                    class="form-control @error('password') is-invalid @enderror" name="password"
-                                                    required autocomplete="current-password">
+                                                    class="form-control @error('password') is-invalid @enderror"
+                                                    name="password" required autocomplete="current-password">
                                                 <span class="input-group-text" onclick="togglePassword('password', this)">
                                                     <i class="fa-regular fa-eye"></i>
                                                 </span>
@@ -83,9 +86,10 @@
 
                                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
                                             <div class="form-check">
-                                                <input id="remember_me" type="checkbox" class="form-check-input" name="remember" {{
-                                                    old('remember') ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="remember_me">{{ __('Remember me') }}</label>
+                                                <input id="remember_me" type="checkbox" class="form-check-input"
+                                                    name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                                <label class="form-check-label"
+                                                    for="remember_me">{{ __('Remember me') }}</label>
                                             </div>
                                             @if (Route::has('password.request'))
                                                 <a class="btn btn-link px-0" href="{{ route('password.request') }}">
@@ -103,7 +107,8 @@
 
                                     <div class="text-center mt-4 auth-note">
                                         Não tem conta?
-                                        <a href="{{ route('register') }}" class="fw-semibold text-decoration-none">Criar cadastro</a>
+                                        <a href="{{ route('register') }}" class="fw-semibold text-decoration-none">Criar
+                                            cadastro</a>
                                     </div>
                                 </div>
                             </div>
