@@ -1,121 +1,104 @@
-<?php
-if ($contas->situation == 'paid') {
-    $situation_name = 'Pago';
-} elseif ($contas->situation == 'pending') {
-    $situation_name = 'Pendente';
-} else {
-    $situation_name = 'Cancelado';
-}
-
-?>
-
-
 @extends('layouts.app')
 
 @section('title', 'Visualizar')
 
 @section('content')
-<div class="container-fluid p-4">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    Visualizar conta
 
-                    <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-secondary">Voltar</a>
+    <div class="container-fluid p-4">
+        <div class="row justify-content-center g-3">
+            <div class="col-md-12">
+                <div class="page-hero mb-3">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div>
+                            <div class="metric-label mb-2">Detalhes</div>
+                            <h1 class="page-title mb-1">Visualizar conta</h1>
+                            <p class="page-subtitle">Confira todas as informações registradas neste lançamento.</p>
+                        </div>
 
+                        <a href="{{ route('home', session('filtros_contas')) }}" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar
+                        </a>
+                    </div>
                 </div>
 
-                <div class="card-body ">
-
-                    <form action="" method="post">
-                        @csrf
-                        <div class="row">
+                <div class="card shadow-sm section-card form-surface w-100">
+                    <div class="card-body form-card-body">
+                        <div class="row g-3">
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <label for="name" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="name" name="name" required
-                                    value="{{ $contas->name }}" disabled>
+                                <input type="text" class="form-control" id="name" value="{{ $contas->name }}"
+                                    disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="value" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="value" name="value" required
-                                    value="{{ 'R$' . number_format($contas->value, 2, ',', '.') }}" disabled>
+                                <input type="text" class="form-control" id="value"
+                                    value="{{ 'R$ ' . number_format($contas->value, 2, ',', '.') }}" disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="maturity" class="form-label">Vencimento</label>
-                                <input type="text" class="form-control disabled" id="maturity" name="maturity" required
-                                    value="{{ date('d/m/Y', strtotime($contas->maturity)) }}" disabled>
+                                <input type="text" class="form-control" id="maturity"
+                                    value="{{ \Illuminate\Support\Carbon::parse($contas->maturity)->format('d/m/Y') }}"
+                                    disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="type" class="form-label">Tipo</label>
-                                <select class="form-select" id="type" name="type" disabled required>
-                                    <option value="{{ $contas->type }}">{{ ucfirst($contas->type) }}</option>
-                                </select>
+                                <input type="text" class="form-control" id="type"
+                                    value="{{ ucfirst($contas->type) }}" disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="situation" class="form-label">Situação</label>
-                                <select class="form-select" id="situation" name="situation" disabled required>
-                                    <option value="{{ $contas->situation }}">{{ $situation_name }}</option>
-                                </select>
+                                <input type="text" class="form-control" id="situation"
+                                    value="{{ $contas->situation_name }}" disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="category" class="form-label">Categoria</label>
-                                <select name="category" id="category" class="form-select" disabled required>
-                                    <option value="" selected disabled>Selecione</option>
-                                    @forelse ($categorys as $category)
-                                    <option value="{{ $category->id }}" {{ old('category', $contas->category_id) ==
-                                        $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}</option>
-                                    @empty
-                                    <option value="">Nenhuma situação da conta encontrada</option>
-                                    @endforelse
-                                </select>
+                                <input type="text" class="form-control" id="category"
+                                    value="{{ $contas->category->name }}" disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="image" class="form-label">Comprovante:</label>
                                 @if (!empty($contas->image))
-                                <a class="form-control text-decoration-none" style="background-color:var(--bs-secondary-bg);"
-                                    href="{{ url('img/comprovantes' . Auth::user()->id . '/' . $contas->image) }}"
-                                    target="_blank">Visualizar <i class="fas fa-download"></i></a>
+                                    <a class="form-control text-decoration-none"
+                                        style="background-color:var(--bs-secondary-bg);"
+                                        href="{{ url('img/comprovantes/' . Auth::id() . '/' . $contas->image) }}"
+                                        target="_blank">Visualizar <i class="fas fa-download"></i>
+                                    </a>
                                 @else
-                                <a class="form-control text-decoration-none disabled"
-                                    style="background-color:var(--bs-secondary-bg);">Sem
-                                    Comprovante</a>
+                                    <a class="form-control text-decoration-none disabled"
+                                        style="background-color:var(--bs-secondary-bg);">Sem comprovante</a>
                                 @endif
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="cadastro" class="form-label">Cadastrado</label>
-                                <input type="text" class="form-control" id="cadastro" name="cadastro" required
-                                    value="{{ date('d/m/Y', strtotime($contas->created_at)) }}" disabled>
+                                <input type="text" class="form-control" id="cadastro"
+                                    value="{{ \Illuminate\Support\Carbon::parse($contas->created_at)->format('d/m/Y') }}"
+                                    disabled>
                             </div>
 
                             <div class="col-md-3 col-sm-12 mb-3">
                                 <label for="editado" class="form-label">Editado</label>
-                                <input type="text" class="form-control disabled" id="editado" name="editado" required
-                                    value="{{ date('d/m/Y', strtotime($contas->updated_at)) }}" disabled>
+                                <input type="text" class="form-control" id="editado"
+                                    value="{{ \Illuminate\Support\Carbon::parse($contas->updated_at)->format('d/m/Y') }}"
+                                    disabled>
                             </div>
 
-                            <div class="col-md-12 col-sm-12 mb-3">
-                                <label for="note" class="form-label">Nota</label>
-                                {!! $contas->note !!}
+                            <div class="col-12 mb-3">
+                                <label for="note" class="form-label">Nota:</label>
+                                <div class="form-control bg-body-tertiary" style="min-height: 120px;">
+                                    {!! $contas->note !!}
+                                </div>
                             </div>
-
-
                         </div>
-                    </form>
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
 @endsection

@@ -92,7 +92,7 @@ class HomeController extends Controller
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
             $contas->fixed = $request->fixed ?? false;
-            $contas->repeat = $request->repeat;
+            $contas->repeat = $request->repeat ?? 0;
             $contas->note = $request->note;
 
             if ($contas->value <= 0 || $contas->value === "") {
@@ -127,7 +127,7 @@ class HomeController extends Controller
     {
 
         $user = auth()->user();
-        $contas = Conta::findOrFail($id);
+        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
     }
@@ -135,7 +135,7 @@ class HomeController extends Controller
     public function edit($id)
     {
         $user = auth()->user();
-        $contas = Conta::findOrFail($id);
+        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
         return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
     }

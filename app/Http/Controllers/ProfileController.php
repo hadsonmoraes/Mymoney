@@ -13,8 +13,8 @@ class ProfileController extends Controller
 {
     public function edit($id)
     {
-
-        $profile = User::findOrFail($id);
+        $user = auth()->user();
+        $profile = User::where('id', $user->id)->findOrFail($id);
 
         return view('profile.edit', ['profile' => $profile]);
     }
@@ -33,6 +33,7 @@ class ProfileController extends Controller
                 if ($request->password != "") {
                     $user->password = Hash::make($request->password);
                 }
+                $user->save();
 
                 return redirect()->route('profile.edit', ['id' => $user->id])->with('success', 'Perfil atualizado com sucesso!');
             }
@@ -42,29 +43,31 @@ class ProfileController extends Controller
         }
     }
 
-    public function toggleSidebar(Request $request){
+    public function toggleSidebar(Request $request)
+    {
 
-   $request->validate([
-        'sidebar_open' => 'required|boolean',
-    ]);
+        $request->validate([
+            'sidebar_open' => 'required|boolean',
+        ]);
 
-    $user = auth()->user();
-    $user->sidebar = $request->sidebar_open;
-    $user->save();
+        $user = auth()->user();
+        $user->sidebar = $request->sidebar_open;
+        $user->save();
 
-    return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
-    public function darkMode(Request $request){
+    public function darkMode(Request $request)
+    {
 
-   $request->validate([
-        'theme' => 'required|in:theme-light,theme-dark',
-    ]);
+        $request->validate([
+            'theme' => 'required|in:theme-light,theme-dark',
+        ]);
 
-    $user = auth()->user();
-    $user->darkmode = $request->theme;
-    $user->save();
+        $user = auth()->user();
+        $user->darkmode = $request->theme;
+        $user->save();
 
-    return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 }

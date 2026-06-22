@@ -38,4 +38,22 @@ class Conta extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function getStatusAttribute()
+    {
+        return match ($this->situation) {
+            'paid' => 'success',
+            'pending' => 'warning',
+            default => 'danger',
+        };
+    }
+
+    public function getSituationNameAttribute()
+    {
+        return match ($this->situation) {
+            'paid' => 'Pago',
+            'pending' => 'Pendente',
+            default => 'Cancelado',
+        };
+    }
 }

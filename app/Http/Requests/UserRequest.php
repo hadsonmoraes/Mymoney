@@ -38,6 +38,7 @@ class UserRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($user)
             ],
             'password' => [
+                'nullable',
                 'confirmed',
                 Password::min(8)
                     ->letters()
