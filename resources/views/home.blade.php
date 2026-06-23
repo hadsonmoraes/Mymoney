@@ -22,9 +22,13 @@
                                 class="btn btn-outline-secondary">
                                 <i class="fa-solid fa-file-excel me-1"></i> Exportar Excel
                             </a>
-                            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                            {{-- <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
                                 <i class="fa-solid fa-chart-line me-1"></i> Dashboard
-                            </a>
+                            </a> --}}
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#filtro">
+                                <i class="fas fa-filter me-1"></i> Filtros
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -88,46 +92,73 @@
                 </div>
 
 
-                <div class="card shadow-sm section-card">
-                    <div class="card-body">
-                        <div class="page-toolbar">
-                            <form id="filterForm" action="{{ route('home') }}"
-                                class="d-flex align-items-center gap-2 flex-wrap">
-                                {{-- <label for="perPage" class="form-label mb-0 fw-semibold">Exibir</label> --}}
-                                <select class="form-select form-select-sm" id="perPage" name="perPage"
-                                    onchange="document.getElementById('filterForm').submit()">
-                                    <option value="5" @selected($perPage == '5')>5</option>
-                                    <option value="10" @selected($perPage == '10')>10</option>
-                                    <option value="25" @selected($perPage == '25')>25</option>
-                                    <option value="50" @selected($perPage == '50')>50</option>
-                                    <option value="100" @selected($perPage == '100')>100</option>
-                                    <option value="150" @selected($perPage == '150')>150</option>
-                                    <option value="200" @selected($perPage == '200')>200</option>
-                                </select>
-                                @if ($name)
-                                    <input type="hidden" name="name" value="{{ $name }}">
-                                @endif
-                                @if ($data_inicio)
-                                    <input type="hidden" name="data_inicio" value="{{ $data_inicio }}">
-                                @endif
-                                @if ($data_fim)
-                                    <input type="hidden" name="data_fim" value="{{ $data_fim }}">
-                                @endif
-                                @if ($situation)
-                                    <input type="hidden" name="situation" value="{{ $situation }}">
-                                @endif
-                                @if ($type)
-                                    <input type="hidden" name="type" value="{{ $type }}">
-                                @endif
-                            </form>
-
-                            <div class="tool-row">
-                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#filtro">
-                                    <i class="fas fa-filter me-1"></i> Filtros
-                                </button>
+                <div class="row mb-3">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Entradas</span>
+                                    <span class="icon bg-soft-secondary"><i class="fa-solid fa-scale-balanced"></i></span>
+                                </div>
+                                {{-- <h3 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h3> --}}
+                                <small class="text-muted">Entradas - Saídas no período</small>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Saida</span>
+                                    <span class="icon bg-soft-primary"><i class="fa-solid fa-layer-group"></i></span>
+                                </div>
+                                {{-- <h4 class="metric-value mb-1">{{ $money($total) }}</h4> --}}
+                                {{-- <small class="text-muted">Quantidade: {{ $totalquantidade }}</small> --}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-12">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Balanço Mensal</span>
+                                    <span class="icon bg-soft-info"><i
+                                            class="fa-solid fa-arrow-right-arrow-left"></i></span>
+                                </div>
+                                <p class="mb-1"><span class="fw-semibold">Entrada:</span>
+                                    {{-- {{ $money($contasEntradaValor) }} --}}
+                                    {{-- ({{ $contasEntradaQuantidade }})</p> --}}
+                                    {{-- <p class="mb-0"><span class="fw-semibold">Saída:</span> {{ $money($contasSaidaValor) }} --}}
+                                    {{-- ({{ $contasSaidaQuantidade }})</p> --}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-12">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Total</span>
+                                    <span class="icon bg-soft-info"><i
+                                            class="fa-solid fa-arrow-right-arrow-left"></i></span>
+                                </div>
+                                <p class="mb-1"><span class="fw-semibold">Entrada:</span>
+                                    {{-- {{ $money($contasEntradaValor) }} --}}
+                                    {{-- ({{ $contasEntradaQuantidade }})</p> --}}
+                                    {{-- <p class="mb-0"><span class="fw-semibold">Saída:</span> {{ $money($contasSaidaValor) }} --}}
+                                    {{-- ({{ $contasSaidaQuantidade }})</p> --}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card shadow-sm section-card">
+                    <div class="card-body">
+
 
                         <x-alert />
                         <div class="table-responsive">
@@ -241,7 +272,39 @@
 
                             </table>
                         </div>
-                        {{ $contas->onEachSide(0)->links() }}
+                        <div class="d-flex justify-content-between align-items-center gap-5 flex-wrap mt-3">
+                            <form id="filterForm" action="{{ route('home') }}" class="d-flex align-items-center gap-2">
+                                <label for="perPage" class="text-nowrap">Linhas por página:</label>
+                                <select class="form-select form-select-sm" id="perPage" name="perPage"
+                                    onchange="document.getElementById('filterForm').submit()">
+                                    <option value="5" @selected($perPage == '5')>5</option>
+                                    <option value="10" @selected($perPage == '10')>10</option>
+                                    <option value="25" @selected($perPage == '25')>25</option>
+                                    <option value="50" @selected($perPage == '50')>50</option>
+                                    <option value="100" @selected($perPage == '100')>100</option>
+                                    <option value="150" @selected($perPage == '150')>150</option>
+                                    <option value="200" @selected($perPage == '200')>200</option>
+                                </select>
+                                @if ($name)
+                                    <input type="hidden" name="name" value="{{ $name }}">
+                                @endif
+                                @if ($data_inicio)
+                                    <input type="hidden" name="data_inicio" value="{{ $data_inicio }}">
+                                @endif
+                                @if ($data_fim)
+                                    <input type="hidden" name="data_fim" value="{{ $data_fim }}">
+                                @endif
+                                @if ($situation)
+                                    <input type="hidden" name="situation" value="{{ $situation }}">
+                                @endif
+                                @if ($type)
+                                    <input type="hidden" name="type" value="{{ $type }}">
+                                @endif
+                            </form>
+                            <div style="min-width: 25%;">
+                                {{ $contas->onEachSide(0)->links() }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
