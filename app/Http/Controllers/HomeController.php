@@ -52,7 +52,14 @@ class HomeController extends Controller
                 $whenQuery->where('type', $request->type);
             })
             ->orderByDesc('created_at');
+        $allContas = $contasQuery->get();
 
+        $contasEntrada = $allContas->where('type', 'entrada');
+        $contasEntradaValor = $contasEntrada->sum('value');
+
+        $contasSaida = $allContas->where('type', 'saida');
+        $contasSaidaValor = $contasSaida->sum('value');
+        $MyTotal = ($contasEntradaValor - $contasSaidaValor);
         $contas = $contasQuery->paginate($perPage)->withQueryString();
         session(['filtros_contas' => request()->query()]);
 
@@ -64,6 +71,9 @@ class HomeController extends Controller
             'situation' => $request->situation,
             'type' => $request->type,
             'perPage' => $perPage,
+            'entrada' => $contasEntradaValor,
+            'saida' => $contasSaidaValor,
+            'MyTotal' => $MyTotal,
         ]);
     }
 

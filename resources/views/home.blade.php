@@ -3,6 +3,10 @@
 @section('title', 'Home')
 
 @section('content')
+    @php
+        $money = fn($value) => 'R$ ' . number_format($value, 2, ',', '.');
+        $saldoClass = $MyTotal >= 0 ? 'text-success' : 'text-danger';
+    @endphp
     <div class="container-fluid p-4">
         <div class="row justify-content-center g-3">
             <div class="col-md-12">
@@ -93,62 +97,38 @@
 
 
                 <div class="row mb-3">
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body p-4">
+                    <div class="col-xl-4 col-md-6 mb-3 mb-md-3 mb-xl-0">
+                        <div class="card dash-stat-card h-100 ">
+                            <div class="card-body pe-4 ">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <span class="metric-label">Entradas</span>
+                                    <span class="icon bg-soft-success"><i class="fa-solid fa-arrow-up"></i></span>
+                                </div>
+                                <h3 class="metric-value mb-1 ">{{ $money($entrada) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-6 mb-3 mb-md-3 mb-xl-0">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body pe-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Saídas</span>
+                                    <span class="icon bg-soft-danger"><i class="fa-solid fa-arrow-down"></i></i></span>
+                                </div>
+                                <h4 class="metric-value mb-1">{{ $money($saida) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-md-12 mb-0 mb-md-0 mb-xl-0">
+                        <div class="card dash-stat-card h-100">
+                            <div class="card-body pe-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="metric-label">Saldo</span>
                                     <span class="icon bg-soft-secondary"><i class="fa-solid fa-scale-balanced"></i></span>
                                 </div>
-                                {{-- <h3 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h3> --}}
-                                <small class="text-muted">Entradas - Saídas no período</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Saida</span>
-                                    <span class="icon bg-soft-primary"><i class="fa-solid fa-layer-group"></i></span>
-                                </div>
-                                {{-- <h4 class="metric-value mb-1">{{ $money($total) }}</h4> --}}
-                                {{-- <small class="text-muted">Quantidade: {{ $totalquantidade }}</small> --}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-3 col-md-12">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Balanço Mensal</span>
-                                    <span class="icon bg-soft-info"><i
-                                            class="fa-solid fa-arrow-right-arrow-left"></i></span>
-                                </div>
-                                <p class="mb-1"><span class="fw-semibold">Entrada:</span>
-                                    {{-- {{ $money($contasEntradaValor) }} --}}
-                                    {{-- ({{ $contasEntradaQuantidade }})</p> --}}
-                                    {{-- <p class="mb-0"><span class="fw-semibold">Saída:</span> {{ $money($contasSaidaValor) }} --}}
-                                    {{-- ({{ $contasSaidaQuantidade }})</p> --}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-3 col-md-12">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Total</span>
-                                    <span class="icon bg-soft-info"><i
-                                            class="fa-solid fa-arrow-right-arrow-left"></i></span>
-                                </div>
-                                <p class="mb-1"><span class="fw-semibold">Entrada:</span>
-                                    {{-- {{ $money($contasEntradaValor) }} --}}
-                                    {{-- ({{ $contasEntradaQuantidade }})</p> --}}
-                                    {{-- <p class="mb-0"><span class="fw-semibold">Saída:</span> {{ $money($contasSaidaValor) }} --}}
-                                    {{-- ({{ $contasSaidaQuantidade }})</p> --}}
+                                <h4 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h4>
                             </div>
                         </div>
                     </div>
