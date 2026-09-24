@@ -27,6 +27,7 @@ class NotificationController extends Controller
 
         $query = InternalNotification::with('conta')
             ->where('user_id', $user->id)
+            ->unread()
             ->latest('id');
 
         if ($filter === 'unread') {

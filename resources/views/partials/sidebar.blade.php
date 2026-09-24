@@ -46,8 +46,8 @@
                                     </span>
                                 @endif
                             </span>
-                            <span class="sidebar-label d-inline-flex align-items-center justify-content-between w-100">
-                                <span>{{ __('Lembretes') }}</span>
+                            <span class="sidebar-label d-inline-flex align-items-center justify-content-between">
+                                <span class="sidebar-label">{{ __('Lembretes') }}</span>
                                 @if (auth()->check() && auth()->user()->unreadNotificationsCount() > 0)
                                     <span
                                         class="badge bg-danger rounded-pill ms-2">{{ auth()->user()->unreadNotificationsCount() }}</span>
