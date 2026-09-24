@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/contas/edit/{id}', [HomeController::class, 'edit'])->name('contas.edit');
     Route::put('/contas/update/{id}', [HomeController::class, 'update'])->name('contas.update');
     Route::delete('/contas/delete/{id}', [HomeController::class, 'destroy'])->name('contas.destroy');
+    Route::post('/contas/{id}/cancelar-recorrencia', [HomeController::class, 'cancelFixed'])->name('contas.cancelar-recorrencia');
+    Route::post('/contas/{id}/repetir', [HomeController::class, 'repeat'])->name('contas.repeat');
     Route::get('/contas/situacao/alterar/{id}', [HomeController::class, 'changeSituation'])->name('situacao.alterar');
     Route::post('/user/sidebar-toggle', [profileController::class, 'toggleSidebar'])->name('usuario.sidebar.toggle');
     Route::post('/user/dark-mode', [profileController::class, 'darkMode'])->name('usuario.darkmode');
@@ -50,4 +52,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/gerar-csv', [HomeController::class, 'gerarCsv'])->name('contas.gerar-csv');
+
+    // Importação de lançamentos via Excel / CSV
+    Route::get('/contas/importar/modelo', [HomeController::class, 'downloadImportTemplate'])->name('contas.importar.modelo');
+    Route::post('/contas/importar/preview', [HomeController::class, 'importExcelPreview'])->name('contas.importar.preview');
+    Route::post('/contas/importar/confirm', [HomeController::class, 'importExcelConfirm'])->name('contas.importar.confirm');
+
+    // Parcelamento Estruturado
+    Route::post('/contas/{id}/configurar-parcelamento', [HomeController::class, 'configureInstallment'])->name('contas.configurar-parcelamento');
+    Route::get('/contas/{id}/parcelamento-detalhes', [HomeController::class, 'installmentDetails'])->name('contas.parcelamento-detalhes');
+
+    // Central de Lembretes Internos
+    Route::get('/lembretes', [\App\Http\Controllers\NotificationController::class, 'index'])->name('lembretes.index');
+    Route::post('/lembretes/{id}/lida', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('lembretes.read');
+    Route::post('/lembretes/marcar-todas-lidas', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('lembretes.read-all');
+    Route::post('/lembretes/configuracoes', [\App\Http\Controllers\NotificationController::class, 'updateSettings'])->name('lembretes.settings');
 });

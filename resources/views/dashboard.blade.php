@@ -156,5 +156,203 @@
                 </div>
             </div>
         </div>
+
+        <!-- Projeção Futura e Próximos 30 Dias -->
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white py-3 border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0 fw-bold"><i
+                                        class="fa-solid fa-calendar-days text-primary me-2"></i>Compromissos Futuros
+                                    (Próximos 30 Dias)</h5>
+                                <small class="text-muted">Projeção com base em lançamentos pendentes com vencimento nos
+                                    próximos 30 dias.</small>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary border px-3 py-2">Próximos 30 dias</span>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 bg-light">
+                                    <span class="text-muted small fw-semibold">Receitas Previstas</span>
+                                    <h4 class="text-success fw-bold mb-0 mt-1">{{ $money($futureEntradasValor) }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 bg-light">
+                                    <span class="text-muted small fw-semibold">Despesas Previstas</span>
+                                    <h4 class="text-danger fw-bold mb-0 mt-1">{{ $money($futureSaidasValor) }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 bg-light">
+                                    <span class="text-muted small fw-semibold">Saldo Projetado do Período</span>
+                                    <h4
+                                        class="{{ $futureSaldoProjetado >= 0 ? 'text-primary' : 'text-danger' }} fw-bold mb-0 mt-1">
+                                        {{ $money($futureSaldoProjetado) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas de Vencimento e Contas Vencidas -->
+        <div class="row g-3 mt-2">
+            <!-- Vencidos -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
+                        <h6 class="mb-0 fw-bold text-danger"><i
+                                class="fa-solid fa-circle-exclamation me-2"></i>Lançamentos Vencidos Pendentes</h6>
+                        <span class="badge bg-danger rounded-pill">{{ $overdueCount }}</span>
+                    </div>
+                    <div class="card-body pt-0">
+                        @if ($overdueCount > 0)
+                            <div class="alert alert-danger py-2 small mb-3">
+                                <strong>Atenção:</strong> Existem {{ $overdueCount }} contas vencidas totalizando
+                                <strong>{{ $money($overdueValor) }}</strong>.
+                            </div>
+                            <div class="list-group list-group-flush border rounded"
+                                style="max-height: 220px; overflow-y: auto;">
+                                @foreach ($overdueContas->take(5) as $c)
+                                    <div
+                                        class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                        <div>
+                                            <div class="fw-semibold small">{{ $c->name }}</div>
+                                            <small class="text-danger">Venceu em
+                                                {{ \Carbon\Carbon::parse($c->maturity)->format('d/m/Y') }}</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="fw-bold text-dark small">{{ $money($c->value) }}</span>
+                                            <a href="{{ route('contas.show', $c->id) }}"
+                                                class="btn btn-sm btn-link p-0 d-block text-secondary small">Ver</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4 text-muted small">
+                                <i class="fa-regular fa-circle-check fa-2x text-success mb-2"></i>
+                                <div>Nenhum lançamento vencido pendente. Excelente!</div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vencendo Hoje e Próximos 7 Dias -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
+                        <h6 class="mb-0 fw-bold text-warning-emphasis"><i class="fa-solid fa-clock me-2"></i>Vencendo Hoje
+                            & Próximos 7 Dias</h6>
+                        <span
+                            class="badge bg-warning text-dark rounded-pill">{{ $dueTodayContas->count() + $upcoming7DaysContas->count() }}</span>
+                    </div>
+                    <div class="card-body pt-0">
+                        @if ($dueTodayContas->count() > 0 || $upcoming7DaysContas->count() > 0)
+                            <div class="list-group list-group-flush border rounded"
+                                style="max-height: 250px; overflow-y: auto;">
+                                @foreach ($dueTodayContas as $c)
+                                    <div
+                                        class="list-group-item list-group-item-danger d-flex justify-content-between align-items-center py-2 px-3">
+                                        <div>
+                                            <span class="badge bg-danger me-1">Hoje</span>
+                                            <span class="fw-semibold small">{{ $c->name }}</span>
+                                        </div>
+                                        <span class="fw-bold small">{{ $money($c->value) }}</span>
+                                    </div>
+                                @endforeach
+                                @foreach ($upcoming7DaysContas as $c)
+                                    <div
+                                        class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                        <div>
+                                            <span
+                                                class="badge bg-warning text-dark me-1">{{ \Carbon\Carbon::parse($c->maturity)->format('d/m') }}</span>
+                                            <span class="fw-semibold small">{{ $c->name }}</span>
+                                        </div>
+                                        <span class="fw-bold small text-muted">{{ $money($c->value) }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-4 text-muted small">
+                                <i class="fa-regular fa-calendar-check fa-2x text-primary mb-2"></i>
+                                <div>Nenhum vencimento nos próximos 7 dias.</div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progresso dos Parcelamentos Ativos -->
+        <div class="row g-3 mt-2 mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
+                        <div>
+                            <h5 class="mb-0 fw-bold"><i class="fa-solid fa-layer-group text-info me-2"></i>Progresso dos
+                                Parcelamentos Ativos</h5>
+                            <small class="text-muted">Acompanhamento consolidado com dados estruturados reais de cada
+                                parcela.</small>
+                        </div>
+                        <span class="badge bg-info text-white rounded-pill px-3">{{ $activeInstallments->count() }}
+                            ativos</span>
+                    </div>
+                    <div class="card-body pt-0">
+                        @if ($activeInstallments->isEmpty())
+                            <div class="text-center py-4 text-muted small">
+                                <i class="fa-solid fa-receipt fa-2x text-secondary mb-2"></i>
+                                <div>Nenhum parcelamento ativo no momento.</div>
+                            </div>
+                        @else
+                            <div class="row g-3">
+                                @foreach ($activeInstallments as $inst)
+                                    <div class="col-md-6 col-xl-4">
+                                        <div class="border rounded p-3 bg-light-subtle h-100">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <h6 class="fw-bold mb-0 text-dark">{{ $inst->name }}</h6>
+                                                    <small class="text-muted">{{ $inst->category }}</small>
+                                                </div>
+                                                <span
+                                                    class="badge bg-primary">{{ $inst->paid_count }}/{{ $inst->total_installments }}</span>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="d-flex justify-content-between small text-muted mb-1">
+                                                    <span>Progresso</span>
+                                                    <span
+                                                        class="fw-bold text-primary">{{ $inst->progress_percent }}%</span>
+                                                </div>
+                                                <div class="progress" style="height: 8px;">
+                                                    <div class="progress-bar bg-success" role="progressbar"
+                                                        style="width: {{ $inst->progress_percent }}%;"
+                                                        aria-valuenow="{{ $inst->progress_percent }}" aria-valuemin="0"
+                                                        aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between small pt-1 border-top mt-2">
+                                                <span class="text-muted">Restante:
+                                                    <strong>{{ $money($inst->remaining_value) }}</strong></span>
+                                                <span class="text-muted">Total:
+                                                    <strong>{{ $money($inst->total_value) }}</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

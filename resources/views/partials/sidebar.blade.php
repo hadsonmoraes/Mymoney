@@ -34,6 +34,27 @@
                             <span class="sidebar-label">{{ 'Categoria' }}</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-text {{ request()->routeIs('lembretes.*') ? 'active' : '' }}"
+                            href="{{ route('lembretes.index') }}">
+                            <span class="sidebar-icon position-relative">
+                                <i class="fa-solid fa-bell"></i>
+                                @if (auth()->check() && auth()->user()->unreadNotificationsCount() > 0)
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                        <span class="visually-hidden">Novos lembretes</span>
+                                    </span>
+                                @endif
+                            </span>
+                            <span class="sidebar-label d-inline-flex align-items-center justify-content-between w-100">
+                                <span>{{ __('Lembretes') }}</span>
+                                @if (auth()->check() && auth()->user()->unreadNotificationsCount() > 0)
+                                    <span
+                                        class="badge bg-danger rounded-pill ms-2">{{ auth()->user()->unreadNotificationsCount() }}</span>
+                                @endif
+                            </span>
+                        </a>
+                    </li>
                 </ul>
                 <ul class="nav flex-column p-3 mt-auto">
                     @guest
@@ -82,7 +103,8 @@
                     @endguest
                 </ul>
                 <div class="sidebar-footer p-3">
-                    <small class="text-white-50 d-block sidebar-label">Controle financeiro com uma interface mais limpa e rápida.</small>
+                    <small class="text-white-50 d-block sidebar-label">Controle financeiro com uma interface mais limpa
+                        e rápida.</small>
                 </div>
             </nav>
     @endif

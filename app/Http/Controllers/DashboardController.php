@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conta;
+use App\Services\InstallmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function dashboard(Request $request)
+    public function dashboard(Request $request, InstallmentService $installmentService)
     {
         $user = auth()->user();
 
@@ -41,9 +42,50 @@ class DashboardController extends Controller
 
         $MyTotal = ($contasEntradaValor - $contasSaidaValor);
 
-
         $total = $allContas->sum('value');
         $totalquantidade = $allContas->count();
+
+        // --- Visão de Futuro / Próximos 30 dias ---
+        $today = Carbon::today();
+        $next30Days = (clone $today)->addDays(30);
+
+        $futurePendingContas = Conta::where('user_id', $user->id)
+            ->where('situation', 'pending')
+            ->whereDate('maturity', '>=', $today)
+            ->whereDate('maturity', '<=', $next30Days)
+            ->orderBy('maturity')
+            ->get();
+
+        $futureEntradasValor = $futurePendingContas->where('type', 'entrada')->sum('value');
+        $futureSaidasValor = $futurePendingContas->where('type', 'saida')->sum('value');
+        $futureSaldoProjetado = $futureEntradasValor - $futureSaidasValor;
+
+        // Vencidos pendentes
+        $overdueContas = Conta::where('user_id', $user->id)
+            ->where('situation', '!=', 'paid')
+            ->whereDate('maturity', '<', $today)
+            ->orderBy('maturity')
+            ->get();
+        $overdueValor = $overdueContas->sum('value');
+        $overdueCount = $overdueContas->count();
+
+        // Vencendo hoje
+        $dueTodayContas = Conta::where('user_id', $user->id)
+            ->where('situation', '!=', 'paid')
+            ->whereDate('maturity', '=', $today)
+            ->get();
+
+        // Vencendo nos próximos 7 dias (excluindo hoje)
+        $next7Days = (clone $today)->addDays(7);
+        $upcoming7DaysContas = Conta::where('user_id', $user->id)
+            ->where('situation', '!=', 'paid')
+            ->whereDate('maturity', '>', $today)
+            ->whereDate('maturity', '<=', $next7Days)
+            ->orderBy('maturity')
+            ->get();
+
+        // Parcelamentos ativos com progresso estruturado
+        $activeInstallments = $installmentService->getActiveInstallmentsForUser($user->id);
 
         return view('dashboard', [
             'contasPagasValor' => $contasPagasValor,
@@ -60,7 +102,17 @@ class DashboardController extends Controller
             'total' => $total,
             'totalquantidade' => $totalquantidade,
             'data_inicio' => $dataInicio,
-            'data_fim' => $dataFim
+            'data_fim' => $dataFim,
+            // Futuro & Compromissos
+            'futureEntradasValor' => $futureEntradasValor,
+            'futureSaidasValor' => $futureSaidasValor,
+            'futureSaldoProjetado' => $futureSaldoProjetado,
+            'overdueContas' => $overdueContas,
+            'overdueValor' => $overdueValor,
+            'overdueCount' => $overdueCount,
+            'dueTodayContas' => $dueTodayContas,
+            'upcoming7DaysContas' => $upcoming7DaysContas,
+            'activeInstallments' => $activeInstallments,
         ]);
     }
 }

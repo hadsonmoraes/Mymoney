@@ -28,6 +28,11 @@ class ContaRequest extends FormRequest
             'type' => 'required',
             'situation' => 'required',
             'category_id' => 'required',
+            'recurrence_type' => 'nullable|in:none,weekly,biweekly,monthly,yearly,custom',
+            'recurrence_interval' => 'nullable|integer|min:1|max:365',
+            'recurrence_end_date' => 'nullable|date',
+            'recurrence_max_occurrences' => 'nullable|integer|min:1|max:365',
+            'update_scope' => 'nullable|in:only_this,this_and_next,all_sequence',
         ];
     }
 
@@ -40,6 +45,9 @@ class ContaRequest extends FormRequest
             'maturity.required' => 'Campo vencimento é obrigatório!',
             'situation.required' => 'Campo situação é obrigatório!',
             'category_id.required' => 'Campo categoria é obrigatório!',
+            'recurrence_type.in' => 'Tipo de recorrência selecionado inválido!',
+            'recurrence_interval.min' => 'O intervalo mínimo de recorrência é 1 dia!',
+            'update_scope.in' => 'Opção de atualização em lote inválida!',
         ];
     }
 }

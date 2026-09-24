@@ -6,7 +6,14 @@ use App\Models\Conta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ContaRequest;
+use App\Http\Requests\RepeatContaRequest;
+use App\Http\Requests\ConfigureInstallmentRequest;
 use App\Models\Category;
+use App\Models\Recurrence;
+use App\Services\ContaRepeatService;
+use App\Services\RecurrenceService;
+use App\Services\InstallmentService;
+use App\Services\ExcelImportService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -87,12 +94,11 @@ class HomeController extends Controller
         ]);
     }
 
-    public function store(ContaRequest $request)
+    public function store(ContaRequest $request, RecurrenceService $recurrenceService)
     {
         $request->validated();
 
         try {
-
             $contas = new Conta;
 
             $contas->name = $request->name;
@@ -101,7 +107,7 @@ class HomeController extends Controller
             $contas->situation = $request->situation;
             $contas->category_id = $request->category_id;
             $contas->type = $request->type;
-            $contas->fixed = $request->fixed ?? false;
+            $contas->fixed = (bool) ($request->fixed ?? false);
             $contas->repeat = $request->repeat ?? 0;
             $contas->note = $request->note;
 
@@ -114,86 +120,320 @@ class HomeController extends Controller
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
-
                 $extension = $requestImage->extension();
-
                 $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
-
                 $requestImage->move(public_path('img/comprovantes' . $contas->user_id), $imageName);
-
                 $contas->image =  $imageName;
             }
 
             $contas->save();
 
+            // Configurar regra de recorrência contínua se selecionada
+            $recurrenceType = $request->input('recurrence_type');
+            if ($recurrenceType && $recurrenceType !== 'none') {
+                $recurrenceService->createFromConta($contas, [
+                    'frequency' => $recurrenceType,
+                    'interval' => $request->input('recurrence_interval', 1),
+                    'end_date' => $request->input('recurrence_end_date'),
+                    'max_occurrences' => $request->input('recurrence_max_occurrences'),
+                    'start_date' => $contas->maturity,
+                ]);
+            } elseif ($contas->fixed) {
+                // Compatibilidade com checkbox legado "Despesa/receita fixa"
+                $recurrenceService->createFromConta($contas, [
+                    'frequency' => 'monthly',
+                    'interval' => 1,
+                    'start_date' => $contas->maturity,
+                ]);
+            }
+
             return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta criada com sucesso!');
         } catch (Exception $e) {
             Log::error('Conta não Cadastrada.', ['mensagem' => $e->getMessage()]);
-            return back()->withInput()->with('error', 'Conta não Cadastrada');
+            return back()->withInput()->with('error', 'Conta não Cadastrada: ' . $e->getMessage());
         }
     }
 
-    public function show($id)
-    {
-
-        $user = auth()->user();
-        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
-        $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
-        return view('contas.show', ['contas' => $contas, 'categorys' => $categorys]);
-    }
-
-    public function edit($id)
+    public function show($id, InstallmentService $installmentService)
     {
         $user = auth()->user();
-        $contas = Conta::where('user_id', $user->id)->findOrFail($id);
+        $contas = Conta::where('user_id', $user->id)->with(['recurrence', 'category'])->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
-        return view('contas.edit', ['contas' => $contas, 'categorys' => $categorys]);
+
+        $installmentSummary = $contas->installment_group_id
+            ? $installmentService->getInstallmentSummary($contas->installment_group_id, $user->id)
+            : null;
+
+        $installmentPattern = !$contas->is_installment ? $contas->detectInstallmentPattern() : null;
+        $potentialInstallments = ($installmentPattern)
+            ? $installmentService->findPotentialInstallmentMatches($contas)
+            : collect();
+
+        return view('contas.show', [
+            'contas' => $contas,
+            'categorys' => $categorys,
+            'installmentSummary' => $installmentSummary,
+            'installmentPattern' => $installmentPattern,
+            'potentialInstallments' => $potentialInstallments,
+        ]);
     }
 
-    public function update(ContaRequest $request)
+    public function edit($id, InstallmentService $installmentService)
+    {
+        $user = auth()->user();
+        $contas = Conta::where('user_id', $user->id)->with(['recurrence', 'category'])->findOrFail($id);
+        $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
+
+        $sequenceCount = 1;
+        if (!empty($contas->repeat_group_id)) {
+            $sequenceCount = Conta::where('user_id', $user->id)
+                ->where('repeat_group_id', $contas->repeat_group_id)
+                ->count();
+        } elseif (!empty($contas->installment_group_id)) {
+            $sequenceCount = Conta::where('user_id', $user->id)
+                ->where('installment_group_id', $contas->installment_group_id)
+                ->count();
+        }
+
+        $installmentSummary = $contas->installment_group_id
+            ? $installmentService->getInstallmentSummary($contas->installment_group_id, $user->id)
+            : null;
+
+        $installmentPattern = !$contas->is_installment ? $contas->detectInstallmentPattern() : null;
+        $potentialInstallments = ($installmentPattern)
+            ? $installmentService->findPotentialInstallmentMatches($contas)
+            : collect();
+
+        return view('contas.edit', [
+            'contas' => $contas,
+            'categorys' => $categorys,
+            'sequenceCount' => $sequenceCount,
+            'installmentSummary' => $installmentSummary,
+            'installmentPattern' => $installmentPattern,
+            'potentialInstallments' => $potentialInstallments,
+        ]);
+    }
+
+    public function update(ContaRequest $request, ContaRepeatService $repeatService, RecurrenceService $recurrenceService, InstallmentService $installmentService)
     {
         try {
             $user_id = auth()->user()->id;
             $data = $request->validated();
-            $data['repeat'] = $request->repeat;
+            $data['repeat'] = $request->repeat ?? 0;
             $data['note'] = $request->note;
             $data['value'] = str_replace(',', '.', str_replace('.', '', $request->value));
             if ($data['value'] <= 0 || $data['value'] === "") {
                 return back()->withInput()->with('error', 'O valor precisa ser maior que zero');
             }
-            $data['fixed'] = $request->fixed ?? false;
+            $data['fixed'] = (bool) ($request->fixed ?? false);
+
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
                 $requestImage = $request->image;
-
                 $extension = $requestImage->extension();
-
                 $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
-
                 $requestImage->move(public_path('img/comprovantes' . $user_id), $imageName);
-
                 $data['image'] =  $imageName;
             }
+
             $id = $request->id;
-            Conta::findOrFail($id)->update($data);
+            $conta = Conta::where('user_id', $user_id)->findOrFail($id);
+
+            // Remover campos extras que não pertencem à tabela contas
+            $scope = $request->input('update_scope', 'only_this');
+            unset($data['recurrence_type'], $data['recurrence_interval'], $data['recurrence_end_date'], $data['recurrence_max_occurrences'], $data['update_scope']);
+
+            if (!empty($conta->repeat_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
+                $repeatService->updateSequence($conta, $data, $scope);
+            } elseif (!empty($conta->installment_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
+                $installmentService->updateSequence($conta, $data, $scope);
+            } else {
+                $conta->update($data);
+            }
+
+            // Gerenciar regra de recorrência se alterada
+            $recurrenceType = $request->input('recurrence_type');
+            if ($recurrenceType && $recurrenceType !== 'none') {
+                if ($conta->recurrence_id) {
+                    $conta->recurrence->update([
+                        'frequency' => $recurrenceType,
+                        'interval' => $request->input('recurrence_interval', 1),
+                        'end_date' => $request->input('recurrence_end_date'),
+                        'max_occurrences' => $request->input('recurrence_max_occurrences'),
+                        'name' => $conta->name,
+                        'value' => $conta->value,
+                        'category_id' => $conta->category_id,
+                        'type' => $conta->type,
+                        'note' => $conta->note,
+                    ]);
+                } else {
+                    $recurrenceService->createFromConta($conta, [
+                        'frequency' => $recurrenceType,
+                        'interval' => $request->input('recurrence_interval', 1),
+                        'end_date' => $request->input('recurrence_end_date'),
+                        'max_occurrences' => $request->input('recurrence_max_occurrences'),
+                        'start_date' => $conta->maturity,
+                    ]);
+                }
+            }
 
             return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta atualizada com sucesso!');
         } catch (Exception $e) {
             Log::error('Conta não atualizada.', ['mensagem' => $e->getMessage()]);
-            return back()->withInput()->with('error', 'Conta não atualizada');
+            return back()->withInput()->with('error', 'Conta não atualizada: ' . $e->getMessage());
         }
     }
 
-    public function destroy($id)
+    public function repeat(RepeatContaRequest $request, $id, ContaRepeatService $repeatService)
     {
-        Conta::findOrFail($id)->delete();
-        return redirect()->route('home', session('filtros_contas'))->with('success', 'Conta apagada!');
+        $user_id = auth()->user()->id;
+        $conta = Conta::where('user_id', $user_id)->findOrFail($id);
+
+        try {
+            $created = $repeatService->repeat($conta, $request->validated());
+            $count = $created->count();
+
+            return redirect()->route('home', session('filtros_contas'))
+                ->with('success', "Lançamento repetido com sucesso! {$count} nova(s) ocorrência(s) gerada(s).");
+        } catch (Exception $e) {
+            Log::error('Erro ao repetir lançamento.', ['mensagem' => $e->getMessage()]);
+            return back()->with('error', 'Não foi possível repetir o lançamento: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(Request $request, $id, ContaRepeatService $repeatService, RecurrenceService $recurrenceService, InstallmentService $installmentService)
+    {
+        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
+        $scope = $request->input('delete_scope', 'only_this');
+        $cancelRecurrence = $request->boolean('cancel_recurrence', false);
+
+        if ($cancelRecurrence && $conta->recurrence_id) {
+            $recurrenceService->cancelFromConta($conta);
+        }
+
+        if (!empty($conta->repeat_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
+            $repeatService->deleteSequence($conta, $scope);
+            $msg = $scope === 'all_sequence' ? 'Toda a sequência foi apagada!' : 'Este e os lançamentos posteriores foram apagados!';
+        } elseif (!empty($conta->installment_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
+            $installmentService->deleteSequence($conta, $scope);
+            $msg = $scope === 'all_sequence' ? 'Todas as parcelas foram apagadas!' : 'Esta e as parcelas posteriores foram apagadas!';
+        } else {
+            $conta->delete();
+            $msg = 'Conta apagada!';
+        }
+
+        return redirect()->route('home', session('filtros_contas'))->with('success', $msg);
+    }
+
+    public function configureInstallment(ConfigureInstallmentRequest $request, $id, InstallmentService $installmentService)
+    {
+        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
+
+        try {
+            $validated = $request->validated();
+            if ($validated['is_installment']) {
+                $installmentService->configureInstallment($conta, $validated);
+                return back()->with('success', 'Parcelamento estruturado configurado com sucesso!');
+            } else {
+                $conta->update([
+                    'installment_group_id' => null,
+                    'installment_number' => null,
+                    'installments_total' => null,
+                ]);
+                return back()->with('success', 'Configuração de parcelamento removida com sucesso!');
+            }
+        } catch (Exception $e) {
+            Log::error('Erro ao configurar parcelamento', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Erro ao configurar parcelamento: ' . $e->getMessage());
+        }
+    }
+
+    public function installmentDetails($id, InstallmentService $installmentService)
+    {
+        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
+        if (!$conta->installment_group_id) {
+            return response()->json(['error' => 'Lançamento não possui parcelamento estruturado.'], 404);
+        }
+
+        $summary = $installmentService->getInstallmentSummary($conta->installment_group_id, auth()->id());
+        return response()->json($summary);
+    }
+
+    public function downloadImportTemplate(ExcelImportService $excelService)
+    {
+        $csvContent = $excelService->generateTemplateCsv();
+        return response($csvContent, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="modelo_importacao_contas.csv"',
+        ]);
+    }
+
+    public function importExcelPreview(Request $request, ExcelImportService $excelService)
+    {
+        $request->validate([
+            'import_file' => 'required|file|max:10240',
+        ], [
+            'import_file.required' => 'Selecione um arquivo Excel (.xlsx) ou CSV para importar.',
+            'import_file.max' => 'O arquivo não pode exceder 10MB.',
+        ]);
+
+        try {
+            $file = $request->file('import_file');
+            $analysis = $excelService->parseAndValidate($file->getRealPath(), auth()->id());
+
+            session(['excel_import_token' => $analysis['import_token']]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $analysis,
+            ]);
+        } catch (Exception $e) {
+            Log::error('Erro na pré-visualização do Excel', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao processar arquivo: ' . $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    public function importExcelConfirm(Request $request, ExcelImportService $excelService)
+    {
+        $token = $request->input('import_token') ?: session('excel_import_token');
+
+        if (empty($token)) {
+            return back()->with('error', 'Nenhum dado válido para importação encontrado na sessão. Por favor envie o arquivo novamente.');
+        }
+
+        try {
+            $autoCreateCategories = $request->boolean('auto_create_categories', false);
+            $imported = $excelService->commitImport($token, auth()->id(), ['create_missing_categories' => $autoCreateCategories]);
+
+            session()->forget('excel_import_token');
+
+            return redirect()->route('home')->with('success', "Importação concluída com sucesso! {$imported} lançamentos foram criados.");
+        } catch (Exception $e) {
+            Log::error('Erro ao confirmar importação do Excel', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Erro durante a importação: ' . $e->getMessage());
+        }
+    }
+
+    public function cancelFixed($id, RecurrenceService $recurrenceService)
+    {
+        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
+
+        if (!$conta->fixed && !$conta->recurrence_id) {
+            return back()->with('error', 'Esta conta não possui recorrência fixa.');
+        }
+
+        $recurrenceService->cancelFromConta($conta);
+
+        return back()->with('success', 'Recorrência cancelada. Os lançamentos existentes foram mantidos.');
     }
 
     public function changeSituation(Conta $id)
     {
 
         try {
-            $conta = $id;
+            $conta = Conta::where('user_id', auth()->id())->findOrFail($id->id);
 
             if ($conta->situation === 'paid') {
                 $novaSituacao = 'pending';
