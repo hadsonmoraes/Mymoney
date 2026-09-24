@@ -49,7 +49,7 @@
                                     <div class="col-12 col-md-6 col-lg-3">
                                         <label for="maturity" class="form-label">Vencimento</label>
                                         <input type="date" class="form-control" id="maturity" name="maturity" required
-                                            value="{{ $contas->maturity }}">
+                                            value="{{ $contas->maturity?->format('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
