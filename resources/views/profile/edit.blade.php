@@ -3,7 +3,7 @@
 @section('title', 'Editar perfil')
 
 @section('content')
-    <div class="container-fluid p-4">
+    <div class="container-fluid p-3">
         <div class="row justify-content-center g-3">
             <div class="col-12">
                 <div class="page-hero mb-3">
@@ -23,7 +23,8 @@
                     <div class="card-body form-card-body">
                         <x-alert />
 
-                        <form action="{{ route('profile.update', ['id' => $profile->id]) }}" method="post" class="form-grid">
+                        <form action="{{ route('profile.update', ['id' => $profile->id]) }}" method="post"
+                            class="form-grid">
                             @csrf
                             @method('PUT')
 
@@ -68,7 +69,8 @@
                                             <input id="password-confirm" type="password" class="form-control"
                                                 name="password_confirmation" autocomplete="new-password"
                                                 placeholder="Repita a senha nova">
-                                            <span class="input-group-text" onclick="togglePassword('password-confirm', this)">
+                                            <span class="input-group-text"
+                                                onclick="togglePassword('password-confirm', this)">
                                                 <i class="fa-regular fa-eye"></i>
                                             </span>
                                         </div>

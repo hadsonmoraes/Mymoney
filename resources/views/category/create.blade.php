@@ -3,7 +3,7 @@
 @section('title', 'Cadastrar categoria')
 
 @section('content')
-    <div class="container-fluid p-4">
+    <div class="container-fluid p-3">
         <div class="row justify-content-center g-3">
             <div class="col-12">
                 <div class="page-hero mb-3">
@@ -32,9 +32,10 @@
 
                                 <div class="row g-3 justify-content-center">
                                     <div class="col-12 col-md-10 col-lg-8">
-                                        <label for="name" class="form-label">Nome <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"
-                                            placeholder="Ex: Casa, transporte, alimentação">
+                                        <label for="name" class="form-label">Nome <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            value="{{ old('name') }}" placeholder="Ex: Casa, transporte, alimentação">
                                         <div class="form-help">Use um nome curto para localizar mais rápido.</div>
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-3">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div>
                 <h2 class="h3 mb-1"><i class="fa-solid fa-bell text-warning me-2"></i>Central de Lembretes Internos</h2>

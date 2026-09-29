@@ -3,7 +3,7 @@
 @section('title', 'Editar')
 
 @section('content')
-    <div class="container-fluid p-4">
+    <div class="container-fluid p-3">
         <div class="row justify-content-center g-3">
             <div class="col-12">
                 <div class="page-hero mb-3">
