@@ -66,8 +66,8 @@ body,
 }
 
 body.sidebar-collapsed #content {
-    margin-left: 84px;
-    width: calc(100% - 84px);
+    margin-left: 70px;
+    width: calc(100% - 70px);
 }
 
 #sidebar {
@@ -88,11 +88,11 @@ body.theme-light #sidebar {
 }
 
 #sidebar.collapsed {
-    width: 84px;
+    width: 70px;
 }
 
 body.sidebar-collapsed #sidebar {
-    width: 84px;
+    width: 70px;
 }
 
 #sidebar .sidebar-header {
@@ -712,4 +712,147 @@ textarea.form-control {
 footer {
     color: var(--app-muted);
     font-size: 0.9rem;
+}
+
+/* ================================
+   MODAL DE FILTROS
+================================ */
+
+.filter-modal {
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.filter-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #eef0f2;
+    background: #fff;
+}
+
+.filter-modal-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    border-radius: 11px;
+    background: rgba(13, 110, 253, 0.1);
+    color: var(--bs-primary);
+}
+
+.filter-modal-header .modal-title {
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: #212529;
+}
+
+.filter-modal-description {
+    color: #6c757d;
+    font-size: 0.78rem;
+}
+
+.filter-modal-body {
+    padding: 24px;
+    background: #fff;
+}
+
+.filter-field .form-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-bottom: 7px;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.filter-field .form-label i {
+    width: 15px;
+    color: #7b8490;
+    font-size: 0.72rem;
+}
+
+.filter-field .form-control,
+.filter-field .form-select {
+    min-height: 44px;
+
+    border-radius: 9px;
+    border: 1px solid #dee2e6;
+
+    font-size: 0.86rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.filter-field .form-control::placeholder {
+    color: #adb5bd;
+    font-size: 0.82rem;
+}
+
+.filter-field .form-control:hover,
+.filter-field .form-select:hover {
+    border-color: #c5ccd3;
+}
+
+.filter-field .form-control:focus,
+.filter-field .form-select:focus {
+    border-color: rgba(13, 110, 253, 0.5);
+
+    box-shadow:
+        0 0 0 3px rgba(13, 110, 253, 0.08);
+}
+
+.filter-modal-footer {
+    padding: 16px 24px;
+
+    border-top: 1px solid #eef0f2;
+    background: #fafbfc;
+
+    gap: 8px;
+}
+
+.filter-modal-footer .btn {
+    min-height: 42px;
+    padding-left: 18px;
+    padding-right: 18px;
+
+    border-radius: 9px;
+
+    font-size: 0.84rem;
+    font-weight: 500;
+}
+
+.filter-modal-footer .btn-primary {
+    box-shadow: 0 3px 8px rgba(13, 110, 253, 0.18);
+}
+
+@media (max-width: 575.98px) {
+
+    .filter-modal {
+        border-radius: 14px;
+    }
+
+    .filter-modal-header {
+        padding: 18px;
+    }
+
+    .filter-modal-body {
+        padding: 18px;
+    }
+
+    .filter-modal-footer {
+        padding: 14px 18px;
+    }
+
+    .filter-modal-footer .btn {
+        flex: 1;
+    }
 }
