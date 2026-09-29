@@ -8,7 +8,7 @@
         $saldoClass = $MyTotal >= 0 ? 'text-success' : 'text-danger';
     @endphp
 
-    <div class="container-fluid p-4">
+    <div class="container-fluid p-3">
         <div class="row g-3 mb-3">
             <div class="col-md-12">
                 <div class="page-hero dash-hero">
@@ -26,36 +26,99 @@
                                 {{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}
                             </span>
                         </div>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                            data-bs-target="#modalFiltrosDashboard">
+                            <i class="fas fa-filter me-1"></i>
+                            Filtros
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row g-3 mb-2">
-            <div class="col-md-12">
-                <div class="card dash-filter-card section-card">
-                    <div class="card-body p-4">
-                        <form action="{{ route('dashboard') }}">
-                            <div class="row g-3 align-items-end">
-                                <div class="col-md-4 col-sm-12">
-                                    <label for="data_inicio" class="form-label fw-semibold">Data Início</label>
-                                    <input type="date" class="form-control" id="data_inicio" name="data_inicio"
-                                        value="{{ $data_inicio }}">
-                                </div>
-                                <div class="col-md-4 col-sm-12">
-                                    <label for="data_fim" class="form-label fw-semibold">Data Fim</label>
-                                    <input type="date" class="form-control" id="data_fim" name="data_fim"
-                                        value="{{ $data_fim }}">
-                                </div>
-                                <div class="col-md-4 col-sm-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa-solid fa-magnifying-glass me-1"></i> Pesquisar
-                                    </button>
-                                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Limpar</a>
-                                </div>
+        <div class="modal fade" id="modalFiltrosDashboard" tabindex="-1" aria-labelledby="modalFiltrosDashboardLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content filter-modal">
+
+                    <div class="modal-header filter-modal-header">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div class="filter-modal-icon">
+                                <i class="fas fa-filter"></i>
                             </div>
-                        </form>
+
+                            <div>
+                                <h5 class="modal-title mb-1" id="modalFiltrosDashboardLabel">
+                                    Filtros do dashboard
+                                </h5>
+
+                                <p class="filter-modal-description mb-0">
+                                    Selecione o período que deseja visualizar.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
                     </div>
+
+                    <div class="modal-body filter-modal-body">
+
+                        <form action="{{ route('dashboard') }}" id="formFiltrosDashboard">
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <div class="filter-field">
+
+                                        <label for="dashboard_data_inicio" class="form-label">
+                                            <i class="fas fa-calendar"></i>
+                                            Data início
+                                        </label>
+
+                                        <input type="date" class="form-control" id="dashboard_data_inicio"
+                                            name="data_inicio" value="{{ $data_inicio }}">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="filter-field">
+
+                                        <label for="dashboard_data_fim" class="form-label">
+                                            <i class="fas fa-calendar"></i>
+                                            Data fim
+                                        </label>
+
+                                        <input type="date" class="form-control" id="dashboard_data_fim" name="data_fim"
+                                            value="{{ $data_fim }}">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    <div class="modal-footer filter-modal-footer">
+
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-rotate-left me-1"></i>
+                            Limpar
+                        </a>
+
+                        <button type="submit" form="formFiltrosDashboard" class="btn btn-primary">
+                            <i class="fas fa-magnifying-glass me-1"></i>
+                            Aplicar período
+                        </button>
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -158,7 +221,7 @@
         </div>
 
         <!-- Projeção Futura e Próximos 30 Dias -->
-        <div class="row g-3 mt-3">
+        <div class="row g-3 mt-1">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white py-3 border-0">

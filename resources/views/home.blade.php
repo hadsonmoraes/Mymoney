@@ -7,7 +7,7 @@
         $money = fn($value) => 'R$ ' . number_format($value, 2, ',', '.');
         $saldoClass = $MyTotal >= 0 ? 'text-success' : 'text-danger';
     @endphp
-    <div class="container-fluid p-4">
+    <div class="container-fluid p-3">
         <div class="row justify-content-center g-3">
             <div class="col-md-12">
                 <div class="page-hero mb-3">
@@ -34,72 +34,160 @@
                                 class="btn btn-outline-secondary">
                                 <i class="fa-solid fa-file-excel me-1"></i> Exportar Excel
                             </a>
-                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#filtro">
-                                <i class="fas fa-filter me-1"></i> Filtros
+                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modalFiltros">
+                                <i class="fas fa-filter me-1"></i>
+                                Filtros
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow-sm collapse mb-3 filter-card" id="filtro">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Filtros rápidos</span>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('home') }}">
-                            <div class="row">
-                                <div class="col-md-2 col-sm-12">
-                                    <label for="name" class="form-label fw-bold">Nome</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ $name }}">
+
+                <div class="modal fade" id="modalFiltros" tabindex="-1" aria-labelledby="modalFiltrosLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content filter-modal">
+
+                            <div class="modal-header filter-modal-header">
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div class="filter-modal-icon">
+                                        <i class="fas fa-filter"></i>
+                                    </div>
+
+                                    <div>
+                                        <h5 class="modal-title mb-1" id="modalFiltrosLabel">
+                                            Filtros
+                                        </h5>
+
+                                        <p class="filter-modal-description mb-0">
+                                            Refine os lançamentos para encontrar exatamente o que procura.
+                                        </p>
+                                    </div>
+
                                 </div>
 
-                                <div class="col-md-2 col-sm-12">
-                                    <label for="data_inicio" class="form-label fw-bold">Data Início</label>
-                                    <input type="date" class="form-control" id="data_inicio" name="data_inicio"
-                                        value="{{ $data_inicio }}">
-                                </div>
-
-                                <div class="col-md-2 col-sm-12">
-                                    <label for="data_fim" class="form-label fw-bold">Data Fim</label>
-                                    <input type="date" class="form-control" id="data_fim" name="data_fim"
-                                        value="{{ $data_fim }}">
-                                </div>
-
-                                <div class="col-md-2 col-sm-12">
-                                    <label for="situation" class="form-label fw-bold">Situação</label>
-                                    <select class="form-select" id="situation" name="situation">
-                                        <option value="">Todos</option>
-                                        <option value="paid" @selected($situation == 'paid')>Pago</option>
-                                        <option value="pending" @selected($situation == 'pending')>Pendente</option>
-                                        <option value="canceled" @selected($situation == 'canceled')>Cancelado</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-2 col-sm-12">
-                                    <label for="type" class="form-label fw-bold">Tipo</label>
-                                    <select class="form-select" id="type" name="type">
-                                        <option value="">Todos</option>
-                                        <option value="entrada" @selected($type == 'entrada')>Entrada</option>
-                                        <option value="saida" @selected($type == 'saida')>Saída</option>
-                                    </select>
-                                </div>
-
-                                @if ($perPage)
-                                    <input type="hidden" name="perPage" id="perPage" value="{{ $perPage }}">
-                                @endif
-
-                                <div class="d-flex col-md-2 col-sm-12 mt-3 pt-3">
-                                    <button type="submit" class="btn btn-primary me-1">Buscar</button>
-                                    <a href="{{ route('home') }}"
-                                        class="btn btn-outline-secondary mt-xl-0 mt-lg-2 mt-md-2 ">Limpar</a>
-                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Fechar"></button>
                             </div>
-                        </form>
+
+                            <div class="modal-body filter-modal-body">
+
+                                <form action="{{ route('home') }}" id="formFiltros">
+
+                                    <div class="row g-3">
+
+                                        <div class="col-12">
+                                            <div class="filter-field">
+                                                <label for="name" class="form-label">
+                                                    <i class="fas fa-tag"></i>
+                                                    Nome
+                                                </label>
+
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                    value="{{ $name }}"
+                                                    placeholder="Ex.: salário, aluguel, mercado...">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="filter-field">
+                                                <label for="data_inicio" class="form-label">
+                                                    <i class="fas fa-calendar"></i>
+                                                    Data início
+                                                </label>
+
+                                                <input type="date" class="form-control" id="data_inicio"
+                                                    name="data_inicio" value="{{ $data_inicio }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="filter-field">
+                                                <label for="data_fim" class="form-label">
+                                                    <i class="fas fa-calendar"></i>
+                                                    Data fim
+                                                </label>
+
+                                                <input type="date" class="form-control" id="data_fim" name="data_fim"
+                                                    value="{{ $data_fim }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="filter-field">
+                                                <label for="situation" class="form-label">
+                                                    <i class="fas fa-circle-check"></i>
+                                                    Situação
+                                                </label>
+
+                                                <select class="form-select" id="situation" name="situation">
+                                                    <option value="">Todas as situações</option>
+
+                                                    <option value="paid" @selected($situation == 'paid')>
+                                                        Pago
+                                                    </option>
+
+                                                    <option value="pending" @selected($situation == 'pending')>
+                                                        Pendente
+                                                    </option>
+
+                                                    <option value="canceled" @selected($situation == 'canceled')>
+                                                        Cancelado
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="filter-field">
+                                                <label for="type" class="form-label">
+                                                    <i class="fas fa-arrow-right-arrow-left"></i>
+                                                    Tipo
+                                                </label>
+
+                                                <select class="form-select" id="type" name="type">
+                                                    <option value="">Todos os tipos</option>
+
+                                                    <option value="entrada" @selected($type == 'entrada')>
+                                                        Entrada
+                                                    </option>
+
+                                                    <option value="saida" @selected($type == 'saida')>
+                                                        Saída
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        @if ($perPage)
+                                            <input type="hidden" name="perPage" value="{{ $perPage }}">
+                                        @endif
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                            <div class="modal-footer filter-modal-footer">
+
+                                <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-rotate-left me-1"></i>
+                                    Limpar
+                                </a>
+
+                                <button type="submit" form="formFiltros" class="btn btn-primary">
+                                    <i class="fas fa-magnifying-glass me-1"></i>
+                                    Aplicar filtros
+                                </button>
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-
 
                 <div class="row mb-3">
                     <div class="col-xl-4 col-md-6 mb-3 mb-md-3 mb-xl-0">
