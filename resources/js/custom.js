@@ -255,37 +255,139 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// 3. Modal de Exclusão de Sequência
-window.abrirModalExclusaoSequencia = function (contaId, contaName, label, isRecurring) {
-    const form = document.getElementById('formExcluirSequencia');
-    const labelBadge = document.getElementById('modalExcluirSequenciaLabelBadge');
-    const recurrenceWrapper = document.getElementById('cancelRecurrenceCheckboxWrapper');
+// 3. Exclusão de Sequência (Lançamento Repetido) via Swal.fire
+window.confirmarExclusaoSequencia = function (contaId, contaName, label, isRecurring) {
+    const escopoHtml = `
+        <div class="text-start">
+            <p class="small text-muted mb-3">
+                "${contaName}" pertence a uma sequência de repetição
+                (<strong>${label || 'Repetido'}</strong>). Como deseja prosseguir com a exclusão?
+            </p>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="swal_delete_scope"
+                    id="swal_delete_scope_only" value="only_this" checked>
+                <label class="form-check-label" for="swal_delete_scope_only">
+                    <strong>Excluir somente este lançamento</strong>
+                    <div class="small text-muted">Apenas este registro será apagado. Os demais
+                        continuam inalterados.</div>
+                </label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="swal_delete_scope"
+                    id="swal_delete_scope_this_and_next" value="this_and_next">
+                <label class="form-check-label" for="swal_delete_scope_this_and_next">
+                    <strong>Excluir este e os lançamentos posteriores</strong>
+                    <div class="small text-muted">Apaga este lançamento e todas as ocorrências
+                        futuras desta mesma sequência.</div>
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="swal_delete_scope"
+                    id="swal_delete_scope_all" value="all_sequence">
+                <label class="form-check-label" for="swal_delete_scope_all">
+                    <strong>Excluir toda a sequência</strong>
+                    <div class="small text-muted">Apaga todos os lançamentos gerados nesta
+                        repetição.</div>
+                </label>
+            </div>
+            ${isRecurring ? `
+            <div class="form-check text-start mt-3">
+                <input class="form-check-input" type="checkbox" id="swal_cancel_recurrence" value="1">
+                <label class="form-check-label text-warning-emphasis" for="swal_cancel_recurrence">
+                    Cancelar também a regra de recorrência automática futura
+                </label>
+            </div>` : ''}
+        </div>`;
 
-    if (form) {
-        form.action = `/contas/delete/${contaId}`;
-    }
-
-    if (labelBadge) {
-        labelBadge.textContent = label || 'Repetido';
-    }
-
-    if (recurrenceWrapper) {
-        if (isRecurring) {
-            recurrenceWrapper.classList.remove('d-none');
-        } else {
-            recurrenceWrapper.classList.add('d-none');
+    Swal.fire({
+        title: 'Excluir lançamento repetido',
+        html: escopoHtml,
+        icon: 'warning',
+        theme: localStorage.getItem('theme'),
+        showCancelButton: true,
+        cancelButtonColor: '#0d6efd',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        confirmButtonText: 'Sim, excluir!',
+        preConfirm: () => {
+            const scope = document.querySelector('input[name="swal_delete_scope"]:checked')?.value || 'only_this';
+            const cancelRecurrence = document.getElementById('swal_cancel_recurrence')?.checked ?? false;
+            return { scope, cancelRecurrence };
         }
-    }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
-    const modalEl = document.getElementById('modalExcluirSequencia');
-    if (modalEl) {
-        if (window.bootstrap?.Modal) {
-            const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-        } else if (window.jQuery && typeof $(modalEl).modal === 'function') {
-            $(modalEl).modal('show');
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/contas/delete/${contaId}`;
+            form.style.display = 'none';
+
+            const campos = {
+                _token: csrfToken,
+                _method: 'DELETE',
+                delete_scope: result.value.scope,
+            };
+
+            if (result.value.cancelRecurrence) {
+                campos.cancel_recurrence = '1';
+            }
+
+            Object.entries(campos).forEach(([nome, valor]) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = nome;
+                input.value = valor;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
         }
-    }
+    });
+};
+
+// 4. Cancelamento de Recorrência via Swal.fire
+window.confirmarCancelamentoRecorrencia = function (contaId, contaName) {
+    Swal.fire({
+        title: 'Cancelar recorrência?',
+        html: `
+            <div class="text-start">
+                <p class="mb-2">
+                    <strong>"${contaName}"</strong>
+                </p>
+                <p class="small text-muted mb-1">
+                    Ao cancelar a recorrência, <strong>novos lançamentos não serão gerados
+                    automaticamente</strong> para este compromisso.
+                </p>
+                <p class="small text-muted mb-0">
+                    Os lançamentos já registrados serão mantidos.
+                </p>
+            </div>`,
+        icon: 'warning',
+        theme: localStorage.getItem('theme'),
+        showCancelButton: true,
+        cancelButtonColor: '#0d6efd',
+        cancelButtonText: 'Manter recorrência',
+        confirmButtonColor: '#ffc107',
+        confirmButtonText: 'Sim, cancelar!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/contas/${contaId}/cancelar-recorrencia`;
+            form.style.display = 'none';
+
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = document.querySelector('meta[name="csrf-token"]')?.content;
+            form.appendChild(token);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
 };
 
 // 6. Manipulação de Importação via Excel / CSV

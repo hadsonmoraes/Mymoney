@@ -309,21 +309,17 @@
                                                     data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
                                                     data-bs-toggle="modal" data-bs-target="#modalRepetirLancamento"
                                                     title="Repetir lançamento">
-                                                    <i class="fa-solid fa-clone me-1"></i>Repetir
+                                                    Repetir
                                                 </button>
                                                 @if ($conta->is_recurring)
-                                                    <form
-                                                        action="{{ route('contas.cancelar-recorrencia', ['id' => $conta->id]) }}"
-                                                        method="post" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-outline-warning btn-sm me-1"
-                                                            onclick="return confirm('Cancelar regra de recorrência desta conta? Os lançamentos existentes serão mantidos.')">Cancelar
-                                                            recorrência</button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-outline-warning btn-sm me-1"
+                                                        onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')"
+                                                        title="Cancelar recorrência">Cancelar
+                                                        recorrência</button>
                                                 @endif
                                                 @if ($conta->is_repeated)
                                                     <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</button>
+                                                        onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</button>
                                                 @else
                                                     <form id="formExcluir{{ $conta->id }}"
                                                         action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
@@ -364,22 +360,16 @@
                                                         </li>
                                                         @if ($conta->is_recurring)
                                                             <li>
-                                                                <form
-                                                                    action="{{ route('contas.cancelar-recorrencia', ['id' => $conta->id]) }}"
-                                                                    method="post">
-                                                                    @csrf
-                                                                    <button type="submit"
-                                                                        class="dropdown-item text-warning"
-                                                                        onclick="return confirm('Cancelar regra de recorrência desta conta? Os lançamentos existentes serão mantidos.')">Cancelar
-                                                                        recorrência</button>
-                                                                </form>
+                                                                <button type="button" class="dropdown-item text-warning"
+                                                                    onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')">Cancelar
+                                                                    recorrência</button>
                                                             </li>
                                                         @endif
                                                         <li>
                                                             @if ($conta->is_repeated)
                                                                 <a class="dropdown-item text-danger"
                                                                     href="javascript:void(0)"
-                                                                    onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</a>
+                                                                    onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</a>
                                                             @else
                                                                 <form id="formExcluir{{ $conta->id }}"
                                                                     action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
@@ -532,79 +522,6 @@
                                 data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary" id="btnSubmitRepetir">
                                 <i class="fa-solid fa-check me-1"></i>Repetir lançamento
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Excluir Sequência -->
-        <div class="modal fade" id="modalExcluirSequencia" tabindex="-1" aria-labelledby="modalExcluirSequenciaLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow">
-                    <form id="formExcluirSequencia" method="POST" action="">
-                        @csrf
-                        @method('DELETE')
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalExcluirSequenciaLabel">
-                                <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>Excluir lançamento
-                                repetido
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                Este lançamento pertence a uma sequência de repetição (<strong
-                                    id="modalExcluirSequenciaLabelBadge"></strong>).
-                                Como deseja prosseguir com a exclusão?
-                            </div>
-
-                            <div class="d-flex flex-column gap-2 border p-3 rounded-2 bg-light-subtle">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="delete_scope"
-                                        id="delete_scope_only" value="only_this" checked>
-                                    <label class="form-check-label" for="delete_scope_only">
-                                        <strong>Excluir somente este lançamento</strong>
-                                        <div class="small text-muted">Apenas este registro será apagado. Os demais
-                                            continuam inalterados.</div>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="delete_scope"
-                                        id="delete_scope_this_and_next" value="this_and_next">
-                                    <label class="form-check-label" for="delete_scope_this_and_next">
-                                        <strong>Excluir este e os lançamentos posteriores</strong>
-                                        <div class="small text-muted">Apaga este lançamento e todas as ocorrências futuras
-                                            desta mesma sequência.</div>
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="delete_scope"
-                                        id="delete_scope_all" value="all_sequence">
-                                    <label class="form-check-label" for="delete_scope_all">
-                                        <strong>Excluir toda a sequência</strong>
-                                        <div class="small text-muted">Apaga todos os lançamentos gerados nesta repetição.
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-check mt-3 d-none" id="cancelRecurrenceCheckboxWrapper">
-                                <input class="form-check-input" type="checkbox" name="cancel_recurrence"
-                                    id="cancel_recurrence" value="1">
-                                <label class="form-check-label text-warning-emphasis" for="cancel_recurrence">
-                                    Cancelar também a regra de recorrência automática futura
-                                </label>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa-solid fa-trash me-1"></i>Confirmar exclusão
                             </button>
                         </div>
                     </form>
