@@ -856,3 +856,15 @@ footer {
         flex: 1;
     }
 }
+
+/* ================================
+   BOTÕES DE AÇÃO EM TABELAS
+   Neutraliza a sombra e o transform
+   do .btn-primary em botões pequenos,
+   mantendo o alinhamento na linha
+=============================== */
+.table .btn,
+.table .btn:hover {
+    box-shadow: none;
+    transform: none;
+}

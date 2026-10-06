@@ -297,37 +297,49 @@
                                                     <i class="fas fa-arrow-down"></i> Saída
                                                 @endif
                                             </td>
-                                            <td class="d-none d-md-flex justify-content-center collapse">
+                                            <td
+                                                class="d-none d-md-flex justify-content-center collapse align-items-center ">
                                                 <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
-                                                    class="btn btn-primary btn-sm me-1">Visualizar</a>
+                                                    class="btn btn-outline-primary me-1" title="Visualizar">
+                                                    <i class="fa-solid fa-fw fa-eye"></i>
+                                                </a>
                                                 <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
-                                                    class="btn btn-outline-secondary btn-sm me-1">Editar</a>
-                                                <button type="button" class="btn btn-outline-info btn-sm me-1 btn-repeat"
+                                                    class="btn btn-outline-secondary me-1" title="Editar">
+                                                    <i class="fa-solid fa-fw fa-pen"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-info me-1 btn-repeat"
                                                     data-id="{{ $conta->id }}" data-name="{{ $conta->name }}"
                                                     data-value="{{ number_format($conta->value, 2, ',', '.') }}"
                                                     data-maturity="{{ date('d/m/Y', strtotime($conta->maturity)) }}"
                                                     data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
                                                     data-bs-toggle="modal" data-bs-target="#modalRepetirLancamento"
                                                     title="Repetir lançamento">
-                                                    Repetir
+                                                    <i class="fa-solid fa-fw fa-clone"></i>
                                                 </button>
                                                 @if ($conta->is_recurring)
-                                                    <button type="button" class="btn btn-outline-warning btn-sm me-1"
+                                                    <button type="button" class="btn btn-outline-warning me-1"
                                                         onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')"
-                                                        title="Cancelar recorrência">Cancelar
-                                                        recorrência</button>
+                                                        title="Cancelar recorrência">
+                                                        <i class="fa-solid fa-fw fa-ban"></i>
+                                                    </button>
                                                 @endif
                                                 @if ($conta->is_repeated)
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</button>
+                                                    <button type="button" class="btn btn-outline-danger"
+                                                        onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})"
+                                                        title="Apagar">
+                                                        <i class="fa-solid fa-fw fa-trash"></i>
+                                                    </button>
                                                 @else
                                                     <form id="formExcluir{{ $conta->id }}"
                                                         action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
                                                         method="post">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                                            onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</button>
+                                                        <button type="button" class="btn btn-outline-danger"
+                                                            onclick="confirmarExclusao(event, {{ $conta->id }})"
+                                                            title="Apagar">
+                                                            <i class="fa-solid fa-fw fa-trash"></i>
+                                                        </button>
                                                     </form>
                                                 @endif
 
