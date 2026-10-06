@@ -59,10 +59,11 @@ class RecurrenceService
 
     /**
      * Processa todas as recorrências ativas com vencimento até $targetDate.
+     * Sem data informada, gera todas as ocorrências do mês corrente.
      */
     public function processDueRecurrences(?string $targetDate = null): int
     {
-        $date = $targetDate ? Carbon::parse($targetDate)->toDateString() : now()->toDateString();
+        $date = $targetDate ? Carbon::parse($targetDate)->toDateString() : now()->endOfMonth()->toDateString();
         $recurrences = Recurrence::where('status', 'active')
             ->where('next_run_date', '<=', $date)
             ->get();
@@ -81,10 +82,11 @@ class RecurrenceService
 
     /**
      * Processa recorrências de um usuário específico (ex: pós-login ou manual).
+     * Sem data informada, gera todas as ocorrências do mês corrente.
      */
     public function processForUser(User $user, ?string $targetDate = null): int
     {
-        $date = $targetDate ? Carbon::parse($targetDate)->toDateString() : now()->toDateString();
+        $date = $targetDate ? Carbon::parse($targetDate)->toDateString() : now()->endOfMonth()->toDateString();
         $recurrences = Recurrence::where('user_id', $user->id)
             ->where('status', 'active')
             ->where('next_run_date', '<=', $date)

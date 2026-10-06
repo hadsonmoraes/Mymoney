@@ -160,4 +160,53 @@ class RecurrenceTest extends TestCase
             'name' => 'Academia',
         ]);
     }
+
+    public function test_process_recurrences_generates_current_month_occurrences_on_month_start()
+    {
+        // Simula que "hoje" é o primeiro dia do mês
+        Carbon::setTestNow(Carbon::create(2026, 11, 1, 0, 0, 0));
+
+        try {
+            $conta = Conta::create([
+                'name' => 'Aluguel',
+                'value' => '1500.00',
+                'maturity' => '2026-10-05',
+                'situation' => 'paid',
+                'category_id' => $this->category->id,
+                'type' => 'saida',
+                'user_id' => $this->user->id,
+            ]);
+
+            $service = app(RecurrenceService::class);
+            $recurrence = $service->createFromConta($conta, [
+                'frequency' => 'monthly',
+                'start_date' => '2026-10-05',
+            ]);
+
+            $this->assertEquals('2026-11-05', $recurrence->next_run_date->toDateString());
+
+            // Rodar o comando SEM --date no dia 01/11: deve antecipar as
+            // ocorrências do mês corrente (vencimento 05/11 ainda futuro)
+            $this->artisan('finance:process-recurrences')->assertSuccessful();
+
+            $novaConta = Conta::where('recurrence_id', $recurrence->id)->where('id', '!=', $conta->id)->first();
+            $this->assertNotNull($novaConta);
+            $this->assertEquals('2026-11-05', $novaConta->maturity->toDateString());
+            $this->assertEquals('pending', $novaConta->situation);
+
+            $recurrence->refresh();
+            $this->assertEquals('2026-12-05', $recurrence->next_run_date->toDateString());
+            $this->assertEquals(2, $recurrence->occurrences_count);
+
+            // Rodar novamente no mesmo dia não deve duplicar o lançamento
+            $this->artisan('finance:process-recurrences')->assertSuccessful();
+
+            $this->assertEquals(
+                1,
+                Conta::where('recurrence_id', $recurrence->id)->whereDate('maturity', '2026-11-05')->count()
+            );
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
 }

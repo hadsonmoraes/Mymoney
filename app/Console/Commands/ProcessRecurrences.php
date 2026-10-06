@@ -20,14 +20,14 @@ class ProcessRecurrences extends Command
      *
      * @var string
      */
-    protected $description = 'Processa as regras de recorrências ativas e gera os lançamentos devidos.';
+    protected $description = 'Processa as regras de recorrências ativas e gera os lançamentos do mês corrente (ou até a data informada).';
 
     /**
      * Execute the console command.
      */
     public function handle(RecurrenceService $recurrenceService): int
     {
-        $targetDate = $this->option('date') ?: now()->toDateString();
+        $targetDate = $this->option('date') ?: now()->endOfMonth()->toDateString();
         $userId = $this->option('user');
 
         $this->info("Iniciando processamento de recorrências até a data {$targetDate}...");
