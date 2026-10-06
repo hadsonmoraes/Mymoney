@@ -58,10 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/contas/importar/preview', [HomeController::class, 'importExcelPreview'])->name('contas.importar.preview');
     Route::post('/contas/importar/confirm', [HomeController::class, 'importExcelConfirm'])->name('contas.importar.confirm');
 
-    // Parcelamento Estruturado
-    Route::post('/contas/{id}/configurar-parcelamento', [HomeController::class, 'configureInstallment'])->name('contas.configurar-parcelamento');
-    Route::get('/contas/{id}/parcelamento-detalhes', [HomeController::class, 'installmentDetails'])->name('contas.parcelamento-detalhes');
-
     // Central de Lembretes Internos
     Route::get('/lembretes', [\App\Http\Controllers\NotificationController::class, 'index'])->name('lembretes.index');
     Route::post('/lembretes/{id}/lida', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('lembretes.read');

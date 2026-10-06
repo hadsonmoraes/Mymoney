@@ -96,31 +96,7 @@
                             </div>
 
                             <div class="form-section">
-                                @if (!$contas->is_installment && $installmentPattern)
-                                    <div class="alert alert-warning border shadow-sm mb-4">
-                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                            <div>
-                                                <h6 class="alert-heading mb-1 fw-bold"><i
-                                                        class="fa-solid fa-wand-magic-sparkles me-2"></i>Possível
-                                                    parcelamento encontrado</h6>
-                                                <p class="mb-0 small text-body-secondary">
-                                                    Este lançamento parece pertencer a um parcelamento
-                                                    (<strong>{{ $installmentPattern['current'] }}/{{ $installmentPattern['total'] }}</strong>).
-                                                    @if ($potentialInstallments->count() > 0)
-                                                        Encontramos outros {{ $potentialInstallments->count() }}
-                                                        lançamentos semelhantes no histórico.
-                                                    @endif
-                                                </p>
-                                            </div>
-                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalConfigurarParcelamento">
-                                                <i class="fa-solid fa-gear me-1"></i> Configurar Parcelamento
-                                            </button>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                @if ($contas->is_repeated || $contas->is_installment)
+                                @if ($contas->is_repeated)
                                     <div class="alert alert-info border-info-subtle shadow-sm mb-4">
                                         <div class="d-flex gap-3 align-items-start">
                                             <i class="fa-solid fa-layer-group text-primary fs-3 mt-1"></i>
@@ -128,18 +104,11 @@
                                                 <div
                                                     class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-1">
                                                     <h6 class="fw-bold mb-0">Lançamento em Sequência
-                                                        ({{ $contas->installment_label ?: $contas->repeat_label ?? 'Repetido' }})
+                                                        ({{ $contas->repeat_label ?? 'Repetido' }})
                                                     </h6>
-                                                    @if ($contas->is_installment)
-                                                        <button type="button" class="btn btn-sm btn-outline-primary"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalConfigurarParcelamento">
-                                                            <i class="fa-solid fa-gear me-1"></i>Ajustar Parcelamento
-                                                        </button>
-                                                    @endif
                                                 </div>
                                                 <p class="small text-muted mb-2">Este lançamento pertence a um grupo de
-                                                    {{ $contas->is_installment ? 'parcelamento' : 'repetição' }}. Como
+                                                    repetição. Como
                                                     deseja aplicar as alterações?</p>
                                                 <div class="d-flex flex-column gap-2 mt-2">
                                                     <div class="form-check">
@@ -158,8 +127,8 @@
                                                             value="this_and_next">
                                                         <label class="form-check-label" for="scope_this_and_next">
                                                             <strong>Este e os próximos lançamentos</strong> <span
-                                                                class="text-muted">(altera os dados deste e das parcelas
-                                                                futuras da sequência)</span>
+                                                                class="text-muted">(altera os dados deste e dos
+                                                                lançamentos futuros da sequência)</span>
                                                         </label>
                                                     </div>
                                                     <div class="form-check">
@@ -261,76 +230,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Configurar Parcelamento Estruturado -->
-    <div class="modal fade" id="modalConfigurarParcelamento" tabindex="-1"
-        aria-labelledby="modalConfigurarParcelamentoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
-                <form method="POST" action="{{ route('contas.configurar-parcelamento', ['id' => $contas->id]) }}">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalConfigurarParcelamentoLabel">
-                            <i class="fa-solid fa-layer-group text-primary me-2"></i>Configurar Parcelamento
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-light border mb-3">
-                            <div class="small text-muted">Lançamento:</div>
-                            <div class="fw-bold">{{ $contas->name }}</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">Faz parte de um parcelamento?</label>
-                            <select class="form-select" id="edit_is_installment" name="is_installment" required>
-                                <option value="1"
-                                    {{ $contas->is_installment || $installmentPattern ? 'selected' : '' }}>Sim, é um
-                                    lançamento parcelado</option>
-                                <option value="0"
-                                    {{ !$contas->is_installment && !$installmentPattern ? 'selected' : '' }}>Não (remover
-                                    parcelamento estruturado)</option>
-                            </select>
-                        </div>
-
-                        <div id="edit_installment_fields">
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <label for="edit_installment_number" class="form-label fw-bold small">Parcela atual
-                                        <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="edit_installment_number"
-                                        name="installment_number" min="1" max="999"
-                                        value="{{ old('installment_number', $contas->installment_number ?? ($installmentPattern['current'] ?? 1)) }}">
-                                </div>
-                                <div class="col-6">
-                                    <label for="edit_installments_total" class="form-label fw-bold small">Total de
-                                        parcelas <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="edit_installments_total"
-                                        name="installments_total" min="1" max="999"
-                                        value="{{ old('installments_total', $contas->installments_total ?? ($installmentPattern['total'] ?? 12)) }}">
-                                </div>
-                            </div>
-
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="edit_link_related"
-                                    name="link_related" value="1" checked>
-                                <label class="form-check-label small" for="edit_link_related">
-                                    Vincular automaticamente outros lançamentos antigos que parecem pertencer a este mesmo
-                                    parcelamento.
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa-solid fa-save me-1"></i>Salvar Parcelamento
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

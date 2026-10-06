@@ -255,15 +255,6 @@
                                             <td class="align-middle">
                                                 <div class="d-flex align-items-center flex-wrap gap-1">
                                                     <span class="fw-medium">{{ $conta->name }}</span>
-                                                    @if ($conta->is_installment)
-                                                        <span class="badge bg-info text-white border cursor-pointer"
-                                                            role="button"
-                                                            onclick="carregarDetalhesParcelamento({{ $conta->id }})"
-                                                            title="Clique para ver o progresso do parcelamento">
-                                                            <i
-                                                                class="fa-solid fa-layer-group me-1"></i>{{ $conta->installment_label }}
-                                                        </span>
-                                                    @endif
                                                     @if ($conta->is_repeated)
                                                         <span class="badge bg-secondary-subtle text-secondary border"
                                                             title="Lançamento repetido">
@@ -320,11 +311,6 @@
                                                     title="Repetir lançamento">
                                                     <i class="fa-solid fa-clone me-1"></i>Repetir
                                                 </button>
-                                                <button type="button" class="btn btn-outline-secondary btn-sm me-1"
-                                                    onclick="abrirModalConfigParcelamento({{ $conta->id }}, '{{ addslashes($conta->name) }}', {{ $conta->is_installment ? 'true' : 'false' }}, {{ $conta->installment_number ?? 1 }}, {{ $conta->installments_total ?? 1 }})"
-                                                    title="Configurar parcelamento">
-                                                    <i class="fa-solid fa-layer-group me-1"></i>Parcela
-                                                </button>
                                                 @if ($conta->is_recurring)
                                                     <form
                                                         action="{{ route('contas.cancelar-recorrencia', ['id' => $conta->id]) }}"
@@ -335,9 +321,9 @@
                                                             recorrência</button>
                                                     </form>
                                                 @endif
-                                                @if ($conta->is_repeated || $conta->is_installment)
+                                                @if ($conta->is_repeated)
                                                     <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->is_installment ? $conta->installment_label : $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }}, {{ $conta->is_installment ? 'true' : 'false' }})">Apagar</button>
+                                                        onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</button>
                                                 @else
                                                     <form id="formExcluir{{ $conta->id }}"
                                                         action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
@@ -376,14 +362,6 @@
                                                                 <i class="fa-solid fa-clone me-1"></i>Repetir lançamento
                                                             </button>
                                                         </li>
-                                                        <li>
-                                                            <a class="dropdown-item text-secondary"
-                                                                href="javascript:void(0)"
-                                                                onclick="abrirModalConfigParcelamento({{ $conta->id }}, '{{ addslashes($conta->name) }}', {{ $conta->is_installment ? 'true' : 'false' }}, {{ $conta->installment_number ?? 1 }}, {{ $conta->installments_total ?? 1 }})">
-                                                                <i class="fa-solid fa-layer-group me-1"></i>Configurar
-                                                                parcelamento
-                                                            </a>
-                                                        </li>
                                                         @if ($conta->is_recurring)
                                                             <li>
                                                                 <form
@@ -398,10 +376,10 @@
                                                             </li>
                                                         @endif
                                                         <li>
-                                                            @if ($conta->is_repeated || $conta->is_installment)
+                                                            @if ($conta->is_repeated)
                                                                 <a class="dropdown-item text-danger"
                                                                     href="javascript:void(0)"
-                                                                    onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->is_installment ? $conta->installment_label : $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }}, {{ $conta->is_installment ? 'true' : 'false' }})">Apagar</a>
+                                                                    onclick="abrirModalExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</a>
                                                             @else
                                                                 <form id="formExcluir{{ $conta->id }}"
                                                                     action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
@@ -774,148 +752,4 @@
             </div>
         </div>
 
-        <!-- Modal Configurar Parcelamento Estruturado -->
-        <div class="modal fade" id="modalConfigurarParcelamento" tabindex="-1"
-            aria-labelledby="modalConfigurarParcelamentoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow">
-                    <form id="formConfigurarParcelamento" method="POST" action="">
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalConfigurarParcelamentoLabel">
-                                <i class="fa-solid fa-layer-group text-primary me-2"></i>Configurar Parcelamento
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert alert-light border mb-3">
-                                <div class="small text-muted">Lançamento selecionado:</div>
-                                <div class="fw-bold" id="configParcelaContaName"></div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label fw-bold small">Faz parte de um parcelamento?</label>
-                                <select class="form-select" id="config_is_installment" name="is_installment" required>
-                                    <option value="1">Sim, é um lançamento parcelado</option>
-                                    <option value="0">Não (remover parcelamento estruturado)</option>
-                                </select>
-                            </div>
-
-                            <div id="configParcelamentoFields">
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <label for="config_installment_number" class="form-label fw-bold small">Parcela
-                                            atual <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="config_installment_number"
-                                            name="installment_number" min="1" max="999" value="1">
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="config_installments_total" class="form-label fw-bold small">Total de
-                                            parcelas <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="config_installments_total"
-                                            name="installments_total" min="1" max="999" value="12">
-                                    </div>
-                                </div>
-
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" id="config_link_related"
-                                        name="link_related" value="1" checked>
-                                    <label class="form-check-label small" for="config_link_related">
-                                        Vincular automaticamente outros lançamentos antigos que parecem pertencer a este
-                                        mesmo parcelamento (mesmo nome base e padrão "X/Y").
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa-solid fa-save me-1"></i>Salvar Parcelamento
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Detalhes do Parcelamento Estruturado -->
-        <div class="modal fade" id="modalDetalhesParcelamento" tabindex="-1"
-            aria-labelledby="modalDetalhesParcelamentoLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content shadow">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="modal-title mb-0" id="detalhesParcelaTitle">
-                                <i class="fa-solid fa-layer-group text-primary me-2"></i>Progresso do Parcelamento
-                            </h5>
-                            <small class="text-muted" id="detalhesParcelaSubtitle"></small>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Barra de progresso -->
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-1 small fw-semibold">
-                                <span id="detalhesProgressoLabel">Progresso: 0 de 0 pagas</span>
-                                <span id="detalhesProgressoPercent" class="text-primary fw-bold">0%</span>
-                            </div>
-                            <div class="progress" style="height: 12px;">
-                                <div class="progress-bar progress-bar-striped bg-success" id="detalhesProgressBar"
-                                    role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0"
-                                    aria-valuemax="100"></div>
-                            </div>
-                        </div>
-
-                        <!-- Cards com métricas consolidadas -->
-                        <div class="row g-2 mb-4 text-center">
-                            <div class="col-4">
-                                <div class="border rounded p-2 bg-light">
-                                    <div class="small text-muted">Valor Total</div>
-                                    <h6 class="mb-0 fw-bold" id="detalhesValorTotal">R$ 0,00</h6>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="border rounded p-2 bg-success-subtle text-success">
-                                    <div class="small">Total Pago</div>
-                                    <h6 class="mb-0 fw-bold" id="detalhesValorPago">R$ 0,00</h6>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="border rounded p-2 bg-danger-subtle text-danger">
-                                    <div class="small">Restante</div>
-                                    <h6 class="mb-0 fw-bold" id="detalhesValorRestante">R$ 0,00</h6>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge bg-secondary" id="badgeTotalParcelas">Total: 0</span>
-                            <span class="badge bg-success" id="badgePagas">Pagas: 0</span>
-                            <span class="badge bg-warning text-dark" id="badgePendentes">Pendentes: 0</span>
-                            <span class="badge bg-danger" id="badgeVencidas">Vencidas: 0</span>
-                        </div>
-
-                        <!-- Tabela de todas as parcelas -->
-                        <h6 class="fw-bold small mb-2"><i class="fa-solid fa-list-ol me-1"></i>Parcelas cadastradas:</h6>
-                        <div class="table-responsive border rounded">
-                            <table class="table table-sm table-hover mb-0 align-middle small">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Parcela</th>
-                                        <th>Vencimento</th>
-                                        <th>Valor</th>
-                                        <th>Situação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="detalhesParcelasTbody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     @endsection

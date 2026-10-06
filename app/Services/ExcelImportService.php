@@ -28,14 +28,12 @@ class ExcelImportService
             'Categoria',
             'Situação',
             'Observação',
-            'Parcela',
-            'Total de Parcelas',
         ];
 
         $sampleRows = [
-            ['10/10/2026', 'Internet Fibra', 'Saída', '120,00', 'Moradia', 'Pendente', 'Boleto mensal', '', ''],
-            ['15/10/2026', 'Notebook Dell', 'Saída', '350,00', 'Eletrônicos', 'Pendente', 'Compra parcelada', '3', '12'],
-            ['05/10/2026', 'Salário', 'Entrada', '4.500,00', 'Rendimento', 'Pago', 'Salário mensal', '', ''],
+            ['10/10/2026', 'Internet Fibra', 'Saída', '120,00', 'Moradia', 'Pendente', 'Boleto mensal'],
+            ['15/10/2026', 'Notebook Dell', 'Saída', '350,00', 'Eletrônicos', 'Pendente', 'Compra parcelada'],
+            ['05/10/2026', 'Salário', 'Entrada', '4.500,00', 'Rendimento', 'Pago', 'Salário mensal'],
         ];
 
         $output = fopen('php://temp', 'r+');
@@ -185,7 +183,6 @@ class ExcelImportService
 
         return DB::transaction(function () use ($validRows, $userId, $createMissingCategories, $cacheKey) {
             $userCategories = Category::where('user_id', $userId)->get()->keyBy(fn($c) => mb_strtolower(trim($c->name)));
-            $installmentGroups = [];
             $importedCount = 0;
 
             foreach ($validRows as $row) {
@@ -203,16 +200,6 @@ class ExcelImportService
                     $categoryId = $newCat->id;
                 }
 
-                // Identificador de parcelamento compartilhado quando há número e total
-                $installmentGroupId = null;
-                if (!empty($row['installment_number']) && !empty($row['installments_total'])) {
-                    $baseNameKey = mb_strtolower(trim(preg_replace('/(?:\s*\-\s*)?\d{1,3}\s*\/\s*\d{1,3}/i', '', $row['name']))) . '_' . $row['installments_total'];
-                    if (!isset($installmentGroups[$baseNameKey])) {
-                        $installmentGroups[$baseNameKey] = (string) Str::ulid();
-                    }
-                    $installmentGroupId = $installmentGroups[$baseNameKey];
-                }
-
                 Conta::create([
                     'name' => $row['name'],
                     'value' => $row['value'],
@@ -224,9 +211,6 @@ class ExcelImportService
                     'user_id' => $userId,
                     'fixed' => false,
                     'repeat' => 0,
-                    'installment_group_id' => $installmentGroupId,
-                    'installment_number' => $row['installment_number'] ?? null,
-                    'installments_total' => $row['installments_total'] ?? null,
                 ]);
 
                 $importedCount++;
@@ -296,17 +280,6 @@ class ExcelImportService
         // 7. Observação
         $note = isset($headerMap['note']) ? trim($row[$headerMap['note']] ?? '') : trim($row[6] ?? '');
 
-        // 8. Parcela e Total
-        $rawInstNumber = isset($headerMap['installment_number']) ? ($row[$headerMap['installment_number']] ?? '') : ($row[7] ?? '');
-        $rawInstTotal = isset($headerMap['installments_total']) ? ($row[$headerMap['installments_total']] ?? '') : ($row[8] ?? '');
-
-        $installmentNumber = !empty($rawInstNumber) && is_numeric(trim($rawInstNumber)) ? (int) trim($rawInstNumber) : null;
-        $installmentsTotal = !empty($rawInstTotal) && is_numeric(trim($rawInstTotal)) ? (int) trim($rawInstTotal) : null;
-
-        if ($installmentNumber && $installmentsTotal && $installmentNumber > $installmentsTotal) {
-            $errors[] = "O número da parcela ({$installmentNumber}) não pode ser maior que o total ({$installmentsTotal}).";
-        }
-
         return [
             'errors' => $errors,
             'missing_category' => $missingCategory,
@@ -320,8 +293,6 @@ class ExcelImportService
                 'category_name' => $categoryName,
                 'category' => $categoryName,
                 'note' => $note ?: null,
-                'installment_number' => $installmentNumber,
-                'installments_total' => $installmentsTotal,
             ],
         ];
     }
@@ -348,10 +319,6 @@ class ExcelImportService
                 $map['situation'] = $index;
             } elseif (str_contains($norm, 'nota') || str_contains($norm, 'observa')) {
                 $map['note'] = $index;
-            } elseif (str_contains($norm, 'total')) {
-                $map['installments_total'] = $index;
-            } elseif (str_contains($norm, 'parcela')) {
-                $map['installment_number'] = $index;
             }
         }
 

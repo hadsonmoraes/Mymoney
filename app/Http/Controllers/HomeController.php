@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ContaRequest;
 use App\Http\Requests\RepeatContaRequest;
-use App\Http\Requests\ConfigureInstallmentRequest;
 use App\Models\Category;
 use App\Models\Recurrence;
 use App\Services\ContaRepeatService;
 use App\Services\RecurrenceService;
-use App\Services\InstallmentService;
 use App\Services\ExcelImportService;
 use Carbon\Carbon;
 use Exception;
@@ -154,31 +152,19 @@ class HomeController extends Controller
         }
     }
 
-    public function show($id, InstallmentService $installmentService)
+    public function show($id)
     {
         $user = auth()->user();
         $contas = Conta::where('user_id', $user->id)->with(['recurrence', 'category'])->findOrFail($id);
         $categorys = Category::where('user_id', $user->id)->orderBy('name', 'asc')->get();
 
-        $installmentSummary = $contas->installment_group_id
-            ? $installmentService->getInstallmentSummary($contas->installment_group_id, $user->id)
-            : null;
-
-        $installmentPattern = !$contas->is_installment ? $contas->detectInstallmentPattern() : null;
-        $potentialInstallments = ($installmentPattern)
-            ? $installmentService->findPotentialInstallmentMatches($contas)
-            : collect();
-
         return view('contas.show', [
             'contas' => $contas,
             'categorys' => $categorys,
-            'installmentSummary' => $installmentSummary,
-            'installmentPattern' => $installmentPattern,
-            'potentialInstallments' => $potentialInstallments,
         ]);
     }
 
-    public function edit($id, InstallmentService $installmentService)
+    public function edit($id)
     {
         $user = auth()->user();
         $contas = Conta::where('user_id', $user->id)->with(['recurrence', 'category'])->findOrFail($id);
@@ -189,32 +175,16 @@ class HomeController extends Controller
             $sequenceCount = Conta::where('user_id', $user->id)
                 ->where('repeat_group_id', $contas->repeat_group_id)
                 ->count();
-        } elseif (!empty($contas->installment_group_id)) {
-            $sequenceCount = Conta::where('user_id', $user->id)
-                ->where('installment_group_id', $contas->installment_group_id)
-                ->count();
         }
-
-        $installmentSummary = $contas->installment_group_id
-            ? $installmentService->getInstallmentSummary($contas->installment_group_id, $user->id)
-            : null;
-
-        $installmentPattern = !$contas->is_installment ? $contas->detectInstallmentPattern() : null;
-        $potentialInstallments = ($installmentPattern)
-            ? $installmentService->findPotentialInstallmentMatches($contas)
-            : collect();
 
         return view('contas.edit', [
             'contas' => $contas,
             'categorys' => $categorys,
             'sequenceCount' => $sequenceCount,
-            'installmentSummary' => $installmentSummary,
-            'installmentPattern' => $installmentPattern,
-            'potentialInstallments' => $potentialInstallments,
         ]);
     }
 
-    public function update(ContaRequest $request, ContaRepeatService $repeatService, RecurrenceService $recurrenceService, InstallmentService $installmentService)
+    public function update(ContaRequest $request, ContaRepeatService $repeatService, RecurrenceService $recurrenceService)
     {
         try {
             $user_id = auth()->user()->id;
@@ -244,8 +214,6 @@ class HomeController extends Controller
 
             if (!empty($conta->repeat_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
                 $repeatService->updateSequence($conta, $data, $scope);
-            } elseif (!empty($conta->installment_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
-                $installmentService->updateSequence($conta, $data, $scope);
             } else {
                 $conta->update($data);
             }
@@ -300,7 +268,7 @@ class HomeController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id, ContaRepeatService $repeatService, RecurrenceService $recurrenceService, InstallmentService $installmentService)
+    public function destroy(Request $request, $id, ContaRepeatService $repeatService, RecurrenceService $recurrenceService)
     {
         $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
         $scope = $request->input('delete_scope', 'only_this');
@@ -313,49 +281,12 @@ class HomeController extends Controller
         if (!empty($conta->repeat_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
             $repeatService->deleteSequence($conta, $scope);
             $msg = $scope === 'all_sequence' ? 'Toda a sequência foi apagada!' : 'Este e os lançamentos posteriores foram apagados!';
-        } elseif (!empty($conta->installment_group_id) && in_array($scope, ['this_and_next', 'all_sequence'])) {
-            $installmentService->deleteSequence($conta, $scope);
-            $msg = $scope === 'all_sequence' ? 'Todas as parcelas foram apagadas!' : 'Esta e as parcelas posteriores foram apagadas!';
         } else {
             $conta->delete();
             $msg = 'Conta apagada!';
         }
 
         return redirect()->route('home', session('filtros_contas'))->with('success', $msg);
-    }
-
-    public function configureInstallment(ConfigureInstallmentRequest $request, $id, InstallmentService $installmentService)
-    {
-        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
-
-        try {
-            $validated = $request->validated();
-            if ($validated['is_installment']) {
-                $installmentService->configureInstallment($conta, $validated);
-                return back()->with('success', 'Parcelamento estruturado configurado com sucesso!');
-            } else {
-                $conta->update([
-                    'installment_group_id' => null,
-                    'installment_number' => null,
-                    'installments_total' => null,
-                ]);
-                return back()->with('success', 'Configuração de parcelamento removida com sucesso!');
-            }
-        } catch (Exception $e) {
-            Log::error('Erro ao configurar parcelamento', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Erro ao configurar parcelamento: ' . $e->getMessage());
-        }
-    }
-
-    public function installmentDetails($id, InstallmentService $installmentService)
-    {
-        $conta = Conta::where('user_id', auth()->id())->findOrFail($id);
-        if (!$conta->installment_group_id) {
-            return response()->json(['error' => 'Lançamento não possui parcelamento estruturado.'], 404);
-        }
-
-        $summary = $installmentService->getInstallmentSummary($conta->installment_group_id, auth()->id());
-        return response()->json($summary);
     }
 
     public function downloadImportTemplate(ExcelImportService $excelService)

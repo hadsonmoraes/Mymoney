@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conta;
-use App\Services\InstallmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function dashboard(Request $request, InstallmentService $installmentService)
+    public function dashboard(Request $request)
     {
         $user = auth()->user();
 
@@ -84,9 +83,6 @@ class DashboardController extends Controller
             ->orderBy('maturity')
             ->get();
 
-        // Parcelamentos ativos com progresso estruturado
-        $activeInstallments = $installmentService->getActiveInstallmentsForUser($user->id);
-
         return view('dashboard', [
             'contasPagasValor' => $contasPagasValor,
             'contasPagasQuantidade' => $contasPagasQuantidade,
@@ -112,7 +108,6 @@ class DashboardController extends Controller
             'overdueCount' => $overdueCount,
             'dueTodayContas' => $dueTodayContas,
             'upcoming7DaysContas' => $upcoming7DaysContas,
-            'activeInstallments' => $activeInstallments,
         ]);
     }
 }
