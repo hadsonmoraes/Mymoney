@@ -1,0 +1,81 @@
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    container_name: mymoney-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mymoney
+
+  mysql:
+    image: mysql:8.4
+    container_name: mymoney-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - mymoney
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: mymoney-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mymoney
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mymoney-mailpit
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1025:1025" # SMTP
+      - "127.0.0.1:8025:8025" # Web UI
+    networks:
+      - mymoney
+
+  # One-off tooling container for npm commands, e.g.:
+  #   docker compose run --rm node npm install
+  #   docker compose run --rm node npm run build
+  node:
+    profiles: ["tools"]
+    image: node:22-bookworm-slim
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - mymoney
+
+volumes:
+  mysql-data:
+
+networks:
+  mymoney:
+    driver: bridge

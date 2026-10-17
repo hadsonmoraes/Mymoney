@@ -198,4 +198,20 @@ return [
 
     'same_site' => 'lax',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Session Serialization
+    |--------------------------------------------------------------------------
+    |
+    | This option controls how session data is serialized for storage. The
+    | default "json" serialization is more secure as it prevents object
+    | injection attacks; however, "php" serialization is required when
+    | storing PHP objects in the session.
+    |
+    | Supported: "json", "php"
+    |
+    */
+
+    'serialization' => 'json',
+
 ];
