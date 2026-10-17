@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'sidebar',
+        'darkmode',
+        'reminder_upcoming',
+        'reminder_days_before',
+        'reminder_overdue',
     ];
 
     /**
@@ -40,6 +45,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'reminder_upcoming' => 'boolean',
+        'reminder_days_before' => 'integer',
+        'reminder_overdue' => 'boolean',
     ];
 
     public function conta()
@@ -50,5 +58,15 @@ class User extends Authenticatable
     public function categories()
     {
         return $this->hasMany(Category::class);
+    }
+
+    public function internalNotifications()
+    {
+        return $this->hasMany(InternalNotification::class);
+    }
+
+    public function unreadNotificationsCount(): int
+    {
+        return $this->internalNotifications()->unread()->count();
     }
 }
