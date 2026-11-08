@@ -298,7 +298,7 @@
                                                 @endif
                                             </td>
                                             <td
-                                                class="d-none d-md-flex justify-content-center collapse align-items-center ">
+                                                class="hidden d-md-flex justify-content-center collapse align-items-center ">
                                                 <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
                                                     class="btn btn-outline-primary me-1" title="Visualizar">
                                                     <i class="fa-solid fa-fw fa-eye"></i>
@@ -344,7 +344,7 @@
                                                 @endif
 
                                             </td>
-                                            <td class="d-flex d-md-none justify-content-center">
+                                            <td class="d-flex d-mhidden justify-content-center">
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-primary dropdown-toggle"
                                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -503,7 +503,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-12 d-none" id="repeat_custom_interval_wrapper">
+                                <div class="col-12hidden" id="repeat_custom_interval_wrapper">
                                     <label for="repeat_interval" class="form-label">Intervalo personalizado em dias <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -577,11 +577,11 @@
                                     <i class="fa-solid fa-magnifying-glass me-1"></i> Analisar Arquivo
                                 </button>
                             </div>
-                            <div class="text-danger small mt-1 d-none" id="excelFileError"></div>
+                            <div class="text-danger small mt-1hidden" id="excelFileError"></div>
                         </div>
 
                         <!-- Spinner de Carregamento -->
-                        <div class="text-center py-4 d-none" id="excelLoadingSpinner">
+                        <div class="text-center py-4hidden" id="excelLoadingSpinner">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Processando...</span>
                             </div>
@@ -589,7 +589,7 @@
                         </div>
 
                         <!-- Resultado da Análise -->
-                        <div class="d-none" id="excelPreviewContainer">
+                        <div class="hidden" id="excelPreviewContainer">
                             <div class="row g-2 mb-3 text-center">
                                 <div class="col-3">
                                     <div class="border rounded p-2 bg-light">
@@ -618,7 +618,7 @@
                             </div>
 
                             <!-- Erros Detalhados se houver -->
-                            <div class="alert alert-danger d-none py-2 small" id="excelErrorsBox">
+                            <div class="alert alert-dangerhidden py-2 small" id="excelErrorsBox">
                                 <h6 class="alert-heading small fw-bold mb-1"><i
                                         class="fa-solid fa-circle-exclamation me-1"></i>Erros encontrados (estas linhas
                                     serão ignoradas):</h6>
@@ -626,7 +626,7 @@
                             </div>
 
                             <!-- Avisos / Duplicatas se houver -->
-                            <div class="alert alert-warning d-none py-2 small" id="excelWarningsBox">
+                            <div class="alert alert-warninghidden py-2 small" id="excelWarningsBox">
                                 <h6 class="alert-heading small fw-bold mb-1"><i
                                         class="fa-solid fa-triangle-exclamation me-1"></i>Avisos de duplicidade potencial:
                                 </h6>

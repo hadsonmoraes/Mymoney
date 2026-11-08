@@ -38,7 +38,7 @@
                                         <tr>
                                             <th class="align-middle" scope="row">{{ $category->id }}</th>
                                             <td class="align-middle">{{ $category->name }}</td>
-                                            <td class="d-none d-md-flex justify-content-center collapse">
+                                            <td class="hidden d-md-flex justify-content-center collapse">
                                                 <a href="{{ route('category.edit', ['id' => $category->id]) }}"
                                                     class="btn btn-outline-secondary btn-sm me-1">Editar</a>
                                                 <form id="formExcluir{{ $category->id }}"
@@ -51,7 +51,7 @@
                                                 </form>
 
                                             </td>
-                                            <td class="d-flex d-md-none justify-content-center">
+                                            <td class="d-flex d-mhidden justify-content-center">
                                                 <div class="btn-group" role="group">
                                                     <button type="button" class="btn btn-primary dropdown-toggle"
                                                         data-bs-toggle="dropdown" aria-expanded="false">

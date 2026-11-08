@@ -134,7 +134,7 @@
                                         <div class="form-help">Regra automática gerada pelo sistema.</div>
                                     </div>
 
-                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type') == 'custom' ? '' : 'd-none' }}"
+                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type') == 'custom' ? '' : 'hidden' }}"
                                         id="customIntervalDiv">
                                         <label for="recurrence_interval" class="form-label">Intervalo em dias <span
                                                 class="text-danger">*</span></label>
@@ -148,7 +148,7 @@
                                         <div class="form-help">Ex: 3 dias, 10 dias, 45 dias...</div>
                                     </div>
 
-                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type', 'none') !== 'none' ? '' : 'd-none' }}"
+                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type', 'none') !== 'none' ? '' : 'hidden' }}"
                                         id="recurrenceEndDateDiv">
                                         <label for="recurrence_end_date" class="form-label">Até (Data limite)</label>
                                         <input type="date" class="form-control" id="recurrence_end_date"
@@ -156,7 +156,7 @@
                                         <div class="form-help">Opcional. Deixe em branco para tempo indeterminado.</div>
                                     </div>
 
-                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type', 'none') !== 'none' ? '' : 'd-none' }}"
+                                    <div class="col-12 col-md-6 col-lg-4 {{ old('recurrence_type', 'none') !== 'none' ? '' : 'hidden' }}"
                                         id="recurrenceMaxDiv">
                                         <label for="recurrence_max_occurrences" class="form-label">Limite de
                                             ocorrências</label>

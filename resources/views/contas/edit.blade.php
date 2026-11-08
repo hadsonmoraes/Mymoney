@@ -173,7 +173,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq == 'custom' ? '' : 'd-none' }}"
+                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq == 'custom' ? '' : 'hidden' }}"
                                             id="customIntervalDiv">
                                             <label for="recurrence_interval" class="form-label">Intervalo em dias</label>
                                             <div class="input-group">
@@ -185,7 +185,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq !== 'none' ? '' : 'd-none' }}"
+                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq !== 'none' ? '' : 'hidden' }}"
                                             id="recurrenceEndDateDiv">
                                             <label for="recurrence_end_date" class="form-label">Data limite (Até)</label>
                                             <input type="date" class="form-control" id="recurrence_end_date"
@@ -193,7 +193,7 @@
                                                 value="{{ old('recurrence_end_date', $currentEndDate) }}">
                                         </div>
 
-                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq !== 'none' ? '' : 'd-none' }}"
+                                        <div class="col-12 col-md-6 col-lg-4 {{ $currentFreq !== 'none' ? '' : 'hidden' }}"
                                             id="recurrenceMaxDiv">
                                             <label for="recurrence_max_occurrences" class="form-label">Limite de
                                                 ocorrências</label>

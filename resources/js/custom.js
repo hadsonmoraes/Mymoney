@@ -89,7 +89,7 @@ if (inputValor) {
 
 $(function () {
     $('.select2').select2({
-        theme: 'bootstrap-5'
+        
     });
 });
 const toggleThemeButton = document.getElementById('toggleTheme');
@@ -163,26 +163,26 @@ document.addEventListener('DOMContentLoaded', function () {
             const val = recurrenceSelect.value;
             if (customIntervalDiv) {
                 if (val === 'custom') {
-                    customIntervalDiv.classList.remove('d-none');
+                    customIntervalDiv.classList.remove('hidden');
                 } else {
-                    customIntervalDiv.classList.add('d-none');
+                    customIntervalDiv.classList.add('hidden');
                 }
             }
 
             const isNone = val === 'none';
             if (recurrenceEndDateDiv) {
                 if (!isNone) {
-                    recurrenceEndDateDiv.classList.remove('d-none');
+                    recurrenceEndDateDiv.classList.remove('hidden');
                 } else {
-                    recurrenceEndDateDiv.classList.add('d-none');
+                    recurrenceEndDateDiv.classList.add('hidden');
                 }
             }
 
             if (recurrenceMaxDiv) {
                 if (!isNone) {
-                    recurrenceMaxDiv.classList.remove('d-none');
+                    recurrenceMaxDiv.classList.remove('hidden');
                 } else {
-                    recurrenceMaxDiv.classList.add('d-none');
+                    recurrenceMaxDiv.classList.add('hidden');
                 }
             }
         }
@@ -223,9 +223,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (repeatFrequencySelect && repeatCustomIntervalWrapper) {
         repeatFrequencySelect.addEventListener('change', function () {
             if (this.value === 'custom') {
-                repeatCustomIntervalWrapper.classList.remove('d-none');
+                repeatCustomIntervalWrapper.classList.remove('hidden');
             } else {
-                repeatCustomIntervalWrapper.classList.add('d-none');
+                repeatCustomIntervalWrapper.classList.add('hidden');
             }
         });
     }
@@ -236,9 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (repeatFreqShow && repeatCustomShow) {
         repeatFreqShow.addEventListener('change', function () {
             if (this.value === 'custom') {
-                repeatCustomShow.classList.remove('d-none');
+                repeatCustomShow.classList.remove('hidden');
             } else {
-                repeatCustomShow.classList.add('d-none');
+                repeatCustomShow.classList.add('hidden');
             }
         });
     }
@@ -403,14 +403,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!fileInput.files || !fileInput.files[0]) {
                 if (errorDiv) {
                     errorDiv.textContent = 'Por favor selecione um arquivo Excel (.xlsx) ou CSV.';
-                    errorDiv.classList.remove('d-none');
+                    errorDiv.classList.remove('hidden');
                 }
                 return;
             }
 
-            if (errorDiv) errorDiv.classList.add('d-none');
-            if (spinner) spinner.classList.remove('d-none');
-            if (previewContainer) previewContainer.classList.add('d-none');
+            if (errorDiv) errorDiv.classList.add('hidden');
+            if (spinner) spinner.classList.remove('hidden');
+            if (previewContainer) previewContainer.classList.add('hidden');
             btnAnalisar.disabled = true;
 
             const formData = new FormData();
@@ -429,12 +429,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(res => res.json())
                 .then(res => {
                     btnAnalisar.disabled = false;
-                    if (spinner) spinner.classList.add('d-none');
+                    if (spinner) spinner.classList.add('hidden');
 
                     if (!res.success) {
                         if (errorDiv) {
                             errorDiv.textContent = res.message || 'Erro ao processar arquivo.';
-                            errorDiv.classList.remove('d-none');
+                            errorDiv.classList.remove('hidden');
                         }
                         return;
                     }
@@ -460,9 +460,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             liMore.textContent = `... e mais ${data.errors.length - 10} linha(s) com erro.`;
                             errorsList.appendChild(liMore);
                         }
-                        errorsBox.classList.remove('d-none');
+                        errorsBox.classList.remove('hidden');
                     } else if (errorsBox) {
-                        errorsBox.classList.add('d-none');
+                        errorsBox.classList.add('hidden');
                     }
 
                     // Avisos de duplicidade
@@ -475,9 +475,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             li.textContent = `Linha ${w.row}: ${w.message}`;
                             warningsList.appendChild(li);
                         });
-                        warningsBox.classList.remove('d-none');
+                        warningsBox.classList.remove('hidden');
                     } else if (warningsBox) {
-                        warningsBox.classList.add('d-none');
+                        warningsBox.classList.add('hidden');
                     }
 
                     // Tabela de prévia
@@ -504,14 +504,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         btnConfirmar.disabled = data.valid_rows === 0;
                     }
 
-                    if (previewContainer) previewContainer.classList.remove('d-none');
+                    if (previewContainer) previewContainer.classList.remove('hidden');
                 })
                 .catch(err => {
                     btnAnalisar.disabled = false;
-                    if (spinner) spinner.classList.add('d-none');
+                    if (spinner) spinner.classList.add('hidden');
                     if (errorDiv) {
                         errorDiv.textContent = 'Erro na comunicação com o servidor ao analisar planilha.';
-                        errorDiv.classList.remove('d-none');
+                        errorDiv.classList.remove('hidden');
                     }
                 });
         });

@@ -186,7 +186,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 d-none" id="repeat_custom_interval_show">
+                            <div class="col-12hidden" id="repeat_custom_interval_show">
                                 <label for="repeat_interval" class="form-label">Intervalo personalizado em dias <span
                                         class="text-danger">*</span></label>
                                 <div class="input-group">
