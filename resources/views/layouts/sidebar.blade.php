@@ -50,11 +50,9 @@
             return window.location.pathname === path || (path === '/ai-settings' && window.location.pathname.startsWith('/ai-settings')) || '{{ $currentPath }}' === path.replace(/^\//, '');
         }
     }"
-    :class="{ 'translate-x-0': $store.sidebar.isMobileOpen, 'max-xl:-translate-x-full max-xl:rtl:translate-x-full': !$store.sidebar.isMobileOpen }"
-    @mouseenter="if (!$store.sidebar.isExpanded) $store.sidebar.setHovered(true)"
-    @mouseleave="$store.sidebar.setHovered(false)">
+    :class="{ 'translate-x-0': $store.sidebar.isMobileOpen, 'max-xl:-translate-x-full max-xl:rtl:translate-x-full': !$store.sidebar.isMobileOpen }">
     <!-- Logo Section -->
-    <div class="py-8 flex items-center gap-2" :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'justify-center' : 'justify-between'">
+    <div class="py-8 flex items-center gap-2" :class="(!$store.sidebar.isExpanded && !$store.sidebar.isMobileOpen) ? 'justify-center' : 'justify-between'">
         <a href="{{ route('home') }}" class="flex items-center gap-3">
             <img src="{{ asset('logo.png') }}" alt="" width="40" height="40"
                 class="size-10 shrink-0 rounded-lg object-contain" />
@@ -80,12 +78,12 @@
                     <div>
                         <!-- Menu Group Title -->
                         <h2 class="mb-4 text-xs uppercase flex leading-[20px] text-gray-400"
-                            :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'lg:justify-center' : 'justify-start'">
+                            :class="(!$store.sidebar.isExpanded && !$store.sidebar.isMobileOpen) ? 'lg:justify-center' : 'justify-start'">
                             <template
-                                x-if="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen">
+                                x-if="$store.sidebar.isExpanded || $store.sidebar.isMobileOpen">
                                 <span>{{ __($menuGroup['title']) }}</span>
                             </template>
-                            <template x-if="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen">
+                            <template x-if="!$store.sidebar.isExpanded && !$store.sidebar.isMobileOpen">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99915 10.2451C6.96564 10.2451 7.74915 11.0286 7.74915 11.9951V12.0051C7.74915 12.9716 6.96564 13.7551 5.99915 13.7551C5.03265 13.7551 4.24915 12.9716 4.24915 12.0051V11.9951C4.24915 11.0286 5.03265 10.2451 5.99915 10.2451ZM17.9991 10.2451C18.9656 10.2451 19.7491 11.0286 19.7491 11.9951V12.0051C19.7491 12.9716 18.9656 13.7551 17.9991 13.7551C17.0326 13.7551 16.2491 12.9716 16.2491 12.0051V11.9951C16.2491 11.0286 17.0326 10.2451 17.9991 10.2451ZM13.7491 11.9951C13.7491 11.0286 12.9656 10.2451 11.9991 10.2451C11.0326 10.2451 10.2491 11.0286 10.2491 11.9951V12.0051C10.2491 12.9716 11.0326 13.7551 11.9991 13.7551C12.9656 13.7551 13.7491 12.9716 13.7491 12.0051V11.9951Z" fill="currentColor"/>
                                 </svg>
@@ -100,7 +98,7 @@
                                         <!-- Menu Item with Submenu -->
                                         <button @click="toggleSubmenu({{ $groupIndex }}, {{ $itemIndex }})"
                                             class="menu-item group w-full"
-                                            :class="[ isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) ? 'menu-item-active' : 'menu-item-inactive', !$store.sidebar.isExpanded && !$store.sidebar.isHovered ? 'xl:justify-center' : 'xl:justify-start' ]">
+                                            :class="[ isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) ? 'menu-item-active' : 'menu-item-inactive', !$store.sidebar.isExpanded ? 'xl:justify-center' : 'xl:justify-start' ]">
 
                                             <!-- Icon -->
                                             <span :class="isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) ? 'menu-item-icon-active' : 'menu-item-icon-inactive'">
@@ -109,7 +107,7 @@
 
                                             <!-- Text -->
                                             <span
-                                                x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                                x-show="$store.sidebar.isExpanded || $store.sidebar.isMobileOpen"
                                                 class="menu-item-text flex items-center gap-2">
                                                 {{ __($item['name']) }}
                                                 @if (!empty($item['new']))
@@ -121,13 +119,13 @@
                                             </span>
 
                                             <!-- Chevron Down Icon -->
-                                            <x-svg.chevron-down x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                            <x-svg.chevron-down x-show="$store.sidebar.isExpanded || $store.sidebar.isMobileOpen"
                                                 class="ms-auto h-5 w-5 transition-transform duration-200"
                                                 x-bind:class="{ 'rotate-180 text-brand-500': isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) }" />
                                         </button>
 
                                         <!-- Submenu -->
-                                        <div x-show="isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) && ($store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen)">
+                                        <div x-show="isSubmenuOpen({{ $groupIndex }}, {{ $itemIndex }}) && ($store.sidebar.isExpanded || $store.sidebar.isMobileOpen)">
                                             <ul class="mt-2 space-y-1 ltr:ml-9 rtl:mr-9">
                                                 @foreach ($item['subItems'] as $subItem)
                                                     <li>
@@ -156,7 +154,7 @@
                                     @else
                                         <!-- Simple Menu Item -->
                                         <a href="{{ $item['path'] }}" @if(str_starts_with($item['path'], '/layout-')) target="_blank" @endif class="menu-item group"
-                                            :class="[ isActive('{{ $item['path'] }}') ? 'menu-item-active' : 'menu-item-inactive', (!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'xl:justify-center' : 'justify-start' ]">
+                                            :class="[ isActive('{{ $item['path'] }}') ? 'menu-item-active' : 'menu-item-inactive', (!$store.sidebar.isExpanded && !$store.sidebar.isMobileOpen) ? 'xl:justify-center' : 'justify-start' ]">
 
                                             <!-- Icon -->
                                             <span
@@ -166,7 +164,7 @@
 
                                             <!-- Text -->
                                             <span
-                                                x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                                x-show="$store.sidebar.isExpanded || $store.sidebar.isMobileOpen"
                                                 class="menu-item-text flex items-center gap-2">
                                                 {{ __($item['name']) }}
                                                 @if (!empty($item['new']))
@@ -187,7 +185,7 @@
         </nav>
 
         <!-- Sidebar Widget -->
-        {{-- <div x-data x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen" x-transition class="mt-auto">
+        {{-- <div x-data x-show="$store.sidebar.isExpanded || $store.sidebar.isMobileOpen" x-transition class="mt-auto">
             @include('layouts.sidebar-widget')
         </div> --}}
 

@@ -15,6 +15,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('layouts.page-loader-styles')
 
     <!-- Theme Store -->
     <style>
@@ -66,7 +67,6 @@
             Alpine.store('sidebar', {
                 isExpanded: false,
                 isMobileOpen: false,
-                isHovered: false,
 
                 init() {
                     const savedState = localStorage.getItem('sidebarExpanded');
@@ -109,12 +109,6 @@
 
                 setMobileOpen(val) {
                     this.isMobileOpen = val;
-                },
-
-                setHovered(val) {
-                    if (window.innerWidth >= 1280 && !this.isExpanded) {
-                        this.isHovered = val;
-                    }
                 }
             });
         });
@@ -137,19 +131,18 @@
 </head>
 
 <body>
+    @include('layouts.page-loader')
 
-
-
-    <div class="min-h-screen xl:flex" x-data :class="{ 'sidebar-expanded': $store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen }">
+    <div class="min-h-screen xl:flex" x-data :class="{ 'sidebar-expanded': $store.sidebar.isExpanded || $store.sidebar.isMobileOpen }">
         @include('layouts.backdrop')
         @include('layouts.sidebar')
 
         {{-- transition-all duration-300 ease-in-out --}}
-        <div class="flex-1 min-w-0 ml-0 ltr:xl:ml-[90px] rtl:xl:ml-0 rtl:xl:mr-[90px] [.sidebar-expanded_&]:ltr:xl:ml-[290px] [.sidebar-expanded_&]:rtl:xl:ml-0 [.sidebar-expanded_&]:rtl:xl:mr-[290px] transition-all duration-300 ease-in-out">
+        <div id="app-content" class="flex-1 min-w-0 ml-0 ltr:xl:ml-[90px] rtl:xl:ml-0 rtl:xl:mr-[90px] [.sidebar-expanded_&]:ltr:xl:ml-[290px] [.sidebar-expanded_&]:rtl:xl:ml-0 [.sidebar-expanded_&]:rtl:xl:mr-[290px] transition-all duration-300 ease-in-out">
             <!-- app header start -->
             @include('layouts.app-header')
             <!-- app header end -->
-            <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+            <div class="w-full min-w-0 px-4 py-4 sm:px-5 md:px-6 xl:px-8">
                 @yield('content')
             </div>
         </div>

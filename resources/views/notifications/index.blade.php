@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="w-full py-3">
+    <div class="w-full">
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
                 <h2 class="text-2xl font-semibold mb-1"><i class="fa-solid fa-bell text-warning-700 dark:text-warning-400 me-2"></i>Central de Lembretes Internos</h2>

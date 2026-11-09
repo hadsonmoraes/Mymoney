@@ -15,6 +15,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('layouts.page-loader-styles')
 
 
     <!-- Theme Store -->
@@ -66,7 +67,6 @@
             Alpine.store('sidebar', {
                 isExpanded: false,
                 isMobileOpen: false,
-                isHovered: false,
 
                 init() {
                     const savedState = localStorage.getItem('sidebarExpanded');
@@ -109,12 +109,6 @@
 
                 setMobileOpen(val) {
                     this.isMobileOpen = val;
-                },
-
-                setHovered(val) {
-                    if (window.innerWidth >= 1280 && !this.isExpanded) {
-                        this.isHovered = val;
-                    }
                 }
             });
         });
@@ -125,6 +119,7 @@
 </head>
 
 <body x-data>
+    @include('layouts.page-loader')
 
     <!-- Apply dark mode immediately to prevent flash -->
     <script>

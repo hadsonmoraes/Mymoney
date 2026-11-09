@@ -272,8 +272,7 @@
                                             </td>
                                             <td class="align-middle">
                                                 @if ($conta->maturity < now() && $conta->situation != 'paid')
-                                                    <s
-                                                        class="text-error-700 dark:text-error-400 font-medium">{{ date('d/m/Y', strtotime($conta->maturity)) }}</s>
+                                                    <span class="text-error-700 dark:text-error-400 font-medium">{{ date('d/m/Y', strtotime($conta->maturity)) }}</span>
                                                 @else
                                                     {{ date('d/m/Y', strtotime($conta->maturity)) }}
                                                 @endif
@@ -283,20 +282,22 @@
                                                 <a href="{{ route('situacao.alterar', ['id' => $conta->id]) }}">
                                                     <span @class([
                                                         'status-pill',
-                                                        'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-300' => $conta->status === 'success',
-                                                        'bg-warning-50 text-warning-800 dark:bg-warning-500/15 dark:text-warning-300' => $conta->status === 'warning',
-                                                        'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-300' => $conta->status === 'danger',
+                                                        'bg-success-600 text-white dark:bg-success-500/15 dark:text-success-300' => $conta->status === 'success',
+                                                        'bg-yellow-400 text-black dark:bg-warning-500/15 dark:text-warning-300' => $conta->status === 'warning',
+                                                        'bg-error-600 text-white dark:bg-error-500/15 dark:text-error-300' => $conta->status === 'danger',
                                                     ])>{{ $conta->situation_name }}</span>
                                                 </a>
                                             </td>
                                             <td class="align-middle">{{ $conta->category->name }}</td>
                                             <td class="align-middle"
                                                 style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
-                                                @if (ucfirst($conta->type) == 'Entrada')
-                                                    <x-svg.arrow-up class="size-4" /> Entrada
-                                                @else
-                                                    <x-svg.arrow-down class="size-4" /> Saída
-                                                @endif
+                                                <span class="inline-flex items-center gap-1 whitespace-nowrap">
+                                                    @if (ucfirst($conta->type) == 'Entrada')
+                                                        <x-svg.arrow-up class="size-4 shrink-0" /> Entrada
+                                                    @else
+                                                        <x-svg.arrow-down class="size-4 shrink-0" /> Saída
+                                                    @endif
+                                                </span>
                                             </td>
                                             <td class="hidden align-middle md:table-cell">
                                                 <div class="flex items-center justify-center gap-1">

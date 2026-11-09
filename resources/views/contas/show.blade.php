@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="w-full p-3">
+    <div class="w-full">
         <div class="flex flex-wrap justify-center gap-3">
             <div class="w-full">
                 <div class="page-hero mb-3">

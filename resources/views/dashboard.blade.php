@@ -10,7 +10,7 @@
             : 'text-error-700 dark:text-error-400';
     @endphp
 
-    <div class="w-full p-3">
+    <div class="w-full">
         <div class="mb-3">
             <div class="w-full">
                 <div class="page-hero dash-hero">
