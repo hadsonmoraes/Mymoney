@@ -5,30 +5,32 @@
 @section('content')
     @php
         $money = fn($value) => 'R$ ' . number_format($value, 2, ',', '.');
-        $saldoClass = $MyTotal >= 0 ? 'text-success' : 'text-danger';
+        $saldoClass = $MyTotal >= 0
+            ? 'text-success-700 dark:text-success-400'
+            : 'text-error-700 dark:text-error-400';
     @endphp
 
-    <div class="container-fluid p-3">
-        <div class="row g-3 mb-3">
-            <div class="col-md-12">
+    <div class="w-full p-3">
+        <div class="mb-3">
+            <div class="w-full">
                 <div class="page-hero dash-hero">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
                         <div>
                             <div class="metric-label mb-2">Painel financeiro</div>
                             <h4 class="page-title mb-1">Dashboard Financeiro</h4>
                             <p class="page-subtitle">Resumo por período com status, totais e movimentações das contas.</p>
                         </div>
-                        <div class="text-end">
-                            <small class="metric-label d-block">Período selecionado</small>
-                            <span class="fw-semibold">
+                        <div class="text-right">
+                            <small class="metric-label block">Período selecionado</small>
+                            <span class="font-semibold">
                                 {{ \Carbon\Carbon::parse($data_inicio)->format('d/m/Y') }}
                                 até
                                 {{ \Carbon\Carbon::parse($data_fim)->format('d/m/Y') }}
                             </span>
                         </div>
-                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                            data-bs-target="#modalFiltrosDashboard">
-                            <i class="fas fa-filter me-1"></i>
+                        <button type="button" class="action-button action-button-outline-secondary" data-ui-modal-toggle
+                            data-ui-modal-target="#modalFiltrosDashboard">
+                            <x-svg.horizontal-slide class="size-4 me-1" />
                             Filtros
                         </button>
                     </div>
@@ -36,21 +38,21 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modalFiltrosDashboard" tabindex="-1" aria-labelledby="modalFiltrosDashboardLabel"
+        <div class="ui-modal hidden" data-ui-modal id="modalFiltrosDashboard" tabindex="-1" aria-labelledby="modalFiltrosDashboardLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content filter-modal">
+            <div class="ui-modal-dialog">
+                <div class="ui-modal-content filter-modal">
 
-                    <div class="modal-header filter-modal-header">
+                    <div class="ui-modal-header filter-modal-header">
 
-                        <div class="d-flex align-items-center gap-3">
+                        <div class="flex items-center gap-3">
 
                             <div class="filter-modal-icon">
-                                <i class="fas fa-filter"></i>
+                                <x-svg.horizontal-slide class="size-5" />
                             </div>
 
                             <div>
-                                <h5 class="modal-title mb-1" id="modalFiltrosDashboardLabel">
+                                <h5 class="ui-modal-title mb-1" id="modalFiltrosDashboardLabel">
                                     Filtros do dashboard
                                 </h5>
 
@@ -61,39 +63,39 @@
 
                         </div>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        <button type="button" class="ui-modal-close" data-ui-modal-dismiss aria-label="Fechar"></button>
 
                     </div>
 
-                    <div class="modal-body filter-modal-body">
+                    <div class="ui-modal-body filter-modal-body">
 
                         <form action="{{ route('dashboard') }}" id="formFiltrosDashboard">
 
-                            <div class="row g-3">
+                            <div class="mb-3 grid grid-cols-1 gap-3 md:grid-cols-2">
 
-                                <div class="col-md-6">
+                                <div>
                                     <div class="filter-field">
 
-                                        <label for="dashboard_data_inicio" class="form-label">
-                                            <i class="fas fa-calendar"></i>
+                                        <label for="dashboard_data_inicio" class="field-label">
+                                            <x-svg.calendar class="size-4" />
                                             Data início
                                         </label>
 
-                                        <input type="date" class="form-control" id="dashboard_data_inicio"
+                                        <input type="date" class="field-control" id="dashboard_data_inicio"
                                             name="data_inicio" value="{{ $data_inicio }}">
 
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div>
                                     <div class="filter-field">
 
-                                        <label for="dashboard_data_fim" class="form-label">
-                                            <i class="fas fa-calendar"></i>
+                                        <label for="dashboard_data_fim" class="field-label">
+                                            <x-svg.calendar class="size-4" />
                                             Data fim
                                         </label>
 
-                                        <input type="date" class="form-control" id="dashboard_data_fim" name="data_fim"
+                                        <input type="date" class="field-control" id="dashboard_data_fim" name="data_fim"
                                             value="{{ $data_fim }}">
 
                                     </div>
@@ -105,15 +107,15 @@
 
                     </div>
 
-                    <div class="modal-footer filter-modal-footer">
+                    <div class="ui-modal-footer filter-modal-footer">
 
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-rotate-left me-1"></i>
+                        <a href="{{ route('dashboard') }}" class="action-button action-button-outline-secondary">
+                            <x-svg.arrow-left class="size-4 me-1" />
                             Limpar
                         </a>
 
-                        <button type="submit" form="formFiltrosDashboard" class="btn btn-primary">
-                            <i class="fas fa-magnifying-glass me-1"></i>
+                        <button type="submit" form="formFiltrosDashboard" class="action-button action-button-primary">
+                            <x-svg.search class="size-4 me-1" />
                             Aplicar período
                         </button>
 
@@ -123,138 +125,137 @@
             </div>
         </div>
 
-        <div class="row g-3">
-            <div class="col-xl-4 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+        <div class="mb-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-4">
+                        <div class="mb-2 flex items-start justify-between">
                             <span class="metric-label">Saldo Entrada/Saída</span>
-                            <span class="icon bg-soft-secondary"><i class="fa-solid fa-scale-balanced"></i></span>
+                            <span class="icon bg-gray-100 dark:bg-gray-700"><x-svg.bar-chart class="size-5" /></span>
                         </div>
                         <h3 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h3>
-                        <small class="text-muted">Entradas - Saídas no período</small>
+                        <small class="text-gray-500 dark:text-gray-400">Entradas - Saídas no período</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-4 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-4">
+                        <div class="mb-2 flex items-start justify-between">
                             <span class="metric-label">Total de Contas</span>
-                            <span class="icon bg-soft-primary"><i class="fa-solid fa-layer-group"></i></span>
+                            <span class="icon bg-brand-50 dark:bg-brand-500/10"><x-svg.box class="size-5" /></span>
                         </div>
                         <h4 class="metric-value mb-1">{{ $money($total) }}</h4>
-                        <small class="text-muted">Quantidade: {{ $totalquantidade }}</small>
+                        <small class="text-gray-500 dark:text-gray-400">Quantidade: {{ $totalquantidade }}</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xl-4 col-md-12">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-4">
+                        <div class="mb-2 flex items-start justify-between">
                             <span class="metric-label">Movimentação</span>
-                            <span class="icon bg-soft-info"><i class="fa-solid fa-arrow-right-arrow-left"></i></span>
+                            <span class="icon bg-blue-light-50 dark:bg-blue-light-500/10"><x-svg.arrow-right class="size-5" /></span>
                         </div>
-                        <p class="mb-1"><span class="fw-semibold">Entrada:</span> {{ $money($contasEntradaValor) }}
+                        <p class="mb-1"><span class="font-semibold">Entrada:</span> {{ $money($contasEntradaValor) }}
                             ({{ $contasEntradaQuantidade }})</p>
-                        <p class="mb-0"><span class="fw-semibold">Saída:</span> {{ $money($contasSaidaValor) }}
+                        <p class="mb-0"><span class="font-semibold">Saída:</span> {{ $money($contasSaidaValor) }}
                             ({{ $contasSaidaQuantidade }})</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row g-3 mt-1">
-            <div class="col-lg-3 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-semibold">Pago</span>
-                            <span class="icon bg-soft-success"><i class="fa-solid fa-circle-check"></i></span>
+        <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-3">
+                        <div class="mb-2 flex justify-between">
+                            <span class="font-semibold">Pago</span>
+                            <span class="icon bg-success-50 dark:bg-success-500/10"><x-svg.check-circle class="size-5" /></span>
                         </div>
-                        <div class="fw-bold">{{ $money($contasPagasValor) }}</div>
-                        <small class="text-muted">Qtd: {{ $contasPagasQuantidade }}</small>
+                        <div class="font-bold">{{ $money($contasPagasValor) }}</div>
+                        <small class="text-gray-500 dark:text-gray-400">Qtd: {{ $contasPagasQuantidade }}</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-semibold">Pendente</span>
-                            <span class="icon bg-soft-warning"><i class="fa-solid fa-hourglass-half"></i></span>
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-3">
+                        <div class="mb-2 flex justify-between">
+                            <span class="font-semibold">Pendente</span>
+                            <span class="icon bg-warning-50 dark:bg-warning-500/10"><x-svg.time class="size-5" /></span>
                         </div>
-                        <div class="fw-bold">{{ $money($contasPendentesValor) }}</div>
-                        <small class="text-muted">Qtd: {{ $contasPendentesQuantidade }}</small>
+                        <div class="font-bold">{{ $money($contasPendentesValor) }}</div>
+                        <small class="text-gray-500 dark:text-gray-400">Qtd: {{ $contasPendentesQuantidade }}</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-semibold">Cancelado</span>
-                            <span class="icon bg-soft-danger"><i class="fa-solid fa-ban"></i></span>
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-3">
+                        <div class="mb-2 flex justify-between">
+                            <span class="font-semibold">Cancelado</span>
+                            <span class="icon bg-error-50 dark:bg-error-500/10"><x-svg.x class="size-5" /></span>
                         </div>
-                        <div class="fw-bold">{{ $money($contasCanceladasValor) }}</div>
-                        <small class="text-muted">Qtd: {{ $contasCanceladasQuantidade }}</small>
+                        <div class="font-bold">{{ $money($contasCanceladasValor) }}</div>
+                        <small class="text-gray-500 dark:text-gray-400">Qtd: {{ $contasCanceladasQuantidade }}</small>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card dash-stat-card h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-semibold">Entrada / Saída</span>
-                            <span class="icon bg-soft-dark"><i class="fa-solid fa-chart-column"></i></span>
+            <div class="min-w-0">
+                <div class="dash-stat-card">
+                    <div class="p-3">
+                        <div class="mb-2 flex justify-between">
+                            <span class="font-semibold">Entrada / Saída</span>
+                            <span class="icon bg-gray-100 dark:bg-gray-700"><x-svg.bar-chart class="size-5" /></span>
                         </div>
-                        <div class="fw-bold">{{ $money($contasEntradaValor) }}</div>
-                        <small class="text-muted">Saída: {{ $money($contasSaidaValor) }}</small>
+                        <div class="font-bold">{{ $money($contasEntradaValor) }}</div>
+                        <small class="text-gray-500 dark:text-gray-400">Saída: {{ $money($contasSaidaValor) }}</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Projeção Futura e Próximos 30 Dias -->
-        <div class="row g-3 mt-1">
-            <div class="col-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3 border-0">
-                        <div class="d-flex justify-content-between align-items-center">
+        <div class="mb-3">
+            <div class="w-full">
+                <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="border-b border-gray-200 p-4 dark:border-gray-700">
+                        <div class="flex items-center justify-between gap-3">
                             <div>
-                                <h5 class="mb-0 fw-bold"><i
-                                        class="fa-solid fa-calendar-days text-primary me-2"></i>Compromissos Futuros
+                                <h5 class="mb-0 font-bold"><x-svg.calendar class="size-5 text-brand-600 dark:text-brand-400 me-2" />Compromissos Futuros
                                     (Próximos 30 Dias)</h5>
-                                <small class="text-muted">Projeção com base em lançamentos pendentes com vencimento nos
+                                <small class="text-gray-500 dark:text-gray-400">Projeção com base em lançamentos pendentes com vencimento nos
                                     próximos 30 dias.</small>
                             </div>
-                            <span class="badge bg-primary-subtle text-primary border px-3 py-2">Próximos 30 dias</span>
+                            <span class="status-badge bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 border px-3 py-2">Próximos 30 dias</span>
                         </div>
                     </div>
-                    <div class="card-body pt-0">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light">
-                                    <span class="text-muted small fw-semibold">Receitas Previstas</span>
-                                    <h4 class="text-success fw-bold mb-0 mt-1">{{ $money($futureEntradasValor) }}</h4>
+                    <div class="p-4 pt-0">
+                        <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                            <div>
+                                <div class="border rounded p-3 bg-gray-50 dark:bg-gray-800">
+                                    <span class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Receitas Previstas</span>
+                                    <h4 class="text-success-700 dark:text-success-400 font-bold mb-0 mt-1">{{ $money($futureEntradasValor) }}</h4>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light">
-                                    <span class="text-muted small fw-semibold">Despesas Previstas</span>
-                                    <h4 class="text-danger fw-bold mb-0 mt-1">{{ $money($futureSaidasValor) }}</h4>
+                            <div>
+                                <div class="border rounded p-3 bg-gray-50 dark:bg-gray-800">
+                                    <span class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Despesas Previstas</span>
+                                    <h4 class="text-error-700 dark:text-error-400 font-bold mb-0 mt-1">{{ $money($futureSaidasValor) }}</h4>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 bg-light">
-                                    <span class="text-muted small fw-semibold">Saldo Projetado do Período</span>
+                            <div>
+                                <div class="border rounded p-3 bg-gray-50 dark:bg-gray-800">
+                                    <span class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Saldo Projetado do Período</span>
                                     <h4
-                                        class="{{ $futureSaldoProjetado >= 0 ? 'text-primary' : 'text-danger' }} fw-bold mb-0 mt-1">
+                                        class="{{ $futureSaldoProjetado >= 0 ? 'text-brand-600 dark:text-brand-400' : 'text-error-700 dark:text-error-400' }} font-bold mb-0 mt-1">
                                         {{ $money($futureSaldoProjetado) }}</h4>
                                 </div>
                             </div>
@@ -265,42 +266,41 @@
         </div>
 
         <!-- Alertas de Vencimento e Contas Vencidas -->
-        <div class="row g-3 mt-2">
+        <div class="mt-2 grid grid-cols-1 gap-3 lg:grid-cols-2">
             <!-- Vencidos -->
-            <div class="col-lg-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
-                        <h6 class="mb-0 fw-bold text-danger"><i
-                                class="fa-solid fa-circle-exclamation me-2"></i>Lançamentos Vencidos Pendentes</h6>
-                        <span class="badge bg-danger rounded-pill">{{ $overdueCount }}</span>
+            <div class="min-w-0">
+                <div class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
+                        <h6 class="mb-0 font-bold text-error-700 dark:text-error-400"><x-svg.octagon-alert class="size-4 me-2" />Lançamentos Vencidos Pendentes</h6>
+                        <span class="status-badge bg-error-600 text-white rounded-full">{{ $overdueCount }}</span>
                     </div>
-                    <div class="card-body pt-0">
+                    <div class="flex-1 p-4 pt-0">
                         @if ($overdueCount > 0)
-                            <div class="alert alert-danger py-2 small mb-3">
+                            <div class="mb-3 rounded-lg border border-error-200 bg-error-50 px-3 py-2 text-sm text-error-700 dark:border-error-800 dark:bg-error-950 dark:text-error-200">
                                 <strong>Atenção:</strong> Existem {{ $overdueCount }} contas vencidas totalizando
                                 <strong>{{ $money($overdueValor) }}</strong>.
                             </div>
-                            <div class="list-group list-group-flush border rounded"
-                                style="max-height: 220px; overflow-y: auto;">
+                            <div
+                                class="max-h-[220px] overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
                                 @foreach ($overdueContas->take(5) as $c)
                                     <div
-                                        class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                        class="flex items-center justify-between gap-3 border-b border-gray-200 px-3 py-2 last:border-b-0 dark:border-gray-700">
                                         <div>
-                                            <div class="fw-semibold small">{{ $c->name }}</div>
-                                            <small class="text-danger">Venceu em
+                                            <div class="font-semibold text-sm">{{ $c->name }}</div>
+                                            <small class="text-error-700 dark:text-error-400">Venceu em
                                                 {{ \Carbon\Carbon::parse($c->maturity)->format('d/m/Y') }}</small>
                                         </div>
-                                        <div class="text-end">
-                                            <span class="fw-bold text-dark small">{{ $money($c->value) }}</span>
+                                        <div class="text-right">
+                                            <span class="font-bold text-gray-900 dark:text-gray-100 text-sm">{{ $money($c->value) }}</span>
                                             <a href="{{ route('contas.show', $c->id) }}"
-                                                class="btn btn-sm btn-link p-0 d-block text-secondary small">Ver</a>
+                                                class="action-button action-button-sm action-button-link p-0 block text-gray-600 dark:text-gray-300 text-sm">Ver</a>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <div class="text-center py-4 text-muted small">
-                                <i class="fa-regular fa-circle-check fa-2x text-success mb-2"></i>
+                            <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                                <x-svg.check-circle class="size-8 text-success-700 dark:text-success-400 mb-2" />
                                 <div>Nenhum lançamento vencido pendente. Excelente!</div>
                             </div>
                         @endif
@@ -309,43 +309,43 @@
             </div>
 
             <!-- Vencendo Hoje e Próximos 7 Dias -->
-            <div class="col-lg-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
-                        <h6 class="mb-0 fw-bold text-warning-emphasis"><i class="fa-solid fa-clock me-2"></i>Vencendo Hoje
+            <div class="min-w-0">
+                <div class="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700">
+                        <h6 class="mb-0 font-bold text-warning-800 dark:text-warning-300"><x-svg.time class="size-4 me-2" />Vencendo Hoje
                             & Próximos 7 Dias</h6>
                         <span
-                            class="badge bg-warning text-dark rounded-pill">{{ $dueTodayContas->count() + $upcoming7DaysContas->count() }}</span>
+                            class="status-badge bg-warning-500 text-gray-900 dark:text-gray-100 rounded-full">{{ $dueTodayContas->count() + $upcoming7DaysContas->count() }}</span>
                     </div>
-                    <div class="card-body pt-0">
+                    <div class="flex-1 p-4 pt-0">
                         @if ($dueTodayContas->count() > 0 || $upcoming7DaysContas->count() > 0)
-                            <div class="list-group list-group-flush border rounded"
-                                style="max-height: 250px; overflow-y: auto;">
+                            <div
+                                class="max-h-[250px] overflow-y-auto rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
                                 @foreach ($dueTodayContas as $c)
                                     <div
-                                        class="list-group-item list-group-item-danger d-flex justify-content-between align-items-center py-2 px-3">
+                                        class="flex items-center justify-between gap-3 border-b border-gray-200 px-3 py-2 last:border-b-0 dark:border-gray-700">
                                         <div>
-                                            <span class="badge bg-danger me-1">Hoje</span>
-                                            <span class="fw-semibold small">{{ $c->name }}</span>
+                                            <span class="status-badge bg-error-600 text-white me-1">Hoje</span>
+                                            <span class="font-semibold text-sm">{{ $c->name }}</span>
                                         </div>
-                                        <span class="fw-bold small">{{ $money($c->value) }}</span>
+                                        <span class="font-bold text-sm">{{ $money($c->value) }}</span>
                                     </div>
                                 @endforeach
                                 @foreach ($upcoming7DaysContas as $c)
                                     <div
-                                        class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                        class="flex items-center justify-between gap-3 border-b border-gray-200 px-3 py-2 last:border-b-0 dark:border-gray-700">
                                         <div>
                                             <span
-                                                class="badge bg-warning text-dark me-1">{{ \Carbon\Carbon::parse($c->maturity)->format('d/m') }}</span>
-                                            <span class="fw-semibold small">{{ $c->name }}</span>
+                                                class="status-badge bg-warning-500 text-gray-900 dark:text-gray-100 me-1">{{ \Carbon\Carbon::parse($c->maturity)->format('d/m') }}</span>
+                                            <span class="font-semibold text-sm">{{ $c->name }}</span>
                                         </div>
-                                        <span class="fw-bold small text-muted">{{ $money($c->value) }}</span>
+                                        <span class="font-bold text-sm text-gray-500 dark:text-gray-400">{{ $money($c->value) }}</span>
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <div class="text-center py-4 text-muted small">
-                                <i class="fa-regular fa-calendar-check fa-2x text-primary mb-2"></i>
+                            <div class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">
+                                <x-svg.calendar class="size-8 text-brand-600 dark:text-brand-400 mb-2" />
                                 <div>Nenhum vencimento nos próximos 7 dias.</div>
                             </div>
                         @endif

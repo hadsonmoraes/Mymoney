@@ -55,17 +55,18 @@ window.confirmarExclusao = function (event, contaId) {
 
 window.togglePassword = function (fieldId, toggleIcon) {
     const field = document.getElementById(fieldId);
-    const icon = toggleIcon.querySelector('i');
-
-    if (field.type == "password") {
-        field.type = "text";
-        icon.classList.remove('fa-regular', 'fa-eye')
-        icon.classList.add('fa-regular', 'fa-eye-slash')
-    } else {
-        field.type = "password";
-        icon.classList.remove('fa-regular', 'fa-eye-slash')
-        icon.classList.add('fa-regular', 'fa-eye')
+    if (!field || !toggleIcon) {
+        console.error(`Password field not found: ${fieldId}`);
+        return;
     }
+
+    const isPasswordHidden = field.type === 'password';
+    field.type = isPasswordHidden ? 'text' : 'password';
+    toggleIcon.querySelector('[data-password-icon="visible"]')
+        ?.classList.toggle('hidden', isPasswordHidden);
+    toggleIcon.querySelector('[data-password-icon="hidden"]')
+        ?.classList.toggle('hidden', !isPasswordHidden);
+    toggleIcon.setAttribute('aria-label', isPasswordHidden ? 'Ocultar senha' : 'Mostrar senha');
 }
 
 let inputValor = document.getElementById('value');
@@ -87,11 +88,14 @@ if (inputValor) {
     });
 }
 
-$(function () {
-    $('.select2').select2({
-        
+if (document.querySelector('.select2')) {
+    import('select2').then(({ default: initializeSelect2 }) => {
+        initializeSelect2(window, window.jQuery);
+        $('.select2').select2({ width: '100%' });
+    }).catch(error => {
+        console.error('Erro ao carregar Select2:', error);
     });
-});
+}
 const toggleThemeButton = document.getElementById('toggleTheme');
 if (toggleThemeButton) {
     toggleThemeButton.addEventListener('click', () => {
@@ -136,12 +140,12 @@ function updateThemeIcon(theme) {
         icon.classList.remove('fa-sun');
         icon.classList.add('fa-moon');
         text.innerText = ' Modo Escuro';
-        document.body.setAttribute('data-bs-theme', 'dark')
+        document.body.setAttribute('data-color-scheme', 'dark')
     } else {
         icon.classList.remove('fa-moon');
         icon.classList.add('fa-sun');
         text.innerText = ' Modo Claro';
-        document.body.setAttribute('data-bs-theme', 'light')
+        document.body.setAttribute('data-color-scheme', 'light')
     }
 }
 
@@ -230,6 +234,113 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const modalOpeners = new WeakMap();
+
+    function showUiModal(modal, trigger) {
+        modalOpeners.set(modal, trigger);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('role', 'dialog');
+        document.body.classList.add('overflow-hidden');
+        const dialog = modal.querySelector('.ui-modal-dialog');
+        dialog?.setAttribute('tabindex', '-1');
+        dialog?.focus();
+    }
+
+    function hideUiModal(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.removeAttribute('aria-modal');
+        if (!document.querySelector('[data-ui-modal]:not(.hidden)')) {
+            document.body.classList.remove('overflow-hidden');
+        }
+        modalOpeners.get(modal)?.focus();
+        modalOpeners.delete(modal);
+    }
+
+    function closeUiDropdowns(except = null) {
+        document.querySelectorAll('.floating-menu:not(.hidden)').forEach(menu => {
+            if (menu === except) {
+                return;
+            }
+
+            menu.classList.add('hidden');
+            menu.closest('[data-ui-dropdown]')
+                ?.querySelector('[data-ui-dropdown-toggle]')
+                ?.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    document.addEventListener('click', event => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+
+        const modalTrigger = event.target.closest('[data-ui-modal-toggle]');
+        if (modalTrigger) {
+            const target = modalTrigger.getAttribute('data-ui-modal-target');
+            const modal = target?.startsWith('#')
+                ? document.getElementById(target.slice(1))
+                : null;
+
+            if (!modal) {
+                console.error(`Modal target not found: ${target}`);
+                return;
+            }
+
+            event.preventDefault();
+            showUiModal(modal, modalTrigger);
+            return;
+        }
+
+        const dismissButton = event.target.closest('[data-ui-modal-dismiss]');
+        if (dismissButton) {
+            const modal = dismissButton.closest('[data-ui-modal]');
+            if (modal) {
+                hideUiModal(modal);
+            }
+            return;
+        }
+
+        const backdrop = event.target.closest('[data-ui-modal]');
+        if (backdrop && event.target === backdrop && !backdrop.classList.contains('hidden')) {
+            hideUiModal(backdrop);
+            return;
+        }
+
+        const dropdownTrigger = event.target.closest('[data-ui-dropdown-toggle]');
+        if (dropdownTrigger) {
+            const dropdown = dropdownTrigger.closest('[data-ui-dropdown]');
+            const menu = dropdown?.querySelector('.floating-menu');
+
+            if (!menu) {
+                console.error('Dropdown menu not found for its trigger.');
+                return;
+            }
+
+            const shouldOpen = menu.classList.contains('hidden');
+            closeUiDropdowns(menu);
+            menu.classList.toggle('hidden', !shouldOpen);
+            dropdownTrigger.setAttribute('aria-expanded', String(shouldOpen));
+            event.preventDefault();
+            return;
+        }
+
+        if (!event.target.closest('.floating-menu')) {
+            closeUiDropdowns();
+        }
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            document.querySelectorAll('[data-ui-modal]:not(.hidden)').forEach(hideUiModal);
+            closeUiDropdowns();
+        }
+    });
+
     // Frequência no show.blade.php se existir
     const repeatFreqShow = document.getElementById('repeat_frequency_show');
     const repeatCustomShow = document.getElementById('repeat_custom_interval_show');
@@ -263,37 +374,37 @@ window.confirmarExclusaoSequencia = function (contaId, contaName, label, isRecur
                 "${contaName}" pertence a uma sequência de repetição
                 (<strong>${label || 'Repetido'}</strong>). Como deseja prosseguir com a exclusão?
             </p>
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="swal_delete_scope"
+            <div class="mb-2 flex items-start gap-2">
+                <input class="mt-1 size-4 shrink-0 accent-brand-500" type="radio" name="swal_delete_scope"
                     id="swal_delete_scope_only" value="only_this" checked>
-                <label class="form-check-label" for="swal_delete_scope_only">
+                <label class="text-sm text-gray-700 dark:text-gray-300" for="swal_delete_scope_only">
                     <strong>Excluir somente este lançamento</strong>
                     <div class="small text-muted">Apenas este registro será apagado. Os demais
                         continuam inalterados.</div>
                 </label>
             </div>
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="swal_delete_scope"
+            <div class="mb-2 flex items-start gap-2">
+                <input class="mt-1 size-4 shrink-0 accent-brand-500" type="radio" name="swal_delete_scope"
                     id="swal_delete_scope_this_and_next" value="this_and_next">
-                <label class="form-check-label" for="swal_delete_scope_this_and_next">
+                <label class="text-sm text-gray-700 dark:text-gray-300" for="swal_delete_scope_this_and_next">
                     <strong>Excluir este e os lançamentos posteriores</strong>
                     <div class="small text-muted">Apaga este lançamento e todas as ocorrências
                         futuras desta mesma sequência.</div>
                 </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="swal_delete_scope"
+            <div class="flex items-start gap-2">
+                <input class="mt-1 size-4 shrink-0 accent-brand-500" type="radio" name="swal_delete_scope"
                     id="swal_delete_scope_all" value="all_sequence">
-                <label class="form-check-label" for="swal_delete_scope_all">
+                <label class="text-sm text-gray-700 dark:text-gray-300" for="swal_delete_scope_all">
                     <strong>Excluir toda a sequência</strong>
                     <div class="small text-muted">Apaga todos os lançamentos gerados nesta
                         repetição.</div>
                 </label>
             </div>
             ${isRecurring ? `
-            <div class="form-check text-start mt-3">
-                <input class="form-check-input" type="checkbox" id="swal_cancel_recurrence" value="1">
-                <label class="form-check-label text-warning-emphasis" for="swal_cancel_recurrence">
+            <div class="mt-3 flex items-start gap-2 text-start">
+                <input class="mt-1 size-4 shrink-0 accent-brand-500" type="checkbox" id="swal_cancel_recurrence" value="1">
+                <label class="text-sm text-amber-700 dark:text-amber-300" for="swal_cancel_recurrence">
                     Cancelar também a regra de recorrência automática futura
                 </label>
             </div>` : ''}

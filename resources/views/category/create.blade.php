@@ -3,24 +3,24 @@
 @section('title', 'Cadastrar categoria')
 
 @section('content')
-    <div class="container-fluid p-3">
-        <div class="row justify-content-center g-3">
-            <div class="col-12">
+    <div class="w-full p-3">
+        <div class="flex flex-wrap justify-center gap-3">
+            <div class="w-full">
                 <div class="page-hero mb-3">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
                         <div>
                             <div class="metric-label mb-2">Organização</div>
                             <h1 class="page-title mb-1">Criar categoria</h1>
                             <p class="page-subtitle">Crie categorias para organizar melhor seus lançamentos.</p>
                         </div>
-                        <a href="{{ route('category.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('category.index') }}" class="action-button action-button-outline-secondary">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar
                         </a>
                     </div>
                 </div>
 
-                <div class="card section-card shadow-sm form-surface w-100">
-                    <div class="card-body form-card-body">
+                <div class="section-card form-surface w-full rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="form-card-body">
                         <x-alert />
 
                         <form action="{{ route('category.store') }}" method="post" class="form-grid">
@@ -30,11 +30,11 @@
                                 <div class="form-section-title">Dados básicos</div>
                                 <div class="form-section-desc">Defina um nome objetivo e fácil de reconhecer.</div>
 
-                                <div class="row g-3 justify-content-center">
-                                    <div class="col-12 col-md-10 col-lg-8">
-                                        <label for="name" class="form-label">Nome <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="name" name="name"
+                                <div class="grid grid-cols-1 justify-center gap-3 md:grid-cols-12">
+                                    <div class="md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
+                                        <label for="name" class="field-label">Nome <span
+                                                class="text-error-700 dark:text-error-400">*</span></label>
+                                        <input type="text" class="field-control" id="name" name="name"
                                             value="{{ old('name') }}" placeholder="Ex: Casa, transporte, alimentação">
                                         <div class="form-help">Use um nome curto para localizar mais rápido.</div>
                                     </div>
@@ -42,7 +42,7 @@
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit" class="btn btn-primary px-4">Cadastrar</button>
+                                <button type="submit" class="action-button action-button-primary px-4">Cadastrar</button>
                             </div>
                         </form>
                     </div>

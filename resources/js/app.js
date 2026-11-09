@@ -1,7 +1,14 @@
+import Alpine from 'alpinejs';
+import registerUi from './ui';
 import './bootstrap';
+import 'select2/dist/css/select2.min.css';
 import './custom';
 import 'summernote/dist/summernote-lite';
 import 'summernote/dist/summernote-lite.css';
+
+window.Alpine = Alpine;
+registerUi(Alpine);
+Alpine.start();
 
 $(document).ready(function(){
     $('#summernote').summernote({

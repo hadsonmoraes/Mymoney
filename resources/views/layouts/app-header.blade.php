@@ -25,9 +25,10 @@
             </x-ui.button>
 
             <!-- Logo (mobile only) -->
-            <a href="/" class="xl:hidden">
-                <img width="154" height="32" class="dark:hidden" src="/assets/images/logo/logo.svg" alt="Logo" />
-                <img width="154" height="32" class="hidden dark:block" src="/assets/images/logo/logo-dark.svg" alt="Logo" />
+            <a href="{{ route('home') }}" class="flex items-center gap-2 xl:hidden">
+                <img src="{{ asset('logo.png') }}" alt="" width="40" height="40"
+                    class="size-10 shrink-0 rounded-lg object-contain" />
+                <span class="font-semibold text-gray-800 dark:text-white">MyMoney</span>
             </a>
 
             <!-- Application menu toggle (mobile only) -->
@@ -36,28 +37,6 @@
                 <x-svg.horizontal-dots />
             </x-ui.button>
 
-            <!-- Search (desktop only) -->
-            <div class="hidden xl:block" x-data="{}"
-                @keydown.window="if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'k') { $event.preventDefault(); $refs.searchInput?.focus(); }">
-                <form @submit.prevent>
-                    <x-ui.field class="xl:w-107.5">
-                        <x-ui.input-group class="border-gray-200 bg-transparent dark:border-gray-800 dark:bg-white/3">
-                            <x-ui.input-group.addon align="inline-start">
-                                <x-svg.search class="size-5 text-gray-500 dark:text-gray-400" />
-                            </x-ui.input-group.addon>
-                            <x-ui.input-group.input x-ref="searchInput" type="text" placeholder="{{ __('header.searchPlaceholder') }}"
-                                class="text-gray-800 placeholder:text-gray-400 dark:text-white/90 dark:placeholder:text-white/30" />
-                            <x-ui.input-group.addon align="inline-end">
-                                <x-ui.badge variant="light" color="gray" size="sm"
-                                    class="cursor-pointer gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-1.75 py-[4.5px] text-xs tracking-[-0.2px] text-gray-500 shadow-none dark:border-gray-800 dark:bg-white/3 dark:text-gray-400">
-                                    <span>⌘</span>
-                                    <span>K</span>
-                                </x-ui.badge>
-                            </x-ui.input-group.addon>
-                        </x-ui.input-group>
-                    </x-ui.field>
-                </form>
-            </div>
         </div>
 
         <!-- Right side content -->

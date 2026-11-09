@@ -16,6 +16,7 @@ class ReminderTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Category $category;
 
     protected function setUp(): void
@@ -151,5 +152,75 @@ class ReminderTest extends TestCase
         $this->assertEquals(7, $this->user->reminder_days_before);
         $this->assertTrue($this->user->reminder_upcoming);
         $this->assertTrue($this->user->reminder_overdue);
+    }
+
+    public function test_home_header_shows_generated_unread_reminders(): void
+    {
+        $this->freezeTime();
+
+        Conta::create([
+            'name' => 'Luz vence hoje',
+            'value' => 120.00,
+            'maturity' => now()->toDateString(),
+            'situation' => 'pending',
+            'category_id' => $this->category->id,
+            'user_id' => $this->user->id,
+            'type' => 'saida',
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('home'));
+
+        $response->assertOk()
+            ->assertSee('Lembretes (1)', false)
+            ->assertSee('Vencendo Hoje: Luz vence hoje')
+            ->assertSee(route('lembretes.index', ['filter' => 'due_today']), false)
+            ->assertSee('Ver todos os lembretes');
+
+        $this->assertDatabaseHas('internal_notifications', [
+            'user_id' => $this->user->id,
+            'type' => 'due_today',
+            'title' => 'Vencendo Hoje: Luz vence hoje',
+            'read_at' => null,
+        ]);
+    }
+
+    public function test_home_header_only_shows_the_authenticated_users_unread_reminders(): void
+    {
+        $this->freezeTime();
+
+        InternalNotification::create([
+            'user_id' => $this->user->id,
+            'type' => 'upcoming',
+            'title' => 'Minha conta vence em breve',
+            'message' => 'Este é o lembrete da minha conta.',
+            'reference_date' => now()->addDay()->toDateString(),
+        ]);
+
+        InternalNotification::create([
+            'user_id' => $this->user->id,
+            'type' => 'upcoming',
+            'title' => 'Lembrete já lido',
+            'message' => 'Este lembrete não deve aparecer no sino.',
+            'reference_date' => now()->addDays(2)->toDateString(),
+            'read_at' => now(),
+        ]);
+
+        $otherUser = User::factory()->create();
+
+        InternalNotification::create([
+            'user_id' => $otherUser->id,
+            'type' => 'overdue',
+            'title' => 'Lembrete privado de outra pessoa',
+            'message' => 'Este lembrete não deve aparecer para o usuário atual.',
+            'reference_date' => now()->subDay()->toDateString(),
+        ]);
+
+        $response = $this->actingAs($this->user)->get(route('home'));
+
+        $response->assertOk()
+            ->assertSee('Lembretes (1)', false)
+            ->assertSee('Minha conta vence em breve')
+            ->assertDontSee('Lembrete já lido')
+            ->assertDontSee('Lembrete privado de outra pessoa');
     }
 }

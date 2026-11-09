@@ -5,13 +5,15 @@
 @section('content')
     @php
         $money = fn($value) => 'R$ ' . number_format($value, 2, ',', '.');
-        $saldoClass = $MyTotal >= 0 ? 'text-success' : 'text-danger';
+        $saldoClass = $MyTotal >= 0
+            ? 'text-success-700 dark:text-success-400'
+            : 'text-error-700 dark:text-error-400';
     @endphp
-    <div class="container-fluid p-3">
-        <div class="row justify-content-center g-3">
-            <div class="col-md-12">
+    <div class="w-full">
+        <div class="flex flex-wrap justify-center gap-3">
+            <div class="w-full">
                 <div class="page-hero mb-3">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
                         <div>
                             <div class="metric-label mb-2">Lançamentos</div>
                             <h1 class="page-title mb-1">Contas</h1>
@@ -19,24 +21,24 @@
                             </p>
                         </div>
                         <div class="tool-row">
-                            <a href="{{ route('contas.create') }}" class="btn btn-primary">
-                                <i class="fa-solid fa-circle-plus me-1"></i> Nova conta
+                            <a href="{{ route('contas.create') }}" class="action-button action-button-primary">
+                                <x-svg.plus class="size-4 me-1" /> Nova conta
                             </a>
-                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                data-bs-target="#modalImportarExcel">
-                                <i class="fa-solid fa-file-import me-1"></i> Importar Excel
+                            <button type="button" class="action-button action-button-outline-success" data-ui-modal-toggle
+                                data-ui-modal-target="#modalImportarExcel">
+                                <x-svg.upload class="size-4 me-1" /> Importar Excel
                             </button>
-                            <a href="{{ route('contas.importar.modelo') }}" class="btn btn-outline-secondary"
+                            <a href="{{ route('contas.importar.modelo') }}" class="action-button action-button-outline-secondary"
                                 title="Baixar modelo de planilha CSV">
-                                <i class="fa-solid fa-download me-1"></i> Modelo
+                                <x-svg.arrow-down class="size-4 me-1" /> Modelo
                             </a>
                             <a href="{{ url('gerar-csv?' . request()->getQueryString()) }}"
-                                class="btn btn-outline-secondary">
-                                <i class="fa-solid fa-file-excel me-1"></i> Exportar Excel
+                                class="action-button action-button-outline-secondary">
+                                <x-svg.table class="size-4 me-1" /> Exportar Excel
                             </a>
-                            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal"
-                                data-bs-target="#modalFiltros">
-                                <i class="fas fa-filter me-1"></i>
+                            <button class="action-button action-button-outline-secondary" type="button" data-ui-modal-toggle
+                                data-ui-modal-target="#modalFiltros">
+                                <x-svg.horizontal-slide class="size-4 me-1" />
                                 Filtros
                             </button>
                         </div>
@@ -44,20 +46,20 @@
                 </div>
 
 
-                <div class="modal fade" id="modalFiltros" tabindex="-1" aria-labelledby="modalFiltrosLabel"
+                <div class="ui-modal hidden" data-ui-modal id="modalFiltros" tabindex="-1" aria-labelledby="modalFiltrosLabel"
                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <div class="modal-content filter-modal">
+                    <div class="ui-modal-dialog ui-modal-dialog-wide">
+                        <div class="ui-modal-content filter-modal">
 
-                            <div class="modal-header filter-modal-header">
-                                <div class="d-flex align-items-center gap-3">
+                            <div class="ui-modal-header filter-modal-header">
+                                <div class="flex items-center gap-3">
 
                                     <div class="filter-modal-icon">
-                                        <i class="fas fa-filter"></i>
+                                        <x-svg.horizontal-slide class="size-5" />
                                     </div>
 
                                     <div>
-                                        <h5 class="modal-title mb-1" id="modalFiltrosLabel">
+                                        <h5 class="ui-modal-title mb-1" id="modalFiltrosLabel">
                                             Filtros
                                         </h5>
 
@@ -68,61 +70,61 @@
 
                                 </div>
 
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                <button type="button" class="ui-modal-close" data-ui-modal-dismiss
                                     aria-label="Fechar"></button>
                             </div>
 
-                            <div class="modal-body filter-modal-body">
+                            <div class="ui-modal-body filter-modal-body">
 
                                 <form action="{{ route('home') }}" id="formFiltros">
 
-                                    <div class="row g-3">
+                                    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 
-                                        <div class="col-12">
+                                        <div class="md:col-span-2">
                                             <div class="filter-field">
-                                                <label for="name" class="form-label">
-                                                    <i class="fas fa-tag"></i>
+                                                <label for="name" class="field-label">
+                                                    <x-svg.box class="size-4" />
                                                     Nome
                                                 </label>
 
-                                                <input type="text" class="form-control" id="name" name="name"
+                                                <input type="text" class="field-control" id="name" name="name"
                                                     value="{{ $name }}"
                                                     placeholder="Ex.: salário, aluguel, mercado...">
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div>
                                             <div class="filter-field">
-                                                <label for="data_inicio" class="form-label">
-                                                    <i class="fas fa-calendar"></i>
+                                                <label for="data_inicio" class="field-label">
+                                                    <x-svg.calendar class="size-4" />
                                                     Data início
                                                 </label>
 
-                                                <input type="date" class="form-control" id="data_inicio"
+                                                <input type="date" class="field-control" id="data_inicio"
                                                     name="data_inicio" value="{{ $data_inicio }}">
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div>
                                             <div class="filter-field">
-                                                <label for="data_fim" class="form-label">
-                                                    <i class="fas fa-calendar"></i>
+                                                <label for="data_fim" class="field-label">
+                                                    <x-svg.calendar class="size-4" />
                                                     Data fim
                                                 </label>
 
-                                                <input type="date" class="form-control" id="data_fim" name="data_fim"
+                                                <input type="date" class="field-control" id="data_fim" name="data_fim"
                                                     value="{{ $data_fim }}">
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div>
                                             <div class="filter-field">
-                                                <label for="situation" class="form-label">
-                                                    <i class="fas fa-circle-check"></i>
+                                                <label for="situation" class="field-label">
+                                                    <x-svg.check-circle class="size-4" />
                                                     Situação
                                                 </label>
 
-                                                <select class="form-select" id="situation" name="situation">
+                                                <select class="field-select" id="situation" name="situation">
                                                     <option value="">Todas as situações</option>
 
                                                     <option value="paid" @selected($situation == 'paid')>
@@ -140,14 +142,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div>
                                             <div class="filter-field">
-                                                <label for="type" class="form-label">
-                                                    <i class="fas fa-arrow-right-arrow-left"></i>
+                                                <label for="type" class="field-label">
+                                                    <x-svg.arrow-right class="size-4" />
                                                     Tipo
                                                 </label>
 
-                                                <select class="form-select" id="type" name="type">
+                                                <select class="field-select" id="type" name="type">
                                                     <option value="">Todos os tipos</option>
 
                                                     <option value="entrada" @selected($type == 'entrada')>
@@ -171,15 +173,15 @@
 
                             </div>
 
-                            <div class="modal-footer filter-modal-footer">
+                            <div class="ui-modal-footer filter-modal-footer">
 
-                                <a href="{{ route('home') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-rotate-left me-1"></i>
+                                <a href="{{ route('home') }}" class="action-button action-button-outline-secondary">
+                                    <x-svg.arrow-left class="size-4 me-1" />
                                     Limpar
                                 </a>
 
-                                <button type="submit" form="formFiltros" class="btn btn-primary">
-                                    <i class="fas fa-magnifying-glass me-1"></i>
+                                <button type="submit" form="formFiltros" class="action-button action-button-primary">
+                                    <x-svg.search class="size-4 me-1" />
                                     Aplicar filtros
                                 </button>
 
@@ -189,53 +191,48 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-xl-4 col-md-6 mb-3 mb-md-3 mb-xl-0">
-                        <div class="card dash-stat-card h-100 ">
-                            <div class="card-body pe-4 ">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Entradas</span>
-                                    <span class="icon bg-soft-success"><i class="fa-solid fa-arrow-up"></i></span>
-                                </div>
-                                <h3 class="metric-value mb-1 ">{{ $money($entrada) }}</h3>
+                <div class="mb-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+                    <div class="min-w-0">
+                        <div class="dash-stat-card">
+                            <div class="flex items-start justify-between mb-2">
+                                <span class="metric-label">Entradas</span>
+                                <span class="icon bg-success-50 dark:bg-success-500/10"><x-svg.arrow-up class="size-5" /></span>
                             </div>
+                            <h3 class="metric-value mb-1">{{ $money($entrada) }}</h3>
                         </div>
                     </div>
 
-                    <div class="col-xl-4 col-md-6 mb-3 mb-md-3 mb-xl-0">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body pe-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Saídas</span>
-                                    <span class="icon bg-soft-danger"><i class="fa-solid fa-arrow-down"></i></i></span>
-                                </div>
-                                <h4 class="metric-value mb-1">{{ $money($saida) }}</h4>
+                    <div class="min-w-0">
+                        <div class="dash-stat-card">
+                            <div class="flex items-start justify-between mb-2">
+                                <span class="metric-label">Saídas</span>
+                                <span class="icon bg-error-50 dark:bg-error-500/10"><x-svg.arrow-down class="size-5" /></span>
                             </div>
+                            <h4 class="metric-value mb-1">{{ $money($saida) }}</h4>
                         </div>
                     </div>
 
-                    <div class="col-xl-4 col-md-12 mb-0 mb-md-0 mb-xl-0">
-                        <div class="card dash-stat-card h-100">
-                            <div class="card-body pe-4">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <span class="metric-label">Saldo</span>
-                                    <span class="icon bg-soft-secondary"><i class="fa-solid fa-scale-balanced"></i></span>
-                                </div>
-                                <h4 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h4>
+                    <div class="min-w-0">
+                        <div class="dash-stat-card">
+                            <div class="flex items-start justify-between mb-2">
+                                <span class="metric-label">Saldo</span>
+                                <span class="icon bg-gray-100 dark:bg-gray-700"><x-svg.bar-chart class="size-5" /></span>
                             </div>
+                            <h4 class="metric-value mb-1 {{ $saldoClass }}">{{ $money($MyTotal) }}</h4>
                         </div>
                     </div>
 
                 </div>
 
 
-                <div class="card shadow-sm section-card">
-                    <div class="card-body">
+                <div
+                    class="section-card min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                    <div class="p-5">
 
 
                         <x-alert />
-                        <div class="table-responsive">
-                            <table class="table align-middle">
+                        <div class="w-full overflow-x-auto">
+                            <table class="data-table align-middle">
                                 <thead>
                                     <tr>
                                         {{-- <th scope="col">Id</th> --}}
@@ -253,31 +250,30 @@
                                         <tr>
                                             {{-- <th class="align-middle">{{ $conta->id }}</th> --}}
                                             <td class="align-middle">
-                                                <div class="d-flex align-items-center flex-wrap gap-1">
-                                                    <span class="fw-medium">{{ $conta->name }}</span>
+                                                <div class="flex flex-wrap items-center gap-1">
+                                                    <span class="font-medium">{{ $conta->name }}</span>
                                                     @if ($conta->is_repeated)
-                                                        <span class="badge bg-secondary-subtle text-secondary border"
+                                                        <span class="status-badge bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border"
                                                             title="Lançamento repetido">
-                                                            <i
-                                                                class="fa-solid fa-clone me-1"></i>{{ $conta->repeat_label ?: 'Repetido' }}
+                                                            <x-svg.copy class="size-4 me-1" />{{ $conta->repeat_label ?: 'Repetido' }}
                                                         </span>
                                                     @endif
                                                     @if ($conta->is_recurring)
-                                                        <span class="badge bg-primary-subtle text-primary border"
+                                                        <span class="status-badge bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 border"
                                                             title="Regra de recorrência ativa">
-                                                            <i class="fa-solid fa-arrows-rotate me-1"></i>Recorrente
+                                                            <x-svg.time class="size-4 me-1" />Recorrente
                                                         </span>
                                                     @endif
                                                 </div>
                                             </td>
                                             <td class="align-middle">
                                                 <span
-                                                    class="fw-semibold">{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</span>
+                                                    class="font-semibold">{{ 'R$' . number_format($conta->value, 2, ',', '.') }}</span>
                                             </td>
                                             <td class="align-middle">
                                                 @if ($conta->maturity < now() && $conta->situation != 'paid')
                                                     <s
-                                                        class="text-danger fw-medium">{{ date('d/m/Y', strtotime($conta->maturity)) }}</s>
+                                                        class="text-error-700 dark:text-error-400 font-medium">{{ date('d/m/Y', strtotime($conta->maturity)) }}</s>
                                                 @else
                                                     {{ date('d/m/Y', strtotime($conta->maturity)) }}
                                                 @endif
@@ -285,117 +281,124 @@
                                             </td>
                                             <td class="align-middle">
                                                 <a href="{{ route('situacao.alterar', ['id' => $conta->id]) }}">
-                                                    {!! '<span class="status-pill text-bg-' . $conta->status . ' ">' . $conta->situation_name . '</span>' !!}
+                                                    <span @class([
+                                                        'status-pill',
+                                                        'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-300' => $conta->status === 'success',
+                                                        'bg-warning-50 text-warning-800 dark:bg-warning-500/15 dark:text-warning-300' => $conta->status === 'warning',
+                                                        'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-300' => $conta->status === 'danger',
+                                                    ])>{{ $conta->situation_name }}</span>
                                                 </a>
                                             </td>
                                             <td class="align-middle">{{ $conta->category->name }}</td>
                                             <td class="align-middle"
                                                 style="color: {{ ucfirst($conta->type) == 'Entrada' ? 'green' : 'red' }};">
                                                 @if (ucfirst($conta->type) == 'Entrada')
-                                                    <i class="fas fa-arrow-up"></i> Entrada
+                                                    <x-svg.arrow-up class="size-4" /> Entrada
                                                 @else
-                                                    <i class="fas fa-arrow-down"></i> Saída
+                                                    <x-svg.arrow-down class="size-4" /> Saída
                                                 @endif
                                             </td>
-                                            <td
-                                                class="hidden d-md-flex justify-content-center collapse align-items-center ">
-                                                <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
-                                                    class="btn btn-outline-primary me-1" title="Visualizar">
-                                                    <i class="fa-solid fa-fw fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
-                                                    class="btn btn-outline-secondary me-1" title="Editar">
-                                                    <i class="fa-solid fa-fw fa-pen"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-outline-info me-1 btn-repeat"
-                                                    data-id="{{ $conta->id }}" data-name="{{ $conta->name }}"
-                                                    data-value="{{ number_format($conta->value, 2, ',', '.') }}"
-                                                    data-maturity="{{ date('d/m/Y', strtotime($conta->maturity)) }}"
-                                                    data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
-                                                    data-bs-toggle="modal" data-bs-target="#modalRepetirLancamento"
-                                                    title="Repetir lançamento">
-                                                    <i class="fa-solid fa-fw fa-clone"></i>
-                                                </button>
-                                                @if ($conta->is_recurring)
-                                                    <button type="button" class="btn btn-outline-warning me-1"
-                                                        onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')"
-                                                        title="Cancelar recorrência">
-                                                        <i class="fa-solid fa-fw fa-ban"></i>
+                                            <td class="hidden align-middle md:table-cell">
+                                                <div class="flex items-center justify-center gap-1">
+                                                    <a href="{{ route('contas.show', ['id' => $conta->id]) }}"
+                                                        class="action-button action-button-outline-primary me-1" title="Visualizar">
+                                                        <x-svg.eye class="size-4" />
+                                                    </a>
+                                                    <a href="{{ route('contas.edit', ['id' => $conta->id]) }}"
+                                                        class="action-button action-button-outline-secondary me-1" title="Editar">
+                                                        <x-svg.pencil class="size-4" />
+                                                    </a>
+                                                    <button type="button" class="action-button action-button-outline-info me-1 btn-repeat"
+                                                        data-id="{{ $conta->id }}" data-name="{{ $conta->name }}"
+                                                        data-value="{{ number_format($conta->value, 2, ',', '.') }}"
+                                                        data-maturity="{{ date('d/m/Y', strtotime($conta->maturity)) }}"
+                                                        data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
+                                                        data-ui-modal-toggle data-ui-modal-target="#modalRepetirLancamento"
+                                                        title="Repetir lançamento">
+                                                        <x-svg.copy class="size-4" />
                                                     </button>
-                                                @endif
-                                                @if ($conta->is_repeated)
-                                                    <button type="button" class="btn btn-outline-danger"
-                                                        onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})"
-                                                        title="Apagar">
-                                                        <i class="fa-solid fa-fw fa-trash"></i>
-                                                    </button>
-                                                @else
-                                                    <form id="formExcluir{{ $conta->id }}"
-                                                        action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn btn-outline-danger"
-                                                            onclick="confirmarExclusao(event, {{ $conta->id }})"
-                                                            title="Apagar">
-                                                            <i class="fa-solid fa-fw fa-trash"></i>
+                                                    @if ($conta->is_recurring)
+                                                        <button type="button" class="action-button action-button-outline-warning me-1"
+                                                            onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')"
+                                                            title="Cancelar recorrência">
+                                                            <x-svg.x class="size-4" />
                                                         </button>
-                                                    </form>
-                                                @endif
-
-                                            </td>
-                                            <td class="d-flex d-mhidden justify-content-center">
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-primary dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Ações
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item"
-                                                                href="{{ route('contas.show', ['id' => $conta->id]) }}">Visualizar</a>
-                                                        </li>
-                                                        <li><a class="dropdown-item"
-                                                                href="{{ route('contas.edit', ['id' => $conta->id]) }}">Editar</a>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button"
-                                                                class="dropdown-item text-info btn-repeat"
-                                                                data-id="{{ $conta->id }}"
-                                                                data-name="{{ $conta->name }}"
-                                                                data-value="{{ number_format($conta->value, 2, ',', '.') }}"
-                                                                data-maturity="{{ date('d/m/Y', strtotime($conta->maturity)) }}"
-                                                                data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#modalRepetirLancamento">
-                                                                <i class="fa-solid fa-clone me-1"></i>Repetir lançamento
+                                                    @endif
+                                                    @if ($conta->is_repeated)
+                                                        <button type="button" class="action-button action-button-outline-danger"
+                                                            onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})"
+                                                            title="Apagar">
+                                                            <x-svg.trash-bin class="size-4" />
+                                                        </button>
+                                                    @else
+                                                        <form id="formExcluir{{ $conta->id }}"
+                                                            action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="action-button action-button-outline-danger"
+                                                                onclick="confirmarExclusao(event, {{ $conta->id }})"
+                                                                title="Apagar">
+                                                                <x-svg.trash-bin class="size-4" />
                                                             </button>
-                                                        </li>
-                                                        @if ($conta->is_recurring)
-                                                            <li>
-                                                                <button type="button" class="dropdown-item text-warning"
-                                                                    onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')">Cancelar
-                                                                    recorrência</button>
-                                                            </li>
-                                                        @endif
-                                                        <li>
-                                                            @if ($conta->is_repeated)
-                                                                <a class="dropdown-item text-danger"
-                                                                    href="javascript:void(0)"
-                                                                    onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</a>
-                                                            @else
-                                                                <form id="formExcluir{{ $conta->id }}"
-                                                                    action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
-                                                                    method="post">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <a class="dropdown-item" type="submit"
-                                                                        onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</a>
-                                                                </form>
-                                                            @endif
-                                                        </li>
-                                                    </ul>
+                                                        </form>
+                                                    @endif
                                                 </div>
-
+                                            </td>
+                                            <td class="align-middle md:hidden">
+                                                <div class="flex justify-center">
+                                                    <div class="relative inline-flex items-center gap-2" role="group" data-ui-dropdown>
+                                                        <button type="button" class="action-button action-button-primary"
+                                                            data-ui-dropdown-toggle aria-expanded="false">
+                                                            Ações
+                                                        </button>
+                                                        <ul class="hidden floating-menu">
+                                                            <li><a class="floating-menu-item"
+                                                                    href="{{ route('contas.show', ['id' => $conta->id]) }}">Visualizar</a>
+                                                            </li>
+                                                            <li><a class="floating-menu-item"
+                                                                    href="{{ route('contas.edit', ['id' => $conta->id]) }}">Editar</a>
+                                                            </li>
+                                                            <li>
+                                                                <button type="button"
+                                                                    class="floating-menu-item text-blue-light-700 dark:text-blue-light-300 btn-repeat"
+                                                                    data-id="{{ $conta->id }}"
+                                                                    data-name="{{ $conta->name }}"
+                                                                    data-value="{{ number_format($conta->value, 2, ',', '.') }}"
+                                                                    data-maturity="{{ date('d/m/Y', strtotime($conta->maturity)) }}"
+                                                                    data-raw-maturity="{{ date('Y-m-d', strtotime($conta->maturity)) }}"
+                                                                    data-ui-modal-toggle
+                                                                    data-ui-modal-target="#modalRepetirLancamento">
+                                                                    <x-svg.copy class="size-4 me-1" />Repetir lançamento
+                                                                </button>
+                                                            </li>
+                                                            @if ($conta->is_recurring)
+                                                                <li>
+                                                                    <button type="button"
+                                                                        class="floating-menu-item text-warning-700 dark:text-warning-400"
+                                                                        onclick="confirmarCancelamentoRecorrencia({{ $conta->id }}, '{{ addslashes($conta->name) }}')">Cancelar
+                                                                        recorrência</button>
+                                                                </li>
+                                                            @endif
+                                                            <li>
+                                                                @if ($conta->is_repeated)
+                                                                    <a class="floating-menu-item text-error-700 dark:text-error-400"
+                                                                        href="javascript:void(0)"
+                                                                        onclick="confirmarExclusaoSequencia({{ $conta->id }}, '{{ addslashes($conta->name) }}', '{{ $conta->repeat_label ?? 'Repetido' }}', {{ $conta->is_recurring ? 'true' : 'false' }})">Apagar</a>
+                                                                @else
+                                                                    <form id="formExcluir{{ $conta->id }}"
+                                                                        action="{{ route('contas.destroy', ['id' => $conta->id]) }}"
+                                                                        method="post">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <a class="floating-menu-item" type="submit"
+                                                                            onclick="confirmarExclusao(event, {{ $conta->id }})">Apagar</a>
+                                                                    </form>
+                                                                @endif
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -406,8 +409,8 @@
 
                                             <td colspan="8">
                                                 <div class="empty-state">
-                                                    <div class="icon"><i class="fa-solid fa-wallet"></i></div>
-                                                    <div class="fw-semibold text-body">Nenhuma conta encontrada</div>
+                                                    <div class="icon"><x-svg.box class="size-6" /></div>
+                                                    <div class="font-semibold text-gray-800 dark:text-gray-200">Nenhuma conta encontrada</div>
                                                     <div>Use os filtros acima ou crie um novo lançamento para começar.</div>
                                                 </div>
                                             </td>
@@ -420,10 +423,10 @@
 
                             </table>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center gap-5 flex-wrap mt-3">
-                            <form id="filterForm" action="{{ route('home') }}" class="d-flex align-items-center gap-2">
-                                <label for="perPage" class="text-nowrap">Linhas por página:</label>
-                                <select class="form-select form-select-sm" id="perPage" name="perPage"
+                        <div class="mt-3 flex flex-wrap items-center justify-between gap-5">
+                            <form id="filterForm" action="{{ route('home') }}" class="flex items-center gap-2">
+                                <label for="perPage" class="whitespace-nowrap">Linhas por página:</label>
+                                <select class="field-select form-select-sm" id="perPage" name="perPage"
                                     onchange="document.getElementById('filterForm').submit()">
                                     <option value="5" @selected($perPage == '5')>5</option>
                                     <option value="10" @selected($perPage == '10')>10</option>
@@ -449,7 +452,7 @@
                                     <input type="hidden" name="type" value="{{ $type }}">
                                 @endif
                             </form>
-                            <div style="min-width: 25%;">
+                            <div class="min-w-[25%]">
                                 {{ $contas->onEachSide(0)->links() }}
                             </div>
                         </div>
@@ -458,43 +461,44 @@
             </div>
         </div>
         <!-- Modal Repetir Lançamento -->
-        <div class="modal fade" id="modalRepetirLancamento" tabindex="-1" aria-labelledby="modalRepetirLancamentoLabel"
+        <div class="ui-modal hidden" data-ui-modal id="modalRepetirLancamento" tabindex="-1" aria-labelledby="modalRepetirLancamentoLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow">
+            <div class="ui-modal-dialog">
+                <div class="ui-modal-content shadow">
                     <form id="formRepetirLancamento" method="POST" action="">
                         @csrf
                         <input type="hidden" name="operation_token" id="repeat_operation_token" value="">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalRepetirLancamentoLabel">
-                                <i class="fa-solid fa-clone text-info me-2"></i>Repetir lançamento
+                        <div class="ui-modal-header">
+                            <h5 class="ui-modal-title" id="modalRepetirLancamentoLabel">
+                                <x-svg.copy class="size-4 text-blue-light-700 dark:text-blue-light-300 me-2" />Repetir lançamento
                             </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            <button type="button" class="ui-modal-close" data-ui-modal-dismiss
                                 aria-label="Fechar"></button>
                         </div>
-                        <div class="modal-body">
-                            <div class="alert alert-light border mb-3">
-                                <div class="small text-muted">Lançamento base:</div>
-                                <div class="fw-bold" id="modalRepeatContaName"></div>
-                                <div class="small text-muted mt-1">
+                        <div class="ui-modal-body">
+                            <div
+                                class="mb-3 rounded-lg border border-gray-200 bg-gray-50 p-3 text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">Lançamento base:</div>
+                                <div class="font-bold" id="modalRepeatContaName"></div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Valor: <strong id="modalRepeatContaValue"></strong> | Vencimento: <strong
                                         id="modalRepeatContaMaturity"></strong>
                                 </div>
                             </div>
 
-                            <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="repeat_count" class="form-label">Quantidade de repetições <span
-                                            class="text-danger">*</span></label>
-                                    <input type="number" min="1" max="120" class="form-control"
+                            <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                <div class="min-w-0">
+                                    <label for="repeat_count" class="field-label">Quantidade de repetições <span
+                                            class="text-error-700 dark:text-error-400">*</span></label>
+                                    <input type="number" min="1" max="120" class="field-control"
                                         id="repeat_count" name="count" value="5" required>
-                                    <div class="form-text">Ex: 5 gerará 5 novas ocorrências.</div>
+                                    <div class="field-help">Ex: 5 gerará 5 novas ocorrências.</div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <label for="repeat_frequency" class="form-label">Frequência <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select" id="repeat_frequency" name="frequency" required>
+                                <div class="min-w-0">
+                                    <label for="repeat_frequency" class="field-label">Frequência <span
+                                            class="text-error-700 dark:text-error-400">*</span></label>
+                                    <select class="field-select" id="repeat_frequency" name="frequency" required>
                                         <option value="monthly" selected>Mensal</option>
                                         <option value="weekly">Semanal</option>
                                         <option value="biweekly">Quinzenal (a cada 15 dias)</option>
@@ -503,37 +507,40 @@
                                     </select>
                                 </div>
 
-                                <div class="col-12hidden" id="repeat_custom_interval_wrapper">
-                                    <label for="repeat_interval" class="form-label">Intervalo personalizado em dias <span
-                                            class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">A cada</span>
-                                        <input type="number" min="1" max="365" class="form-control"
+                                <div class="hidden min-w-0 md:col-span-2" id="repeat_custom_interval_wrapper">
+                                    <label for="repeat_interval" class="field-label">Intervalo personalizado em dias <span
+                                            class="text-error-700 dark:text-error-400">*</span></label>
+                                    <div class="flex flex-col gap-2 sm:flex-row">
+                                        <span
+                                            class="inline-flex shrink-0 items-center rounded-lg border border-gray-300 bg-gray-50 px-3 text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">A
+                                            cada</span>
+                                        <input type="number" min="1" max="365" class="field-control min-w-0 flex-1"
                                             id="repeat_interval" name="interval">
-                                        <span class="input-group-text">dias</span>
+                                        <span
+                                            class="inline-flex shrink-0 items-center rounded-lg border border-gray-300 bg-gray-50 px-3 text-gray-600 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">dias</span>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <label for="repeat_start_date" class="form-label">Data da 1ª repetição</label>
-                                    <input type="date" class="form-control" id="repeat_start_date" name="start_date">
-                                    <div class="form-text">Deixe em branco para calcular a partir do vencimento.</div>
+                                <div class="min-w-0">
+                                    <label for="repeat_start_date" class="field-label">Data da 1ª repetição</label>
+                                    <input type="date" class="field-control" id="repeat_start_date" name="start_date">
+                                    <div class="field-help">Deixe em branco para calcular a partir do vencimento.</div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <label for="repeat_custom_value" class="form-label">Valor das cópias
+                                <div class="min-w-0">
+                                    <label for="repeat_custom_value" class="field-label">Valor das cópias
                                         (opcional)</label>
-                                    <input type="text" class="form-control" id="repeat_custom_value"
+                                    <input type="text" class="field-control" id="repeat_custom_value"
                                         name="custom_value" placeholder="Manter valor original">
-                                    <div class="form-text">Deixe em branco para manter o mesmo valor.</div>
+                                    <div class="field-help">Deixe em branco para manter o mesmo valor.</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" id="btnSubmitRepetir">
-                                <i class="fa-solid fa-check me-1"></i>Repetir lançamento
+                        <div class="ui-modal-footer">
+                            <button type="button" class="action-button action-button-outline-secondary"
+                                data-ui-modal-dismiss>Cancelar</button>
+                            <button type="submit" class="action-button action-button-primary" id="btnSubmitRepetir">
+                                <x-svg.check class="size-4 me-1" />Repetir lançamento
                             </button>
                         </div>
                     </form>
@@ -542,102 +549,111 @@
         </div>
 
         <!-- Modal Importar Excel / CSV -->
-        <div class="modal fade" id="modalImportarExcel" tabindex="-1" aria-labelledby="modalImportarExcelLabel"
+        <div class="ui-modal hidden" data-ui-modal id="modalImportarExcel" tabindex="-1" aria-labelledby="modalImportarExcelLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                <div class="modal-content shadow">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalImportarExcelLabel">
-                            <i class="fa-solid fa-file-excel text-success me-2"></i>Importar Lançamentos via Excel / CSV
+            <div class="ui-modal-dialog ui-modal-dialog-wide">
+                <div class="ui-modal-content shadow">
+                    <div class="ui-modal-header">
+                        <h5 class="ui-modal-title" id="modalImportarExcelLabel">
+                            <x-svg.table class="size-4 text-success-700 dark:text-success-400 me-2" />Importar Lançamentos via Excel / CSV
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        <button type="button" class="ui-modal-close" data-ui-modal-dismiss aria-label="Fechar"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info py-2 small d-flex justify-content-between align-items-center">
+                    <div class="ui-modal-body">
+                        <div
+                            class="flex flex-col items-start justify-between gap-3 rounded-lg border border-blue-light-200 bg-blue-light-50 px-3 py-2 text-sm text-blue-light-900 dark:border-blue-light-800 dark:bg-blue-light-950 dark:text-blue-light-100 sm:flex-row sm:items-center">
                             <div>
-                                <i class="fa-solid fa-circle-info me-1"></i>
+                                <x-svg.info-circle class="size-4 me-1" />
                                 Formatos aceitos: <strong>.xlsx</strong> e <strong>.csv</strong>. Use a coluna
                                 <em>Situação</em> (pago/pendente), <em>Tipo</em> (entrada/saida), <em>Valor</em> (R$
                                 1.250,50) e <em>Vencimento</em> (dd/mm/aaaa).
                             </div>
                             <a href="{{ route('contas.importar.modelo') }}"
-                                class="btn btn-sm btn-outline-primary text-nowrap ms-2">
-                                <i class="fa-solid fa-download me-1"></i>Baixar Modelo
+                                class="action-button action-button-sm action-button-outline-primary shrink-0 whitespace-nowrap ms-2">
+                                <x-svg.arrow-down class="size-4 me-1" />Baixar Modelo
                             </a>
                         </div>
 
                         <!-- Formulário de Upload e Análise -->
-                        <div class="card p-3 bg-light-subtle border mb-3">
-                            <label for="excel_file_input" class="form-label fw-bold small">Selecione o arquivo de
+                        <div class="mb-3 rounded-xl border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800">
+                            <label for="excel_file_input" class="field-label font-bold text-sm">Selecione o arquivo de
                                 planilha</label>
-                            <div class="input-group">
-                                <input type="file" class="form-control" id="excel_file_input"
+                            <div class="flex flex-col gap-2 sm:flex-row">
+                                <input type="file" class="field-control" id="excel_file_input"
                                     accept=".xlsx,.csv,.txt">
-                                <button type="button" class="btn btn-primary" id="btnAnalisarExcel">
-                                    <i class="fa-solid fa-magnifying-glass me-1"></i> Analisar Arquivo
+                                <button type="button" class="action-button action-button-primary" id="btnAnalisarExcel">
+                                    <x-svg.search class="size-4 me-1" /> Analisar Arquivo
                                 </button>
                             </div>
-                            <div class="text-danger small mt-1hidden" id="excelFileError"></div>
+                            <div class="hidden mt-1 text-sm text-error-600" id="excelFileError"></div>
                         </div>
 
                         <!-- Spinner de Carregamento -->
-                        <div class="text-center py-4hidden" id="excelLoadingSpinner">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Processando...</span>
+                        <div class="hidden py-4 text-center" id="excelLoadingSpinner">
+                            <div class="mx-auto size-6 animate-spin rounded-full border-2 border-gray-200 border-t-brand-500" role="status">
+                                <span class="sr-only">Processando...</span>
                             </div>
-                            <div class="mt-2 text-muted small">Analisando e validando dados do arquivo...</div>
+                            <div class="mt-2 text-gray-500 dark:text-gray-400 text-sm">Analisando e validando dados do arquivo...</div>
                         </div>
 
                         <!-- Resultado da Análise -->
                         <div class="hidden" id="excelPreviewContainer">
-                            <div class="row g-2 mb-3 text-center">
-                                <div class="col-3">
-                                    <div class="border rounded p-2 bg-light">
-                                        <div class="small text-muted">Total Linhas</div>
-                                        <h5 class="mb-0 fw-bold" id="previewTotalRows">0</h5>
+                            <div class="mb-3 grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
+                                <div>
+                                    <div class="rounded border border-gray-200 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Total Linhas</div>
+                                        <h5 class="mb-0 font-bold" id="previewTotalRows">0</h5>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="border rounded p-2 bg-success-subtle text-success">
-                                        <div class="small">Válidas</div>
-                                        <h5 class="mb-0 fw-bold" id="previewValidRows">0</h5>
+                                <div>
+                                    <div
+                                        class="rounded border border-success-200 bg-success-50 p-2 text-success-700 dark:border-success-800 dark:bg-success-950 dark:text-success-200">
+                                        <div class="text-sm">Válidas</div>
+                                        <h5 class="mb-0 font-bold" id="previewValidRows">0</h5>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="border rounded p-2 bg-warning-subtle text-warning-emphasis">
-                                        <div class="small">Avisos</div>
-                                        <h5 class="mb-0 fw-bold" id="previewWarnings">0</h5>
+                                <div>
+                                    <div
+                                        class="rounded border border-warning-200 bg-warning-50 p-2 text-warning-700 dark:border-warning-800 dark:bg-warning-950 dark:text-warning-200">
+                                        <div class="text-sm">Avisos</div>
+                                        <h5 class="mb-0 font-bold" id="previewWarnings">0</h5>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="border rounded p-2 bg-danger-subtle text-danger">
-                                        <div class="small">Erros</div>
-                                        <h5 class="mb-0 fw-bold" id="previewErrors">0</h5>
+                                <div>
+                                    <div
+                                        class="rounded border border-error-200 bg-error-50 p-2 text-error-700 dark:border-error-800 dark:bg-error-950 dark:text-error-200">
+                                        <div class="text-sm">Erros</div>
+                                        <h5 class="mb-0 font-bold" id="previewErrors">0</h5>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Erros Detalhados se houver -->
-                            <div class="alert alert-dangerhidden py-2 small" id="excelErrorsBox">
-                                <h6 class="alert-heading small fw-bold mb-1"><i
+                            <div
+                                class="hidden rounded-lg border border-error-200 bg-error-50 px-3 py-2 text-sm text-error-700 dark:border-error-800 dark:bg-error-950 dark:text-error-200"
+                                id="excelErrorsBox">
+                                <h6 class="notice-heading text-sm font-bold mb-1"><i
                                         class="fa-solid fa-circle-exclamation me-1"></i>Erros encontrados (estas linhas
                                     serão ignoradas):</h6>
                                 <ul class="mb-0 ps-3" id="excelErrorsList"></ul>
                             </div>
 
                             <!-- Avisos / Duplicatas se houver -->
-                            <div class="alert alert-warninghidden py-2 small" id="excelWarningsBox">
-                                <h6 class="alert-heading small fw-bold mb-1"><i
+                            <div
+                                class="hidden rounded-lg border border-warning-200 bg-warning-50 px-3 py-2 text-sm text-warning-700 dark:border-warning-800 dark:bg-warning-950 dark:text-warning-200"
+                                id="excelWarningsBox">
+                                <h6 class="notice-heading text-sm font-bold mb-1"><i
                                         class="fa-solid fa-triangle-exclamation me-1"></i>Avisos de duplicidade potencial:
                                 </h6>
                                 <ul class="mb-0 ps-3" id="excelWarningsList"></ul>
                             </div>
 
                             <!-- Prévia dos lançamentos válidos -->
-                            <h6 class="fw-bold small mb-2"><i class="fa-solid fa-table-list me-1"></i>Pré-visualização dos
+                            <h6 class="font-bold text-sm mb-2"><x-svg.table class="size-4 me-1" />Pré-visualização dos
                                 Lançamentos (primeiras 10 linhas):</h6>
-                            <div class="table-responsive border rounded mb-3" style="max-height: 250px;">
-                                <table class="table table-sm table-striped mb-0 small">
+                            <div
+                                class="mb-3 max-h-[250px] overflow-auto rounded border border-gray-200 dark:border-gray-700">
+                                <table class="data-table table-sm table-striped mb-0 text-sm">
                                     <thead class="table-light sticky-top">
                                         <tr>
                                             <th>Linha</th>
@@ -657,21 +673,21 @@
                             <form action="{{ route('contas.importar.confirm') }}" method="POST"
                                 id="formConfirmarImportacao">
                                 @csrf
-                                <div class="form-check form-switch mb-3 p-3 bg-light rounded border">
-                                    <input class="form-check-input ms-0 me-2" type="checkbox" role="switch"
+                                <div class="mb-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800">
+                                    <input class="mr-2 size-4 shrink-0 align-middle accent-brand-500" type="checkbox" role="switch"
                                         id="auto_create_categories" name="auto_create_categories" value="1" checked>
-                                    <label class="form-check-label fw-semibold" for="auto_create_categories">
+                                    <label class="font-semibold" for="auto_create_categories">
                                         Criar automaticamente categorias novas identificadas na planilha
                                     </label>
-                                    <div class="form-text small text-muted">Se desativado, contas com categorias novas
+                                    <div class="field-help text-sm text-gray-500 dark:text-gray-400">Se desativado, contas com categorias novas
                                         serão importadas sem categoria ou com a padrão.</div>
                                 </div>
 
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-success" id="btnConfirmarImportacao">
-                                        <i class="fa-solid fa-check me-1"></i> Confirmar Importação
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" class="action-button action-button-secondary"
+                                        data-ui-modal-dismiss>Cancelar</button>
+                                    <button type="submit" class="action-button action-button-success" id="btnConfirmarImportacao">
+                                        <x-svg.check class="size-4 me-1" /> Confirmar Importação
                                     </button>
                                 </div>
                             </form>

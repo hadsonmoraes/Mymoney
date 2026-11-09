@@ -148,5 +148,9 @@
   "Administrator users can perform any action.": "O administrador pode realizar qualquer ação.",
   "Editor users have the ability to read, create, and update.": "O editor pode ler, criar e atualizar",
   "Remove": "Remover",
-  "Back": "Voltar"
+  "Back": "Voltar",
+  "userDropdown.editProfile": "Editar perfil",
+  "userDropdown.accountSettings": "Configurações da conta",
+  "userDropdown.support": "Suporte",
+  "userDropdown.signOut": "Sair"
 }
